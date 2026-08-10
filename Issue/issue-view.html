@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Issue Details - EAM</title>
+
+    <link
+        rel="stylesheet"
+        href="./css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- Generic Sidebar -->
+
+    <div id="sidebar"></div>
+
+
+    <!-- Main Application -->
+
+    <div class="main-content">
+
+
+        <!-- Generic Header -->
+
+        <div id="header"></div>
+
+
+        <!-- Page -->
+
+        <main class="page-content">
+
+
+            <!-- Breadcrumb -->
+
+            <div class="page-breadcrumb">
+
+                <span>EAM</span>
+
+                <span>›</span>
+
+                <span>Issue</span>
+
+                <span>›</span>
+
+                <span>List</span>
+
+                <span>›</span>
+
+                <strong>View</strong>
+
+            </div>
+
+
+            <!-- Page Header -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Issue Details
+                    </h1>
+
+                    <p>
+                        View complete information about this asset issue.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="secondary-button"
+                    onclick="goBackToList()"
+                >
+
+                    ←
+
+                    Back to List
+
+                </button>
+
+            </div>
+
+
+            <!-- Transaction Summary -->
+
+            <section class="details-card">
+
+
+                <div class="details-card-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            ISSUE TRANSACTION
+                        </span>
+
+                        <h2 id="transactionNumber">
+                            --
+                        </h2>
+
+                    </div>
+
+
+                    <span
+                        class="status-badge"
+                        id="returnableBadge"
+                    >
+                        --
+                    </span>
+
+                </div>
+
+
+                <div class="details-grid">
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Transaction Date
+                        </span>
+
+                        <strong id="transactionDate">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Issue Type
+                        </span>
+
+                        <strong id="issueType">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            From Date
+                        </span>
+
+                        <strong id="fromDate">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            To Date
+                        </span>
+
+                        <strong id="toDate">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Issued To
+                        </span>
+
+                        <strong id="issuedTo">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Created By
+                        </span>
+
+                        <strong id="createdBy">
+                            --
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Remarks -->
+
+                <div class="remarks-section">
+
+                    <span class="detail-label">
+                        Remarks
+                    </span>
+
+                    <p id="remarks">
+                        No remarks available.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- Asset Information -->
+
+            <section class="details-card">
+
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            ASSET INFORMATION
+                        </span>
+
+                        <h2>
+                            Issued Asset
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="asset-summary">
+
+                    <div class="asset-icon">
+                        ◇
+                    </div>
+
+
+                    <div>
+
+                        <h3 id="assetName">
+                            --
+                        </h3>
+
+                        <span id="assetTag">
+                            --
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Asset Grid -->
+
+                <div class="asset-details-grid">
+
+
+                    <div class="asset-detail">
+
+                        <span>
+                            Asset Tag
+                        </span>
+
+                        <strong id="assetTagValue">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="asset-detail">
+
+                        <span>
+                            Serial No
+                        </span>
+
+                        <strong id="serialNo">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="asset-detail">
+
+                        <span>
+                            Model
+                        </span>
+
+                        <strong id="model">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="asset-detail">
+
+                        <span>
+                            Manufacturer
+                        </span>
+
+                        <strong id="manufacturer">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="asset-detail">
+
+                        <span>
+                            Description
+                        </span>
+
+                        <strong id="description">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="asset-detail">
+
+                        <span>
+                            Returned
+                        </span>
+
+                        <strong
+                            id="returned"
+                            class="returned-status"
+                        >
+                            --
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Location -->
+
+                <div class="location-box">
+
+                    <span class="detail-label">
+                        Asset Location
+                    </span>
+
+                    <strong id="location">
+                        --
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- Bottom Action -->
+
+            <div class="bottom-actions">
+
+                <button
+                    class="secondary-button"
+                    onclick="goBackToList()"
+                >
+
+                    ←
+
+                    Back to List
+
+                </button>
+
+            </div>
+
+
+        </main>
+
+
+        <!-- Footer -->
+
+        <div id="footer"></div>
+
+    </div>
+
+
+    <!-- Generic Layout -->
+
+    <script src="./js/layout.js"></script>
+
+
+    <!-- Issue Data -->
+
+    <script src="./js/issue.js"></script>
+
+
+    <!-- Load Issue -->
+
+    <script>
+
+        function getIssueId() {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            return params.get("id");
+
+        }
+
+
+        function showValue(value) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === ""
+            ) {
+
+                return "Not available";
+
+            }
+
+            return value;
+
+        }
+
+
+        function loadIssue() {
+
+            const issueId =
+                getIssueId();
+
+
+            const issue =
+                issueData[issueId];
+
+
+            if (!issue) {
+
+                document.querySelector(
+                    ".page-content"
+                ).innerHTML = `
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            !
+                        </div>
+
+                        <h2>
+                            Issue Not Found
+                        </h2>
+
+                        <p>
+                            The requested issue could not be found.
+                        </p>
+
+                        <button
+                            class="primary-button"
+                            onclick="goBackToList()"
+                        >
+                            Back to List
+                        </button>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            // Transaction
+
+            document.getElementById(
+                "transactionNumber"
+            ).textContent =
+                issue.transactionNo;
+
+
+            document.getElementById(
+                "transactionDate"
+            ).textContent =
+                issue.transactionDate;
+
+
+            document.getElementById(
+                "issueType"
+            ).textContent =
+                issue.issueType;
+
+
+            document.getElementById(
+                "fromDate"
+            ).textContent =
+                issue.fromDate;
+
+
+            document.getElementById(
+                "toDate"
+            ).textContent =
+                issue.toDate;
+
+
+            document.getElementById(
+                "issuedTo"
+            ).textContent =
+                issue.issuedTo;
+
+
+            document.getElementById(
+                "createdBy"
+            ).textContent =
+                issue.createdBy;
+
+
+            document.getElementById(
+                "remarks"
+            ).textContent =
+                showValue(issue.remarks);
+
+
+            // Returnable
+
+            const badge =
+                document.getElementById(
+                    "returnableBadge"
+                );
+
+
+            badge.textContent =
+                issue.returnable === "Yes"
+                    ? "Returnable"
+                    : "Non-returnable";
+
+
+            badge.classList.add(
+                issue.returnable === "Yes"
+                    ? "returnable"
+                    : "non-returnable"
+            );
+
+
+            // Asset
+
+            const asset =
+                issue.asset;
+
+
+            document.getElementById(
+                "assetName"
+            ).textContent =
+                showValue(asset.assetName);
+
+
+            document.getElementById(
+                "assetTag"
+            ).textContent =
+                showValue(asset.assetTag);
+
+
+            document.getElementById(
+                "assetTagValue"
+            ).textContent =
+                showValue(asset.assetTag);
+
+
+            document.getElementById(
+                "serialNo"
+            ).textContent =
+                showValue(asset.serialNo);
+
+
+            document.getElementById(
+                "model"
+            ).textContent =
+                showValue(asset.model);
+
+
+            document.getElementById(
+                "manufacturer"
+            ).textContent =
+                showValue(asset.manufacturer);
+
+
+            document.getElementById(
+                "description"
+            ).textContent =
+                showValue(asset.description);
+
+
+            document.getElementById(
+                "location"
+            ).textContent =
+                showValue(asset.location);
+
+
+            const returned =
+                document.getElementById(
+                    "returned"
+                );
+
+
+            returned.textContent =
+                asset.returned;
+
+
+            returned.classList.add(
+                asset.returned === "Yes"
+                    ? "returned-yes"
+                    : "returned-no"
+            );
+
+        }
+
+
+        function goBackToList() {
+
+            window.location.href =
+                "issue-list.html";
+
+        }
+
+
+        loadIssue();
+
+    </script>
+
+</body>
+
+</html>

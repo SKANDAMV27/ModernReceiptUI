@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Issue List - EAM</title>
+
+    <link
+        rel="stylesheet"
+        href="./css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         GENERIC SIDEBAR
+    ====================================================== -->
+
+    <div id="sidebar"></div>
+
+
+
+    <!-- =====================================================
+         MAIN APPLICATION
+    ====================================================== -->
+
+    <div class="main-content">
+
+
+        <!-- =================================================
+             GENERIC HEADER
+        ================================================== -->
+
+        <div id="header"></div>
+
+
+
+        <!-- =================================================
+             PAGE CONTENT
+        ================================================== -->
+
+        <main class="page-content">
+
+
+            <!-- =================================================
+                 BREADCRUMB
+            ================================================== -->
+
+            <div class="page-breadcrumb">
+
+                <span>
+                    EAM
+                </span>
+
+                <span>
+                    ›
+                </span>
+
+                <span>
+                    Issue
+                </span>
+
+                <span>
+                    ›
+                </span>
+
+                <strong>
+                    List
+                </strong>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Issue Assets
+                    </h1>
+
+                    <p>
+                        View and manage asset issue transactions.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FILTER CARD
+            ================================================== -->
+
+            <section class="filter-card">
+
+
+                <!-- Search Type -->
+
+                <div class="filter-field">
+
+                    <label>
+                        Search By
+                    </label>
+
+                    <select id="searchType">
+
+                        <option value="transactionNo">
+                            Transaction No
+                        </option>
+
+                        <option value="issueType">
+                            Issue Type
+                        </option>
+
+                        <option value="createdBy">
+                            Created By
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Search Value -->
+
+                <div class="filter-field filter-search">
+
+                    <label>
+                        Value
+                    </label>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Enter search value..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+
+                <!-- Filter -->
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    onclick="filterIssues()"
+                >
+
+                    <span>
+                        🔍
+                    </span>
+
+                    Filter
+
+                </button>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ISSUE TABLE
+            ================================================== -->
+
+            <section class="table-card">
+
+
+                <!-- =================================================
+                     TABLE HEADER
+                ================================================== -->
+
+                <div class="table-header">
+
+
+                    <!-- Title -->
+
+                    <div>
+
+                        <h2>
+                            Issue Asset
+                        </h2>
+
+                        <span id="recordCount">
+                            10 Records
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         ACTION BUTTONS
+                    ================================================== -->
+
+                    <div class="table-header-actions">
+
+
+                        <!-- Reload -->
+
+                        <button
+                            type="button"
+                            class="table-action-button reload-action"
+                            onclick="reloadIssues()"
+                            title="Reload Issue List"
+                        >
+
+                            <span class="action-icon">
+                                ↻
+                            </span>
+
+                            Reload
+
+                        </button>
+
+
+
+                        <!-- Issue Asset -->
+
+                        <button
+                            type="button"
+                            class="table-action-button issue-action"
+                            onclick="openIssueAsset()"
+                            title="Issue Asset"
+                        >
+
+                            <span class="action-icon">
+                                ＋
+                            </span>
+
+                            Issue Asset
+
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TABLE
+                ================================================== -->
+
+                <div class="table-wrapper">
+
+
+                    <table>
+
+
+                        <!-- TABLE HEAD -->
+
+                        <thead>
+
+                            <tr>
+
+
+                                <!-- Select -->
+
+                                <th class="checkbox-column">
+
+                                    <input
+                                        type="checkbox"
+                                        id="selectAll"
+                                        onchange="selectAllIssues(this)"
+                                        title="Select All"
+                                    >
+
+                                </th>
+
+
+
+                                <!-- Transaction -->
+
+                                <th>
+                                    Transaction No
+                                </th>
+
+
+
+                                <!-- Date -->
+
+                                <th>
+                                    Transaction Date
+                                </th>
+
+
+
+                                <!-- Issue Type -->
+
+                                <th>
+                                    Issue Type
+                                </th>
+
+
+
+                                <!-- Created By -->
+
+                                <th>
+                                    Created By
+                                </th>
+
+
+
+                                <!-- Action -->
+
+                                <th class="action-column">
+                                    Action
+                                </th>
+
+
+                            </tr>
+
+                        </thead>
+
+
+
+                        <!-- TABLE BODY -->
+
+                        <tbody id="issueTableBody">
+
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PAGINATION
+                ================================================== -->
+
+                <div class="pagination">
+
+
+                    <!-- Pagination Buttons -->
+
+                    <div class="pagination-buttons">
+
+
+                        <button
+                            type="button"
+                            title="First Page"
+                        >
+                            «
+                        </button>
+
+
+                        <button
+                            type="button"
+                            title="Previous Page"
+                        >
+                            ‹
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="active-page"
+                        >
+                            1
+                        </button>
+
+
+                        <button
+                            type="button"
+                        >
+                            2
+                        </button>
+
+
+                        <button
+                            type="button"
+                        >
+                            3
+                        </button>
+
+
+                        <button
+                            type="button"
+                            title="Next Page"
+                        >
+                            ›
+                        </button>
+
+
+                        <button
+                            type="button"
+                            title="Last Page"
+                        >
+                            »
+                        </button>
+
+
+                    </div>
+
+
+
+                    <!-- Pagination Information -->
+
+                    <div class="pagination-info">
+
+                        Showing
+
+                        <strong>
+                            1-10
+                        </strong>
+
+                        of
+
+                        <strong>
+                            13375
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </main>
+
+
+
+        <!-- =================================================
+             GENERIC FOOTER
+        ================================================== -->
+
+        <div id="footer"></div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         GENERIC LAYOUT JAVASCRIPT
+    ====================================================== -->
+
+    <script src="./js/layout.js"></script>
+
+
+
+    <!-- =====================================================
+         ISSUE DATA
+    ====================================================== -->
+
+    <script src="./js/issue.js"></script>
+
+
+
+    <!-- =====================================================
+         ISSUE LIST JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+
+        /* =====================================================
+           ISSUE LIST DATA
+        ====================================================== */
+
+        const issueRows = [
+
+
+            {
+                transactionNo:
+                    "ISSUE/2026/7907",
+
+                transactionDate:
+                    "10-Aug-2026 12:55:32",
+
+                issueType:
+                    "Custodian",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2026/7906",
+
+                transactionDate:
+                    "10-Aug-2026 12:55:32",
+
+                issueType:
+                    "Location",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2026/7905",
+
+                transactionDate:
+                    "10-Aug-2026 12:53:32",
+
+                issueType:
+                    "Custodian",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2020/7103",
+
+                transactionDate:
+                    "02-May-2020 17:07:35",
+
+                issueType:
+                    "Custodian",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2023/21",
+
+                transactionDate:
+                    "10-Mar-2023 11:45:42",
+
+                issueType:
+                    "Employee",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2020/7904",
+
+                transactionDate:
+                    "02-May-2020 17:29:07",
+
+                issueType:
+                    "Employee",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2026/4870",
+
+                transactionDate:
+                    "10-Apr-2026 16:54:25",
+
+                issueType:
+                    "Employee",
+
+                createdBy:
+                    "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2026/4869",
+
+                transactionDate:
+                    "18-Mar-2026 15:28:27",
+
+                issueType:
+                    "Custodian",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2026/4868",
+
+                transactionDate:
+                    "18-Mar-2026 15:28:27",
+
+                issueType:
+                    "Location",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            },
+
+
+            {
+                transactionNo:
+                    "ISSUE/2023/4866",
+
+                transactionDate:
+                    "26-Dec-2023 19:42:07",
+
+                issueType:
+                    "Location",
+
+                createdBy:
+                    "ASADMIN [SYS-ADMIN]"
+            }
+
+        ];
+
+
+
+        /* =====================================================
+           DISPLAY ISSUES
+        ====================================================== */
+
+        function displayIssues(data) {
+
+
+            const tbody =
+                document.getElementById(
+                    "issueTableBody"
+                );
+
+
+            tbody.innerHTML = "";
+
+
+
+            if (data.length === 0) {
+
+                tbody.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty-table-cell"
+                        >
+
+                            <div class="empty-table-state">
+
+                                <div class="empty-table-icon">
+                                    🔍
+                                </div>
+
+                                <strong>
+                                    No issues found
+                                </strong>
+
+                                <span>
+                                    Try changing your search criteria.
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+
+                document.getElementById(
+                    "recordCount"
+                ).textContent =
+                    "0 Records";
+
+
+                return;
+
+            }
+
+
+
+            data.forEach(
+                function(issue, index) {
+
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    const badgeClass =
+                        issue.issueType
+                            .toLowerCase();
+
+
+
+                    row.innerHTML = `
+
+
+                        <!-- CHECKBOX -->
+
+                        <td class="checkbox-column">
+
+                            <input
+                                type="checkbox"
+                                class="issue-checkbox"
+                                data-transaction="${issue.transactionNo}"
+                            >
+
+                        </td>
+
+
+
+                        <!-- TRANSACTION -->
+
+                        <td>
+
+                            <span
+                                class="transaction-link"
+                                onclick="viewIssue('${issue.transactionNo}')"
+                            >
+
+                                ${issue.transactionNo}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- DATE -->
+
+                        <td>
+
+                            ${issue.transactionDate}
+
+                        </td>
+
+
+
+                        <!-- ISSUE TYPE -->
+
+                        <td>
+
+                            <span
+                                class="issue-badge ${badgeClass}"
+                            >
+
+                                ${issue.issueType}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- CREATED BY -->
+
+                        <td>
+
+                            ${issue.createdBy}
+
+                        </td>
+
+
+
+                        <!-- VIEW -->
+
+                        <td class="action-column">
+
+                            <button
+                                type="button"
+                                class="view-button"
+                                onclick="viewIssue('${issue.transactionNo}')"
+                                title="View Issue"
+                            >
+
+                                👁
+
+                            </button>
+
+                        </td>
+
+
+                    `;
+
+
+                    tbody.appendChild(row);
+
+
+                }
+            );
+
+
+
+            document.getElementById(
+                "recordCount"
+            ).textContent =
+                `${data.length} Records`;
+
+
+        }
+
+
+
+        /* =====================================================
+           VIEW ISSUE
+        ====================================================== */
+
+        function viewIssue(transactionNo) {
+
+
+            window.location.href =
+                `issue-view.html?id=${encodeURIComponent(
+                    transactionNo
+                )}`;
+
+
+        }
+
+
+
+        /* =====================================================
+           OPEN ISSUE ASSET PAGE
+        ====================================================== */
+
+        function openIssueAsset() {
+
+
+            window.location.href =
+                "issue-create.html";
+
+
+        }
+
+
+
+        /* =====================================================
+           FILTER ISSUES
+        ====================================================== */
+
+        function filterIssues() {
+
+
+            const type =
+                document.getElementById(
+                    "searchType"
+                ).value;
+
+
+
+            const value =
+                document.getElementById(
+                    "searchInput"
+                ).value
+                .toLowerCase()
+                .trim();
+
+
+
+            if (!value) {
+
+
+                displayIssues(
+                    issueRows
+                );
+
+
+                return;
+
+            }
+
+
+
+            const filtered =
+                issueRows.filter(
+                    function(issue) {
+
+
+                        return String(
+                            issue[type]
+                        )
+                        .toLowerCase()
+                        .includes(value);
+
+
+                    }
+                );
+
+
+
+            displayIssues(
+                filtered
+            );
+
+
+        }
+
+
+
+        /* =====================================================
+           RELOAD ISSUES
+        ====================================================== */
+
+        function reloadIssues() {
+
+
+            // Clear search
+
+            document.getElementById(
+                "searchInput"
+            ).value = "";
+
+
+
+            // Reset search type
+
+            document.getElementById(
+                "searchType"
+            ).value =
+                "transactionNo";
+
+
+
+            // Reset select all
+
+            const selectAll =
+                document.getElementById(
+                    "selectAll"
+                );
+
+
+            if (selectAll) {
+
+                selectAll.checked =
+                    false;
+
+            }
+
+
+
+            // Display all records
+
+            displayIssues(
+                issueRows
+            );
+
+
+        }
+
+
+
+        /* =====================================================
+           SELECT ALL ISSUES
+        ====================================================== */
+
+        function selectAllIssues(source) {
+
+
+            const checkboxes =
+                document.querySelectorAll(
+                    ".issue-checkbox"
+                );
+
+
+            checkboxes.forEach(
+                function(checkbox) {
+
+                    checkbox.checked =
+                        source.checked;
+
+                }
+            );
+
+
+        }
+
+
+
+        /* =====================================================
+           SEARCH WHEN ENTER IS PRESSED
+        ====================================================== */
+
+        document
+            .getElementById(
+                "searchInput"
+            )
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        filterIssues();
+
+                    }
+
+
+                }
+            );
+
+
+
+        /* =====================================================
+           INITIAL LOAD
+        ====================================================== */
+
+        displayIssues(
+            issueRows
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

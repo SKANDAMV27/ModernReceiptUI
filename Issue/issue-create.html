@@ -1,0 +1,2778 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Issue Asset - EAM</title>
+
+
+    <!-- =====================================================
+         MAIN CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="./css/style.css"
+    >
+
+
+    <!-- =====================================================
+         SWEETALERT2
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* =====================================================
+           ASSET VIEW BUTTON
+        ====================================================== */
+
+        .action-column {
+            min-width: 112px;
+            width: 112px;
+            text-align: center;
+        }
+
+        .asset-view-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-width: 82px;
+            padding: 8px 12px;
+            border: 1px solid #d7e0ee;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #1d4ed8;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s ease;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, .05);
+        }
+
+        .asset-view-button:hover {
+            color: #ffffff;
+            background: #2563eb;
+            border-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(37, 99, 235, .22);
+        }
+
+        .view-icon {
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        /* =====================================================
+           ASSET DETAILS MODAL
+        ====================================================== */
+
+        .asset-details-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .asset-details-modal.show {
+            display: flex;
+        }
+
+        .asset-details-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, .62);
+            backdrop-filter: blur(4px);
+        }
+
+        .asset-details-dialog {
+            position: relative;
+            z-index: 1;
+            width: min(1180px, 96vw);
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f8fafc;
+            border: 1px solid rgba(255,255,255,.8);
+            border-radius: 18px;
+            box-shadow: 0 25px 70px rgba(15, 23, 42, .28);
+            animation: assetDialogIn .22s ease-out;
+        }
+
+        @keyframes assetDialogIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(.985);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .asset-details-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .asset-details-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .asset-details-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: #ffffff;
+            font-size: 21px;
+            box-shadow: 0 7px 18px rgba(37,99,235,.22);
+        }
+
+        .asset-details-eyebrow {
+            display: block;
+            margin-bottom: 3px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .asset-details-header h2 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 22px;
+            line-height: 1.2;
+        }
+
+        .asset-details-close {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 10px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .asset-details-close:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .asset-details-content {
+            overflow-y: auto;
+            padding: 20px 24px 24px;
+        }
+
+        .asset-details-summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .asset-summary-card {
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        .asset-summary-card span {
+            display: block;
+            margin-bottom: 5px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .asset-summary-card strong {
+            display: block;
+            overflow: hidden;
+            color: #0f172a;
+            font-size: 14px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .asset-summary-card.status strong {
+            color: #15803d;
+        }
+
+        .asset-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .asset-accordion-item {
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .035);
+        }
+
+        .asset-accordion-trigger {
+            width: 100%;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 13px 18px;
+            border: 0;
+            background: #ffffff;
+            color: #0f172a;
+            text-align: left;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .asset-accordion-trigger:hover {
+            background: #f8fafc;
+        }
+
+        .asset-accordion-item.open .asset-accordion-trigger {
+            background: linear-gradient(90deg, #eff6ff, #ffffff);
+        }
+
+        .accordion-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .accordion-icon {
+            width: 36px;
+            height: 36px;
+            flex: 0 0 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .accordion-left strong {
+            display: block;
+            font-size: 14px;
+            line-height: 1.25;
+        }
+
+        .accordion-left small {
+            display: block;
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .accordion-chevron {
+            color: #64748b;
+            font-size: 18px;
+            transition: transform .2s ease;
+        }
+
+        .asset-accordion-item.open .accordion-chevron {
+            transform: rotate(180deg);
+            color: #2563eb;
+        }
+
+        .asset-accordion-panel {
+            display: none;
+            padding: 0 18px 18px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .asset-accordion-item.open .asset-accordion-panel {
+            display: block;
+        }
+
+        .asset-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-top: 16px;
+        }
+
+        .asset-info-item {
+            min-height: 48px;
+            display: grid;
+            grid-template-columns: 155px minmax(0, 1fr);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .asset-info-item:nth-child(odd) {
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .asset-info-item.full {
+            grid-column: 1 / -1;
+            grid-template-columns: 155px minmax(0, 1fr);
+            border-right: 0;
+        }
+
+        .asset-info-item:last-child,
+        .asset-info-item:nth-last-child(2):nth-child(odd) {
+            border-bottom: 0;
+        }
+
+        .asset-info-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: #f8fafc;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .asset-info-value {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            padding: 10px 12px;
+            color: #1e3a5f;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .asset-info-value.empty {
+            color: #94a3b8;
+        }
+
+        .asset-info-value.status-value {
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        .detail-placeholder-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            padding-top: 16px;
+        }
+
+        .detail-placeholder-grid > div {
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .detail-placeholder-grid span {
+            display: block;
+            margin-bottom: 5px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .detail-placeholder-grid strong {
+            color: #0f172a;
+            font-size: 13px;
+        }
+
+        .empty-accordion-state {
+            margin-top: 16px;
+            padding: 18px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .asset-details-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 14px 24px;
+            border-top: 1px solid #e5e7eb;
+            background: #ffffff;
+        }
+
+        .asset-details-close-button {
+            min-width: 100px;
+            padding: 10px 18px;
+            border: 0;
+            border-radius: 9px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 12px rgba(37,99,235,.18);
+        }
+
+        .asset-details-close-button:hover {
+            background: #1d4ed8;
+        }
+
+        body.asset-modal-open {
+            overflow: hidden;
+        }
+
+        @media (max-width: 900px) {
+            .asset-details-modal {
+                padding: 10px;
+            }
+
+            .asset-details-dialog {
+                width: 100%;
+                max-height: 96vh;
+                border-radius: 14px;
+            }
+
+            .asset-details-summary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .asset-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-info-item,
+            .asset-info-item.full {
+                grid-template-columns: 135px minmax(0, 1fr);
+                border-right: 0;
+            }
+
+            .asset-info-item {
+                border-bottom: 1px solid #e2e8f0 !important;
+            }
+
+            .detail-placeholder-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .asset-details-header,
+            .asset-details-content,
+            .asset-details-footer {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .asset-details-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-details-header h2 {
+                font-size: 18px;
+            }
+
+            .asset-details-eyebrow {
+                display: none;
+            }
+
+            .asset-info-item,
+            .asset-info-item.full {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-info-label {
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .asset-view-button {
+                min-width: 72px;
+                padding: 7px 9px;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     GENERIC SIDEBAR
+========================================================== -->
+
+<div id="sidebar"></div>
+
+
+<!-- =========================================================
+     MAIN APPLICATION
+========================================================== -->
+
+<div class="main-content">
+
+
+    <!-- =====================================================
+         GENERIC HEADER
+    ====================================================== -->
+
+    <div id="header"></div>
+
+
+    <!-- =====================================================
+         PAGE CONTENT
+    ====================================================== -->
+
+    <main class="page-content">
+
+
+        <!-- =================================================
+             BREADCRUMB
+        ================================================== -->
+
+        <div class="page-breadcrumb">
+
+            <span>EAM</span>
+
+            <span>›</span>
+
+            <span>Issue</span>
+
+            <span>›</span>
+
+            <strong>Create New</strong>
+
+        </div>
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Issue Asset
+                </h1>
+
+                <p>
+                    Select assets and add them to the issue cart.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TOP TOOLBAR
+        ================================================== -->
+
+        <section class="create-toolbar">
+
+
+            <!-- Asset Status -->
+
+            <div class="asset-select-group">
+
+                <label for="assetStatus">
+                    Assets
+                </label>
+
+                <select id="assetStatus">
+
+                    <option value="stock">
+                        In Stock
+                    </option>
+
+                    <option value="all">
+                        All Assets
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Show Cart -->
+
+            <button
+                type="button"
+                class="create-action-button blue"
+                onclick="showCart()"
+            >
+
+                🛒
+                Show Cart
+
+            </button>
+
+
+            <!-- Empty Cart -->
+
+            <button
+                type="button"
+                class="create-action-button orange"
+                onclick="emptyCart()"
+            >
+
+                ⊗
+                Empty Cart
+
+            </button>
+
+
+            <!-- Issue Assets -->
+
+            <button
+                type="button"
+                class="create-action-button green"
+                onclick="issueAssetsFromCart()"
+            >
+
+                ✓
+                Issue Assets From Cart
+
+            </button>
+
+        </section>
+
+
+        <!-- =================================================
+             DIVIDER
+        ================================================== -->
+
+        <div class="create-divider"></div>
+
+
+        <!-- =================================================
+             FILTER SECTION
+        ================================================== -->
+
+        <section class="filter-card">
+
+
+            <!-- Search Type -->
+
+            <div class="filter-field">
+
+                <label for="assetSearchType">
+                    Search By
+                </label>
+
+                <select id="assetSearchType">
+
+                    <option value="assetName">
+                        Asset Name
+                    </option>
+
+                    <option value="assetTag">
+                        Asset Tag
+                    </option>
+
+                    <option value="serialNo">
+                        Serial No
+                    </option>
+
+                    <option value="manufacturer">
+                        Manufacturer
+                    </option>
+
+                    <option value="location">
+                        Location
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Search Value -->
+
+            <div class="filter-field filter-search">
+
+                <label for="assetSearchInput">
+                    Value
+                </label>
+
+                <input
+                    type="text"
+                    id="assetSearchInput"
+                    placeholder="Enter asset value..."
+                >
+
+            </div>
+
+
+            <!-- Filter -->
+
+            <button
+                type="button"
+                class="filter-button"
+                onclick="filterAssets()"
+            >
+
+                🔍
+                Filter
+
+            </button>
+
+
+            <!-- Reload -->
+
+            <button
+                type="button"
+                class="reload-button"
+                onclick="reloadAssets()"
+            >
+
+                ↻
+                Reload
+
+            </button>
+
+        </section>
+
+
+        <!-- =================================================
+             ASSET TABLE
+        ================================================== -->
+
+        <section class="table-card">
+
+
+            <!-- =================================================
+                 TABLE HEADER
+            ================================================== -->
+
+            <div class="table-header">
+
+
+                <div>
+
+                    <h2>
+                        Available Assets
+                    </h2>
+
+                    <span id="assetCount">
+                        0 Assets
+                    </span>
+
+                </div>
+
+
+                <div class="table-header-actions">
+
+                    <button
+                        type="button"
+                        class="small-action-button"
+                        onclick="addSelectedToCart()"
+                    >
+
+                        🛒
+                        Add To Cart
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 TABLE WRAPPER
+            ================================================== -->
+
+            <div class="table-wrapper">
+
+                <table class="asset-table">
+
+
+                    <!-- =================================================
+                         TABLE HEADER
+                    ================================================== -->
+
+                    <thead>
+
+                        <tr>
+
+
+                            <!-- Select All -->
+
+                            <th class="checkbox-column">
+
+                                <input
+                                    type="checkbox"
+                                    id="selectAllAssets"
+                                    onchange="selectAllAssets(this)"
+                                >
+
+                            </th>
+
+
+                            <th>
+                                Asset Name
+                            </th>
+
+
+                            <th>
+                                Asset Tag
+                            </th>
+
+
+                            <th>
+                                Serial No
+                            </th>
+
+
+                            <th>
+                                Model
+                            </th>
+
+
+                            <th>
+                                Manufacturer
+                            </th>
+
+
+                            <th>
+                                Location
+                            </th>
+
+
+                            <th>
+                                Stock Status
+                            </th>
+
+
+                            <th>
+                                ERP No
+                            </th>
+
+
+                            <th>
+                                Plate No
+                            </th>
+
+
+                            <th>
+                                Registration Date
+                            </th>
+
+
+                            <th>
+                                User
+                            </th>
+
+
+                            <th>
+                                Department
+                            </th>
+
+
+                            <th>
+                                Custodian
+                            </th>
+
+
+                            <th>
+                                Asset Type
+                            </th>
+
+                            <th class="action-column">
+                                Action
+                            </th>
+
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- =================================================
+                         TABLE BODY
+
+                         IMPORTANT:
+                         JavaScript will populate this section.
+                    ================================================== -->
+
+                    <tbody id="assetTableBody">
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+
+            <!-- =================================================
+                 PAGINATION
+            ================================================== -->
+
+            <div class="pagination">
+
+
+                <div class="pagination-buttons">
+
+                    <button type="button">
+                        «
+                    </button>
+
+                    <button type="button">
+                        ‹
+                    </button>
+
+                    <button
+                        type="button"
+                        class="active-page"
+                    >
+                        1
+                    </button>
+
+                    <button type="button">
+                        2
+                    </button>
+
+                    <button type="button">
+                        3
+                    </button>
+
+                    <button type="button">
+                        ›
+                    </button>
+
+                    <button type="button">
+                        »
+                    </button>
+
+                </div>
+
+
+                <div class="pagination-info">
+
+                    Showing
+
+                    <strong id="showingCount">
+                        0
+                    </strong>
+
+                    of
+
+                    <strong id="totalCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         ASSET DETAILS MODAL
+    ====================================================== -->
+
+    <div
+        id="assetDetailsModal"
+        class="asset-details-modal"
+        aria-hidden="true"
+    >
+        <div class="asset-details-overlay" onclick="closeAssetDetails()"></div>
+
+        <section
+            class="asset-details-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="assetDetailsTitle"
+        >
+            <div class="asset-details-header">
+                <div class="asset-details-heading">
+                    <div class="asset-details-icon">▦</div>
+                    <div>
+                        <span class="asset-details-eyebrow">Asset Management</span>
+                        <h2 id="assetDetailsTitle">Asset Details</h2>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    class="asset-details-close"
+                    onclick="closeAssetDetails()"
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+            </div>
+
+            <div class="asset-details-content">
+                <div class="asset-details-summary" id="assetDetailsSummary"></div>
+
+                <div class="asset-accordion" id="assetAccordion">
+
+                    <section class="asset-accordion-item open">
+                        <button
+                            type="button"
+                            class="asset-accordion-trigger"
+                            onclick="toggleAssetAccordion(this)"
+                            aria-expanded="true"
+                        >
+                            <span class="accordion-left">
+                                <span class="accordion-icon">▣</span>
+                                <span>
+                                    <strong>Asset Details</strong>
+                                    <small>Basic information and identification</small>
+                                </span>
+                            </span>
+                            <span class="accordion-chevron">⌃</span>
+                        </button>
+
+                        <div class="asset-accordion-panel">
+                            <div class="asset-info-grid" id="basicAssetInfo"></div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">↳</span>
+                                <span><strong>Parent Asset Details</strong><small>Parent asset relationship</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No parent asset information available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">↳</span>
+                                <span><strong>Child Asset Details</strong><small>Assets linked below this asset</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No child assets available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">◉</span>
+                                <span><strong>Asset Stakeholder</strong><small>User, department and custodian information</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="detail-placeholder-grid">
+                                <div><span>User</span><strong id="stakeholderUser">-</strong></div>
+                                <div><span>Department</span><strong id="stakeholderDepartment">-</strong></div>
+                                <div><span>Custodian</span><strong id="stakeholderCustodian">-</strong></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">₹</span>
+                                <span><strong>Asset Finance Info</strong><small>Financial and accounting information</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">Finance information is not available for this asset.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">✓</span>
+                                <span><strong>Warranty Details</strong><small>Warranty and coverage information</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No warranty details available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">¤</span>
+                                <span><strong>Custom Cost</strong><small>Additional cost information</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No custom cost information available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">⚙</span>
+                                <span><strong>Maintenance Details</strong><small>Maintenance status and history</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No maintenance details available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">◌</span>
+                                <span><strong>Asset Meter Readings</strong><small>Meter and usage readings</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No meter readings available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">▤</span>
+                                <span><strong>WorkOrder Details</strong><small>Related work orders</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No work orders are linked to this asset.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">▱</span>
+                                <span><strong>Asset Contract Details</strong><small>Contract information</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No contract details available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">▧</span>
+                                <span><strong>Asset Spare Details</strong><small>Spare parts linked to this asset</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No spare details available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">▧</span>
+                                <span><strong>Issued Spare Details</strong><small>Issued spare information</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No issued spare details available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">$</span>
+                                <span><strong>Fund Sources</strong><small>Funding information</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No fund source information available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">⌕</span>
+                                <span><strong>Attachment</strong><small>Documents and files</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No attachments available.</div>
+                        </div>
+                    </section>
+
+                    <section class="asset-accordion-item">
+                        <button type="button" class="asset-accordion-trigger" onclick="toggleAssetAccordion(this)" aria-expanded="false">
+                            <span class="accordion-left">
+                                <span class="accordion-icon">⌕</span>
+                                <span><strong>GRN Attachments</strong><small>Goods receipt documents</small></span>
+                            </span>
+                            <span class="accordion-chevron">⌄</span>
+                        </button>
+                        <div class="asset-accordion-panel">
+                            <div class="empty-accordion-state">No GRN attachments available.</div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <div class="asset-details-footer">
+                <button type="button" class="asset-details-close-button" onclick="closeAssetDetails()">
+                    Close
+                </button>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <div id="footer"></div>
+
+
+</div>
+
+
+<!-- =========================================================
+     GENERIC LAYOUT JS
+========================================================== -->
+
+<script src="./js/layout.js"></script>
+
+
+<!-- =========================================================
+     ASSET DATA + APPLICATION LOGIC
+========================================================== -->
+
+<script>
+
+
+// =========================================================
+// AVAILABLE ASSET DATA
+// =========================================================
+
+const availableAssets = [
+
+    {
+        assetName: "Desktop",
+        assetTag: "ITE-0001276",
+        serialNo: "",
+        model: "",
+        manufacturer: "",
+        location:
+            "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+        stockStatus: "In Stock",
+        erpNo: "",
+        plateNo: "",
+        registrationDate: "",
+        user: "",
+        department: "",
+        custodian:
+            "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "Dell",
+        assetTag: "FUN-0001616",
+        serialNo: "Dell01",
+        model: "",
+        manufacturer: "",
+        location: "Ad Dakhliyah",
+        stockStatus: "In Stock",
+        erpNo: "",
+        plateNo: "",
+        registrationDate: "",
+        user: "",
+        department: "",
+        custodian:
+            "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "Desktop",
+        assetTag: "ITE-0001272",
+        serialNo: "",
+        model: "",
+        manufacturer: "",
+        location:
+            "Ad Dakhliyah-Adam TS-Admin building-Female Toilet",
+        stockStatus: "In Stock",
+        erpNo: "",
+        plateNo: "",
+        registrationDate: "",
+        user: "",
+        department: "",
+        custodian: "",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "AC",
+        assetTag: "OFE-0000409",
+        serialNo: "",
+        model: "samsung24",
+        manufacturer: "SAMSUNG",
+        location: "Ad Dakhliyah",
+        stockStatus: "In Stock",
+        erpNo: "1",
+        plateNo: "4456",
+        registrationDate: "29-Mar-2021",
+        user: "",
+        department: "",
+        custodian: "",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "KEYBOARD",
+        assetTag: "ITE-0001263",
+        serialNo: "",
+        model: "sam-098",
+        manufacturer: "ASUS",
+        location:
+            "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+        stockStatus: "In Stock",
+        erpNo: "01",
+        plateNo: "5665",
+        registrationDate: "27-Mar-2021",
+        user: "",
+        department: "",
+        custodian: "",
+        assetType: "Capitalized"
+    }
+
+];
+
+
+// =========================================================
+// CART
+// =========================================================
+
+let cart = [];
+
+
+// =========================================================
+// DISPLAY ASSETS
+// =========================================================
+
+function displayAssets(data) {
+
+
+    const tbody =
+        document.getElementById(
+            "assetTableBody"
+        );
+
+
+    if (!tbody) {
+
+        console.error(
+            "assetTableBody element not found."
+        );
+
+        return;
+
+    }
+
+
+    // Clear existing rows
+
+    tbody.innerHTML = "";
+
+
+    // =====================================================
+    // NO DATA
+    // =====================================================
+
+    if (!data || data.length === 0) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="16"
+                    class="no-assets-cell"
+                >
+
+                    <div class="no-assets-icon">
+                        📦
+                    </div>
+
+                    <strong>
+                        No assets found
+                    </strong>
+
+                    <span>
+                        Try changing your search criteria.
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `;
+
+
+        updateAssetCount(0);
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // CREATE ROWS
+    // =====================================================
+
+    data.forEach(function (asset) {
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+
+            <!-- CHECKBOX -->
+
+            <td class="checkbox-column">
+
+                <input
+                    type="checkbox"
+                    class="asset-checkbox"
+                    data-asset-tag="${escapeHtml(asset.assetTag)}"
+                >
+
+            </td>
+
+
+            <!-- ASSET NAME -->
+
+            <td>
+
+                <strong>
+                    ${escapeHtml(asset.assetName)}
+                </strong>
+
+            </td>
+
+
+            <!-- ASSET TAG -->
+
+            <td>
+
+                <span class="asset-tag-text">
+
+                    ${escapeHtml(asset.assetTag)}
+
+                </span>
+
+            </td>
+
+
+            <!-- SERIAL NO -->
+
+            <td>
+
+                ${displayValue(asset.serialNo)}
+
+            </td>
+
+
+            <!-- MODEL -->
+
+            <td>
+
+                ${displayValue(asset.model)}
+
+            </td>
+
+
+            <!-- MANUFACTURER -->
+
+            <td>
+
+                ${displayValue(asset.manufacturer)}
+
+            </td>
+
+
+            <!-- LOCATION -->
+
+            <td class="location-cell">
+
+                ${displayValue(asset.location)}
+
+            </td>
+
+
+            <!-- STOCK STATUS -->
+
+            <td>
+
+                <span class="stock-badge">
+
+                    ${escapeHtml(asset.stockStatus)}
+
+                </span>
+
+            </td>
+
+
+            <!-- ERP NO -->
+
+            <td>
+
+                ${displayValue(asset.erpNo)}
+
+            </td>
+
+
+            <!-- PLATE NO -->
+
+            <td>
+
+                ${displayValue(asset.plateNo)}
+
+            </td>
+
+
+            <!-- REGISTRATION DATE -->
+
+            <td>
+
+                ${displayValue(asset.registrationDate)}
+
+            </td>
+
+
+            <!-- USER -->
+
+            <td>
+
+                ${displayValue(asset.user)}
+
+            </td>
+
+
+            <!-- DEPARTMENT -->
+
+            <td>
+
+                ${displayValue(asset.department)}
+
+            </td>
+
+
+            <!-- CUSTODIAN -->
+
+            <td class="custodian-cell">
+
+                ${displayValue(asset.custodian)}
+
+            </td>
+
+
+            <!-- ASSET TYPE -->
+
+            <td>
+
+                ${displayValue(asset.assetType)}
+
+            </td>
+
+            <!-- VIEW -->
+
+            <td class="action-column">
+
+                <button
+                    type="button"
+                    class="asset-view-button"
+                    onclick="viewAssetDetails('${escapeJs(asset.assetTag)}')"
+                    title="View asset details"
+                    aria-label="View asset details"
+                >
+                    <span class="view-icon">◉</span>
+                    View
+                </button>
+
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    // =====================================================
+    // UPDATE COUNTS
+    // =====================================================
+
+    updateAssetCount(data.length);
+
+}
+
+
+// =========================================================
+// DISPLAY VALUE HELPER
+// =========================================================
+
+function displayValue(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+    ) {
+
+        return `
+            <span class="empty-value">
+                -
+            </span>
+        `;
+
+    }
+
+
+    return escapeHtml(String(value));
+
+}
+
+
+// =========================================================
+// HTML ESCAPE
+// =========================================================
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// =========================================================
+// UPDATE ASSET COUNT
+// =========================================================
+
+function updateAssetCount(count) {
+
+
+    const assetCount =
+        document.getElementById(
+            "assetCount"
+        );
+
+
+    const showingCount =
+        document.getElementById(
+            "showingCount"
+        );
+
+
+    const totalCount =
+        document.getElementById(
+            "totalCount"
+        );
+
+
+    if (assetCount) {
+
+        assetCount.textContent =
+            `${count} Assets`;
+
+    }
+
+
+    if (showingCount) {
+
+        if (count === 0) {
+
+            showingCount.textContent = "0";
+
+        } else {
+
+            showingCount.textContent =
+                `1-${count}`;
+
+        }
+
+    }
+
+
+    if (totalCount) {
+
+        totalCount.textContent =
+            availableAssets.length;
+
+    }
+
+}
+
+
+// =========================================================
+// SELECT ALL ASSETS
+// =========================================================
+
+function selectAllAssets(source) {
+
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".asset-checkbox"
+        );
+
+
+    checkboxes.forEach(
+        function (checkbox) {
+
+            checkbox.checked =
+                source.checked;
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// ADD SELECTED ASSETS TO CART
+// =========================================================
+
+async function addSelectedToCart() {
+
+
+    const selected =
+        document.querySelectorAll(
+            ".asset-checkbox:checked"
+        );
+
+
+    // =====================================================
+    // NOTHING SELECTED
+    // =====================================================
+
+    if (selected.length === 0) {
+
+
+        await Swal.fire({
+
+            icon: "warning",
+
+            title: "No Asset Selected",
+
+            text:
+                "Please select at least one asset to add to the cart.",
+
+            confirmButtonText: "OK",
+
+            confirmButtonColor: "#2563eb",
+
+            customClass: {
+
+                popup:
+                    "eam-swal-popup",
+
+                confirmButton:
+                    "eam-swal-confirm"
+
+            }
+
+        });
+
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // FIND SELECTED ASSETS
+    // =====================================================
+
+    const selectedAssets = [];
+
+
+    selected.forEach(
+        function (checkbox) {
+
+
+            const assetTag =
+                checkbox.dataset.assetTag;
+
+
+            const asset =
+                availableAssets.find(
+                    function (item) {
+
+                        return (
+                            item.assetTag ===
+                            assetTag
+                        );
+
+                    }
+                );
+
+
+            if (asset) {
+
+                selectedAssets.push(asset);
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // CONFIRMATION
+    // =====================================================
+
+    const result =
+        await Swal.fire({
+
+            icon: "question",
+
+            title: "Add Assets to Cart?",
+
+            html: `
+
+                <div class="swal-message">
+
+                    Are you sure you want to
+                    <strong>
+                        Add to Cart
+                    </strong>
+                    selected Assets?
+
+                </div>
+
+                <div class="swal-selected-count">
+
+                    ${selectedAssets.length}
+
+                    asset${selectedAssets.length !== 1 ? "s" : ""}
+
+                    selected
+
+                </div>
+
+            `,
+
+            showCancelButton: true,
+
+            confirmButtonText:
+                "Yes, Add to Cart",
+
+            cancelButtonText:
+                "Cancel",
+
+            confirmButtonColor:
+                "#2563eb",
+
+            cancelButtonColor:
+                "#64748b",
+
+            reverseButtons: true,
+
+            customClass: {
+
+                popup:
+                    "eam-swal-popup",
+
+                confirmButton:
+                    "eam-swal-confirm",
+
+                cancelButton:
+                    "eam-swal-cancel"
+
+            }
+
+        });
+
+
+    // =====================================================
+    // CANCEL
+    // =====================================================
+
+    if (!result.isConfirmed) {
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // ADD TO CART
+    // =====================================================
+
+    let addedCount = 0;
+
+    let alreadyInCartCount = 0;
+
+
+    selectedAssets.forEach(
+        function (asset) {
+
+
+            const alreadyExists =
+                cart.some(
+                    function (item) {
+
+                        return (
+                            item.assetTag ===
+                            asset.assetTag
+                        );
+
+                    }
+                );
+
+
+            if (!alreadyExists) {
+
+                cart.push(asset);
+
+                addedCount++;
+
+            } else {
+
+                alreadyInCartCount++;
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // RESET CHECKBOXES
+    // =====================================================
+
+    const selectAll =
+        document.getElementById(
+            "selectAllAssets"
+        );
+
+
+    if (selectAll) {
+
+        selectAll.checked = false;
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".asset-checkbox"
+        )
+        .forEach(
+            function (checkbox) {
+
+                checkbox.checked =
+                    false;
+
+            }
+        );
+
+
+    // =====================================================
+    // SUCCESS MESSAGE
+    // =====================================================
+
+    let successMessage = `
+
+        <strong>
+            ${addedCount}
+            asset${addedCount !== 1 ? "s" : ""}
+        </strong>
+
+        successfully added to your cart.
+
+    `;
+
+
+    if (alreadyInCartCount > 0) {
+
+        successMessage += `
+
+            <div class="swal-warning-text">
+
+                ${alreadyInCartCount}
+
+                asset${alreadyInCartCount !== 1 ? "s" : ""}
+
+                already existed in the cart.
+
+            </div>
+
+        `;
+
+    }
+
+
+    await Swal.fire({
+
+        icon: "success",
+
+        title: "Added to Cart",
+
+        html: successMessage,
+
+        confirmButtonText: "OK",
+
+        confirmButtonColor: "#16a34a",
+
+        customClass: {
+
+            popup:
+                "eam-swal-popup",
+
+            confirmButton:
+                "eam-swal-success"
+
+        }
+
+    });
+
+}
+
+
+// =========================================================
+// SHOW CART
+// =========================================================
+
+async function showCart() {
+
+
+    // =====================================================
+    // CART EMPTY
+    // =====================================================
+
+    if (cart.length === 0) {
+
+
+        await Swal.fire({
+
+            icon: "info",
+
+            title: "Cart is Empty",
+
+            text:
+                "There are no assets in your cart.",
+
+            confirmButtonText: "OK",
+
+            confirmButtonColor:
+                "#2563eb",
+
+            customClass: {
+
+                popup:
+                    "eam-swal-popup"
+
+            }
+
+        });
+
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // CREATE CART ROWS
+    // =====================================================
+
+    let cartRows = "";
+
+
+    cart.forEach(
+        function (asset, index) {
+
+
+            cartRows += `
+
+                <tr>
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+
+                        <strong>
+                            ${escapeHtml(asset.assetTag)}
+                        </strong>
+
+                    </td>
+
+                    <td>
+                        ${escapeHtml(asset.assetName)}
+                    </td>
+
+                    <td>
+                        ${displayValue(asset.manufacturer)}
+                    </td>
+
+                    <td>
+                        ${displayValue(asset.location)}
+                    </td>
+
+                    <td>
+
+                        <span class="swal-stock-badge">
+
+                            ${escapeHtml(asset.stockStatus)}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    // =====================================================
+    // SHOW CART
+    // =====================================================
+
+    await Swal.fire({
+
+        title: "Asset Cart",
+
+        html: `
+
+            <div class="cart-summary">
+
+                <span class="cart-summary-label">
+                    Items in Cart
+                </span>
+
+                <span class="cart-summary-count">
+                    ${cart.length}
+                </span>
+
+            </div>
+
+
+            <div class="swal-cart-table-wrapper">
+
+                <table class="swal-cart-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Asset Tag
+                            </th>
+
+                            <th>
+                                Asset Name
+                            </th>
+
+                            <th>
+                                Manufacturer
+                            </th>
+
+                            <th>
+                                Location
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${cartRows}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        `,
+
+        width: "950px",
+
+        confirmButtonText: "OK",
+
+        confirmButtonColor:
+            "#2563eb",
+
+        customClass: {
+
+            popup:
+                "eam-swal-cart-popup",
+
+            confirmButton:
+                "eam-swal-confirm"
+
+        }
+
+    });
+
+}
+
+
+// =========================================================
+// EMPTY CART
+// =========================================================
+
+async function emptyCart() {
+
+
+    // =====================================================
+    // CART ALREADY EMPTY
+    // =====================================================
+
+    if (cart.length === 0) {
+
+
+        await Swal.fire({
+
+            icon: "info",
+
+            title: "Cart is Already Empty",
+
+            text:
+                "There are no assets to remove.",
+
+            confirmButtonText: "OK",
+
+            confirmButtonColor:
+                "#2563eb",
+
+            customClass: {
+
+                popup:
+                    "eam-swal-popup"
+
+            }
+
+        });
+
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // CONFIRM EMPTY CART
+    // =====================================================
+
+    const result =
+        await Swal.fire({
+
+            icon: "warning",
+
+            title: "Empty Cart?",
+
+            html: `
+
+                Are you sure you want to remove
+
+                <strong>
+
+                    all ${cart.length}
+
+                    selected asset${cart.length !== 1 ? "s" : ""}
+
+                </strong>
+
+                from the cart?
+
+            `,
+            showCancelButton: true,
+            confirmButtonText:
+                "Yes, Empty Cart",
+            cancelButtonText:
+                "Cancel",
+            confirmButtonColor:
+                "#dc2626",
+            cancelButtonColor:
+                "#64748b",
+            reverseButtons: true,
+            customClass: {
+                popup:
+                    "eam-swal-popup",
+                confirmButton:
+                    "eam-swal-danger",
+                cancelButton:
+                    "eam-swal-cancel"
+            }
+
+        });
+    if (!result.isConfirmed) {
+
+        return;
+
+    }
+    cart = [];
+    const selectAll =
+        document.getElementById(
+            "selectAllAssets"
+        );
+    if (selectAll) {
+
+        selectAll.checked = false;
+
+    }
+    document
+        .querySelectorAll(
+            ".asset-checkbox"
+        )
+        .forEach(
+            function (checkbox) {
+
+                checkbox.checked = false;
+
+            }
+        );
+    await Swal.fire({
+        icon: "success",
+        title: "Cart is Empty",
+        text:
+            "All selected assets have been removed from the cart.",
+        confirmButtonText: "OK",
+        confirmButtonColor:
+            "#16a34a",
+        customClass: {
+            popup:
+                "eam-swal-popup",
+
+            confirmButton:
+                "eam-swal-success"
+
+        }
+    });
+}
+
+async function issueAssetsFromCart() {
+    if (cart.length === 0) {
+        await Swal.fire({
+            icon: "warning",
+            title: "Cart is Empty",
+            text:
+                "Please add assets to the cart before continuing.",
+            confirmButtonText: "OK",
+            confirmButtonColor:
+                "#2563eb",
+            customClass: {
+                popup:
+                    "eam-swal-popup"
+            }
+        });
+        return;
+
+    }
+    sessionStorage.setItem(
+        "issueCart",
+        JSON.stringify(cart)
+    );
+    window.location.href =
+        "issue-form.html";
+
+}
+
+function filterAssets() {
+    const type =
+        document.getElementById(
+            "assetSearchType"
+        ).value;
+
+    const value =
+        document.getElementById(
+            "assetSearchInput"
+        ).value
+        .toLowerCase()
+        .trim();
+
+    if (!value) {
+        displayAssets(
+            availableAssets
+        );
+        return;
+    }
+
+    const filtered =
+        availableAssets.filter(
+            function (asset) {
+                return String(
+                    asset[type] || ""
+                )
+                .toLowerCase()
+                .includes(value);
+            }
+        );
+
+    displayAssets(
+        filtered
+    );
+
+    const selectAll =
+        document.getElementById(
+            "selectAllAssets"
+        );
+
+    if (selectAll) {
+        selectAll.checked = false;
+    }
+}
+
+function reloadAssets() {
+
+    const searchInput =
+        document.getElementById(
+            "assetSearchInput"
+        );
+
+
+    if (searchInput) {
+
+        searchInput.value = "";
+
+    }
+
+    const searchType =
+        document.getElementById(
+            "assetSearchType"
+        );
+
+    if (searchType) {
+
+        searchType.value =
+            "assetName";
+
+    }
+
+    displayAssets(
+        availableAssets
+    );
+
+    const selectAll =
+        document.getElementById(
+            "selectAllAssets"
+        );
+
+    if (selectAll) {
+        selectAll.checked = false;
+    }
+}
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+
+        if (
+            event.key === "Enter" &&
+            document.activeElement &&
+            document.activeElement.id ===
+            "assetSearchInput"
+        ) {
+
+            filterAssets();
+
+        }
+
+    }
+);
+
+
+function escapeJs(value) {
+    return String(value ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
+}
+
+
+function assetDetailValue(value) {
+    if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+    ) {
+        return `<span class="empty">-</span>`;
+    }
+
+    return escapeHtml(String(value));
+}
+
+
+function createAssetInfoItem(label, value, full = false, status = false) {
+    const classes = [
+        "asset-info-item",
+        full ? "full" : ""
+    ].filter(Boolean).join(" ");
+
+    const valueClass = [
+        "asset-info-value",
+        (!value || String(value).trim() === "") ? "empty" : "",
+        status ? "status-value" : ""
+    ].filter(Boolean).join(" ");
+
+    return `
+        <div class="${classes}">
+            <div class="asset-info-label">${escapeHtml(label)}</div>
+            <div class="${valueClass}">
+                ${assetDetailValue(value)}
+            </div>
+        </div>
+    `;
+}
+
+
+function viewAssetDetails(assetTag) {
+    const asset = availableAssets.find(function (item) {
+        return item.assetTag === assetTag;
+    });
+
+    if (!asset) {
+        return;
+    }
+
+    const modal = document.getElementById("assetDetailsModal");
+    const title = document.getElementById("assetDetailsTitle");
+    const summary = document.getElementById("assetDetailsSummary");
+    const basicInfo = document.getElementById("basicAssetInfo");
+
+    title.textContent = `${asset.assetName || "Asset"} Details`;
+
+    summary.innerHTML = `
+        <div class="asset-summary-card">
+            <span>Asset Name</span>
+            <strong>${assetDetailValue(asset.assetName)}</strong>
+        </div>
+
+        <div class="asset-summary-card">
+            <span>Asset Tag</span>
+            <strong>${assetDetailValue(asset.assetTag)}</strong>
+        </div>
+
+        <div class="asset-summary-card">
+            <span>Serial No</span>
+            <strong>${assetDetailValue(asset.serialNo)}</strong>
+        </div>
+
+        <div class="asset-summary-card status">
+            <span>Stock Status</span>
+            <strong>${assetDetailValue(asset.stockStatus)}</strong>
+        </div>
+    `;
+
+    basicInfo.innerHTML = [
+        createAssetInfoItem("Branch", asset.branch || "BEAH"),
+        createAssetInfoItem("Account Head", asset.accountHead || "FURNITURE"),
+
+        createAssetInfoItem("Asset Class", asset.assetClass || asset.manufacturer),
+        createAssetInfoItem("Type", asset.type || "General"),
+
+        createAssetInfoItem("Asset Name", asset.assetName),
+        createAssetInfoItem("Serial No", asset.serialNo),
+
+        createAssetInfoItem("Asset Tag", asset.assetTag),
+        createAssetInfoItem("Asset Badge", asset.assetBadge || asset.assetTag),
+
+        createAssetInfoItem("Manufacturer", asset.manufacturer),
+        createAssetInfoItem("Manufacturer Year", asset.manufacturerYear),
+
+        createAssetInfoItem("Description", asset.description || asset.assetName),
+        createAssetInfoItem("Maintainable", asset.maintainable || "Yes"),
+
+        createAssetInfoItem("Model", asset.model),
+        createAssetInfoItem("Registration Date", asset.registrationDate),
+
+        createAssetInfoItem("Criticality", asset.criticality || "MEDIUM"),
+        createAssetInfoItem("Stock Status", asset.stockStatus, false, true),
+
+        createAssetInfoItem("ERP No", asset.erpNo),
+        createAssetInfoItem("Plate No", asset.plateNo),
+
+        createAssetInfoItem("Location Path", asset.location, true),
+        createAssetInfoItem("Location Description", asset.locationDescription, true),
+        createAssetInfoItem("Picture", asset.picture || "No picture available", true)
+    ].join("");
+
+    document.getElementById("stakeholderUser").textContent =
+        asset.user || "-";
+
+    document.getElementById("stakeholderDepartment").textContent =
+        asset.department || "-";
+
+    document.getElementById("stakeholderCustodian").textContent =
+        asset.custodian || "-";
+
+  
+    document.querySelectorAll(".asset-accordion-item").forEach(function (item) {
+        item.classList.remove("open");
+
+        const trigger = item.querySelector(".asset-accordion-trigger");
+
+        if (trigger) {
+            trigger.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    const firstAccordion =
+        document.querySelector(".asset-accordion-item");
+
+    if (firstAccordion) {
+        firstAccordion.classList.add("open");
+
+        const trigger =
+            firstAccordion.querySelector(".asset-accordion-trigger");
+
+        if (trigger) {
+            trigger.setAttribute("aria-expanded", "true");
+        }
+    }
+
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("asset-modal-open");
+}
+
+
+function toggleAssetAccordion(button) {
+    const item = button.closest(".asset-accordion-item");
+
+    if (!item) {
+        return;
+    }
+
+    const isOpen = item.classList.contains("open");
+
+    item.classList.toggle("open", !isOpen);
+    button.setAttribute(
+        "aria-expanded",
+        String(!isOpen)
+    );
+}
+
+
+function closeAssetDetails() {
+    const modal =
+        document.getElementById("assetDetailsModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("asset-modal-open");
+}
+
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeAssetDetails();
+    }
+});
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        displayAssets(
+            availableAssets
+        );
+
+    }
+);
+</script>
+</body>
+</html>
