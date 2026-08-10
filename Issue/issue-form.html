@@ -160,10 +160,12 @@
         }
 
         .issue-actions {
-            display: flex;
-            gap: 10px;
-            padding: 0 24px 24px;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px 24px;
+}
 
         .form-button {
             min-width: 105px;
@@ -207,6 +209,10 @@
         /* =========================================================
            CART
         ========================================================= */
+
+        .cart-actions-card {
+            margin-top: 16px;
+        }
 
         .cart-section {
             margin-top: 22px;
@@ -483,6 +489,11 @@
         }
 
         @media (max-width: 900px) {
+            .issue-actions {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
             .issue-form-grid {
                 grid-template-columns: 1fr;
             }
@@ -879,43 +890,9 @@
 
                 <!-- FORM ACTIONS -->
 
-                <div class="issue-actions">
-
-                    <button
-                        type="button"
-                        id="saveButton"
-                        class="form-button primary"
-                        disabled
-                        onclick="saveIssue()"
-                    >
-                        Save
-                    </button>
-
-                    <button
-                        type="button"
-                        class="form-button secondary"
-                        onclick="cancelIssue()"
-                    >
-                        Cancel
-                    </button>
-
-                    <button
-                        type="button"
-                        class="form-button outline"
-                        onclick="goBackToCreate()"
-                    >
-                        Go Back
-                    </button>
-
-                </div>
+                
 
             </section>
-
-
-            <!-- =====================================================
-                 CART ITEMS
-            ====================================================== -->
-
             <section class="cart-section">
 
                 <div class="cart-section-header">
@@ -945,6 +922,48 @@
                 ></div>
 
             </section>
+
+            <section class="issue-card cart-actions-card">
+                <div class="issue-actions">
+                    
+
+                    <button
+                        type="button"
+                        id="saveButton"
+                        class="form-button primary"
+                        disabled
+                        onclick="saveIssue()"
+                    >
+                        Save
+                    </button>
+
+                    <button
+                        type="button"
+                        class="form-button secondary"
+                        onclick="cancelIssue()"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="form-button outline"
+                        onclick="goBackToCreate()"
+                    >
+                        Go Back
+                    </button>
+
+                
+                </div>
+            </section>
+
+
+
+            <!-- =====================================================
+                 CART ITEMS
+            ====================================================== -->
+
+            
 
         </div>
 
@@ -2431,17 +2450,13 @@
             return "";
 
         }
-
-
         return String(value)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
-
 </script>
 
 </body>

@@ -513,6 +513,399 @@
                 padding: 7px 9px;
             }
         }
+
+        /* =====================================================
+           MODERN ASSET FILTERS
+        ====================================================== */
+        .asset-filter-card {
+            margin: 0 0 20px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, .05);
+        }
+
+        .asset-filter-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .asset-filter-eyebrow {
+            display: block;
+            margin-bottom: 4px;
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .asset-filter-header h2 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 18px;
+            line-height: 1.25;
+        }
+
+        .asset-filter-header p {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .filter-result-hint {
+            flex: 0 0 auto;
+            padding: 8px 11px;
+            border: 1px solid #dbeafe;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .asset-filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .asset-filter-field {
+            min-width: 0;
+        }
+
+        .asset-filter-field label {
+            display: block;
+            margin: 0 0 7px;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .asset-filter-field select,
+        .asset-filter-field input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #d8e1ec;
+            border-radius: 10px;
+            outline: none;
+            background: #fff;
+            color: #0f172a;
+            font: inherit;
+            font-size: 13px;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .asset-filter-field select {
+            padding: 0 36px 0 12px;
+            cursor: pointer;
+        }
+
+        .asset-filter-field input {
+            padding: 0 42px 0 36px;
+        }
+
+        .asset-filter-field select:hover,
+        .asset-filter-field input:hover {
+            border-color: #b8c7db;
+        }
+
+        .asset-filter-field select:focus,
+        .asset-filter-field input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .asset-select-wrap,
+        .asset-common-search-wrap,
+        .asset-date-wrap {
+            position: relative;
+        }
+
+        .asset-common-search-wrap .asset-search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            z-index: 1;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .asset-common-search-wrap .search-help-button {
+            position: absolute;
+            right: 7px;
+            top: 50%;
+            z-index: 2;
+            width: 27px;
+            height: 27px;
+            transform: translateY(-50%);
+            display: grid;
+            place-items: center;
+            border: 1px solid #cbd5e1;
+            border-radius: 50%;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: help;
+        }
+
+        .search-help-button:hover {
+            border-color: #93c5fd;
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .search-help-tooltip {
+            position: absolute;
+            right: -8px;
+            bottom: calc(100% + 10px);
+            width: 190px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border: 1px solid #dbe4f0;
+            border-radius: 10px;
+            background: #0f172a;
+            color: #e2e8f0;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, .18);
+            font-size: 11px;
+            line-height: 1.4;
+            text-align: left;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(5px);
+            transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+            pointer-events: none;
+        }
+
+        .search-help-tooltip::after {
+            content: "";
+            position: absolute;
+            right: 15px;
+            bottom: -6px;
+            width: 11px;
+            height: 11px;
+            background: #0f172a;
+            transform: rotate(45deg);
+        }
+
+        .search-help-tooltip strong {
+            margin-bottom: 2px;
+            color: #ffffff;
+            font-size: 12px;
+        }
+
+        .search-help-tooltip span::before {
+            content: "•";
+            margin-right: 6px;
+            color: #60a5fa;
+        }
+
+        .search-help-button:hover .search-help-tooltip,
+        .search-help-button:focus-visible .search-help-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .asset-date-wrap .asset-date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .asset-date-wrap input {
+            padding-left: 36px;
+            padding-right: 12px;
+        }
+
+        .asset-filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 9px;
+            margin-top: 16px;
+            padding-top: 15px;
+            border-top: 1px solid #eef2f7;
+        }
+
+        .modern-filter-button,
+        .modern-reload-button {
+            min-width: 102px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .modern-filter-button {
+            border: 1px solid #2563eb;
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 5px 12px rgba(37, 99, 235, .18);
+        }
+
+        .modern-filter-button:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .modern-reload-button {
+            border: 1px solid #d8e1ec;
+            background: #fff;
+            color: #475569;
+        }
+
+        .modern-reload-button:hover {
+            border-color: #c0ccdb;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        @media (max-width: 1100px) {
+            .asset-filter-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .asset-filter-card {
+                padding: 15px;
+                border-radius: 13px;
+            }
+
+            .asset-filter-header {
+                flex-direction: column;
+                margin-bottom: 15px;
+            }
+
+            .filter-result-hint {
+                align-self: flex-start;
+            }
+
+            .asset-filter-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .asset-filter-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .modern-filter-button,
+            .modern-reload-button {
+                width: 100%;
+            }
+
+            .search-help-tooltip {
+                right: -4px;
+                width: 175px;
+            }
+        }
+
+        @media (hover: none) {
+            .search-help-tooltip {
+                display: none;
+            }
+
+            .search-help-button:focus-visible .search-help-tooltip {
+                display: flex;
+            }
+        }
+
+        /* =====================================================
+           MORE / LESS ASSET FILTERS
+        ====================================================== */
+
+        /* =====================================================
+           SHOW CART COUNT
+        ====================================================== */
+
+        .show-cart-button {
+            position: relative;
+        }
+
+        .cart-count-badge {
+            min-width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid rgba(37, 99, 235, .18);
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .show-cart-button:hover .cart-count-badge {
+            background: #eff6ff;
+        }
+
+        .asset-filter-toggle-button {
+            min-width: 102px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0 13px;
+            border: 1px solid #d8e1ec;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .asset-filter-toggle-button:hover {
+            border-color: #b8c7db;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .asset-filter-toggle-icon {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .asset-filter-grid.filters-hidden {
+            display: none;
+        }
+
+        @media (max-width: 700px) {
+            .asset-filter-toggle-button {
+                width: 100%;
+            }
+        }
+
     </style>
 
 </head>
@@ -623,41 +1016,12 @@
 
             <button
                 type="button"
-                class="create-action-button blue"
+                class="create-action-button blue show-cart-button"
                 onclick="showCart()"
             >
-
                 🛒
-                Show Cart
-
-            </button>
-
-
-            <!-- Empty Cart -->
-
-            <button
-                type="button"
-                class="create-action-button orange"
-                onclick="emptyCart()"
-            >
-
-                ⊗
-                Empty Cart
-
-            </button>
-
-
-            <!-- Issue Assets -->
-
-            <button
-                type="button"
-                class="create-action-button green"
-                onclick="issueAssetsFromCart()"
-            >
-
-                ✓
-                Issue Assets From Cart
-
+                <span>Show Cart</span>
+                <span id="cartCountBadge" class="cart-count-badge">0</span>
             </button>
 
         </section>
@@ -674,87 +1038,120 @@
              FILTER SECTION
         ================================================== -->
 
-        <section class="filter-card">
+        <section class="asset-filter-card" aria-label="Asset filters">
 
+            <div class="asset-filter-header">
+                <div>
+                    <span class="asset-filter-eyebrow">Asset Search</span>
+                    <h2>Find Assets</h2>
+                    <p>Use one or more filters to narrow down the available assets.</p>
+                </div>
+                <div class="filter-result-hint" id="filterResultHint">All assets</div>
+            </div>
 
-            <!-- Search Type -->
+            <div class="asset-filter-grid" id="assetFilterGrid">
 
-            <div class="filter-field">
+                <div class="asset-filter-field">
+                    <label for="assetNameFilter">Asset Name</label>
+                    <div class="asset-select-wrap">
+                        <select id="assetNameFilter">
+                            <option value="">All Asset Names</option>
+                        </select>
+                    </div>
+                </div>
 
-                <label for="assetSearchType">
-                    Search By
-                </label>
+                <div class="asset-filter-field">
+                    <label for="manufacturerFilter">Manufacturer</label>
+                    <div class="asset-select-wrap">
+                        <select id="manufacturerFilter">
+                            <option value="">All Manufacturers</option>
+                        </select>
+                    </div>
+                </div>
 
-                <select id="assetSearchType">
+                <div class="asset-filter-field">
+                    <label for="locationFilter">Location</label>
+                    <div class="asset-select-wrap">
+                        <select id="locationFilter">
+                            <option value="">All Locations</option>
+                        </select>
+                    </div>
+                </div>
 
-                    <option value="assetName">
-                        Asset Name
-                    </option>
+                <div class="asset-filter-field asset-common-search-field">
+                    <label for="assetCommonSearch">Search Assets</label>
+                    <div class="asset-common-search-wrap">
+                        <span class="asset-search-icon" aria-hidden="true">⌕</span>
+                        <input
+                            type="text"
+                            id="assetCommonSearch"
+                            placeholder="Serial No, Model, ERP No or Plate No"
+                            autocomplete="off"
+                        >
+                        <button
+                            type="button"
+                            class="search-help-button"
+                            aria-label="Search help"
+                            title="Search by Serial No, Model, ERP No or Plate No"
+                        >
+                            ?
+                            <span class="search-help-tooltip">
+                                <strong>Search by</strong>
+                                <span>Serial No</span>
+                                <span>Model</span>
+                                <span>ERP No</span>
+                                <span>Plate No</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
 
-                    <option value="assetTag">
-                        Asset Tag
-                    </option>
-
-                    <option value="serialNo">
-                        Serial No
-                    </option>
-
-                    <option value="manufacturer">
-                        Manufacturer
-                    </option>
-
-                    <option value="location">
-                        Location
-                    </option>
-
-                </select>
+                <div class="asset-filter-field">
+                    <label for="registrationDateFilter">Registration Date</label>
+                    <div class="asset-date-wrap">
+                        <span class="asset-date-icon" aria-hidden="true">▣</span>
+                        <input
+                            type="date"
+                            id="registrationDateFilter"
+                            title="Filter by registration date"
+                        >
+                    </div>
+                </div>
 
             </div>
 
-
-            <!-- Search Value -->
-
-            <div class="filter-field filter-search">
-
-                <label for="assetSearchInput">
-                    Value
-                </label>
-
-                <input
-                    type="text"
-                    id="assetSearchInput"
-                    placeholder="Enter asset value..."
+            <div class="asset-filter-actions">
+                <button
+                    type="button"
+                    class="filter-button modern-filter-button"
+                    onclick="filterAssets()"
                 >
+                    <span>⌕</span>
+                    Filter
+                </button>
 
+                <button
+                    type="button"
+                    class="reload-button modern-reload-button"
+                    onclick="reloadAssets()"
+                >
+                    <span>↻</span>
+                    Reset
+                </button>
+
+                <button
+                    type="button"
+                    id="assetFilterToggleButton"
+                    class="asset-filter-toggle-button"
+                    onclick="toggleAssetFilters()"
+                    aria-expanded="true"
+                    aria-controls="assetFilterGrid"
+                    title="Hide all filters"
+                >
+                    <span id="assetFilterToggleIcon" class="asset-filter-toggle-icon">−</span>
+                    <span id="assetFilterToggleText">Less</span>
+                </button>
             </div>
-
-
-            <!-- Filter -->
-
-            <button
-                type="button"
-                class="filter-button"
-                onclick="filterAssets()"
-            >
-
-                🔍
-                Filter
-
-            </button>
-
-
-            <!-- Reload -->
-
-            <button
-                type="button"
-                class="reload-button"
-                onclick="reloadAssets()"
-            >
-
-                ↻
-                Reload
-
-            </button>
 
         </section>
 
@@ -1407,6 +1804,88 @@ const availableAssets = [
 
 let cart = [];
 
+function loadCart() {
+    try {
+        const savedCart = sessionStorage.getItem("issueCart");
+        cart = savedCart ? JSON.parse(savedCart) : [];
+        if (!Array.isArray(cart)) {
+            cart = [];
+        }
+    } catch (error) {
+        console.error("Unable to load issue cart.", error);
+        cart = [];
+    }
+}
+
+function saveCart() {
+    sessionStorage.setItem("issueCart", JSON.stringify(cart));
+}
+
+function updateCartCount() {
+    const badge = document.getElementById("cartCountBadge");
+    if (badge) {
+        badge.textContent = String(cart.length);
+    }
+}
+
+
+
+// =========================================================
+// MORE / LESS ASSET FILTERS
+// =========================================================
+
+function toggleAssetFilters() {
+
+    const filterGrid =
+        document.getElementById("assetFilterGrid");
+
+    const toggleButton =
+        document.getElementById("assetFilterToggleButton");
+
+    const toggleText =
+        document.getElementById("assetFilterToggleText");
+
+    const toggleIcon =
+        document.getElementById("assetFilterToggleIcon");
+
+    if (!filterGrid) {
+        return;
+    }
+
+    const isHidden =
+        filterGrid.classList.toggle("filters-hidden");
+
+    if (isHidden) {
+
+        toggleText.textContent = "More";
+        toggleIcon.textContent = "+";
+
+        toggleButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        toggleButton.setAttribute(
+            "title",
+            "Show all filters"
+        );
+
+    } else {
+
+        toggleText.textContent = "Less";
+        toggleIcon.textContent = "−";
+
+        toggleButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        toggleButton.setAttribute(
+            "title",
+            "Hide all filters"
+        );
+    }
+}
 
 // =========================================================
 // DISPLAY ASSETS
@@ -2019,6 +2498,9 @@ async function addSelectedToCart() {
     );
 
 
+    saveCart();
+    updateCartCount();
+
     // =====================================================
     // RESET CHECKBOXES
     // =====================================================
@@ -2116,396 +2598,158 @@ async function addSelectedToCart() {
 // SHOW CART
 // =========================================================
 
-async function showCart() {
-
-
-    // =====================================================
-    // CART EMPTY
-    // =====================================================
-
-    if (cart.length === 0) {
-
-
-        await Swal.fire({
-
-            icon: "info",
-
-            title: "Cart is Empty",
-
-            text:
-                "There are no assets in your cart.",
-
-            confirmButtonText: "OK",
-
-            confirmButtonColor:
-                "#2563eb",
-
-            customClass: {
-
-                popup:
-                    "eam-swal-popup"
-
-            }
-
-        });
-
-
-        return;
-
-    }
-
-
-    // =====================================================
-    // CREATE CART ROWS
-    // =====================================================
-
-    let cartRows = "";
-
-
-    cart.forEach(
-        function (asset, index) {
-
-
-            cartRows += `
-
-                <tr>
-
-                    <td>
-                        ${index + 1}
-                    </td>
-
-                    <td>
-
-                        <strong>
-                            ${escapeHtml(asset.assetTag)}
-                        </strong>
-
-                    </td>
-
-                    <td>
-                        ${escapeHtml(asset.assetName)}
-                    </td>
-
-                    <td>
-                        ${displayValue(asset.manufacturer)}
-                    </td>
-
-                    <td>
-                        ${displayValue(asset.location)}
-                    </td>
-
-                    <td>
-
-                        <span class="swal-stock-badge">
-
-                            ${escapeHtml(asset.stockStatus)}
-
-                        </span>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
-
-
-    // =====================================================
-    // SHOW CART
-    // =====================================================
-
-    await Swal.fire({
-
-        title: "Asset Cart",
-
-        html: `
-
-            <div class="cart-summary">
-
-                <span class="cart-summary-label">
-                    Items in Cart
-                </span>
-
-                <span class="cart-summary-count">
-                    ${cart.length}
-                </span>
-
-            </div>
-
-
-            <div class="swal-cart-table-wrapper">
-
-                <table class="swal-cart-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                #
-                            </th>
-
-                            <th>
-                                Asset Tag
-                            </th>
-
-                            <th>
-                                Asset Name
-                            </th>
-
-                            <th>
-                                Manufacturer
-                            </th>
-
-                            <th>
-                                Location
-                            </th>
-
-                            <th>
-                                Status
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        ${cartRows}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        `,
-
-        width: "950px",
-
-        confirmButtonText: "OK",
-
-        confirmButtonColor:
-            "#2563eb",
-
-        customClass: {
-
-            popup:
-                "eam-swal-cart-popup",
-
-            confirmButton:
-                "eam-swal-confirm"
-
-        }
-
-    });
-
+function showCart() {
+    saveCart();
+    window.location.href = "issue-cart.html";
 }
 
+function normalizeFilterValue(value) {
+    return String(value ?? "").trim().toLowerCase();
+}
 
-// =========================================================
-// EMPTY CART
-// =========================================================
+function parseAssetDate(value) {
+    const text = String(value ?? "").trim();
 
-async function emptyCart() {
-
-
-    // =====================================================
-    // CART ALREADY EMPTY
-    // =====================================================
-
-    if (cart.length === 0) {
-
-
-        await Swal.fire({
-
-            icon: "info",
-
-            title: "Cart is Already Empty",
-
-            text:
-                "There are no assets to remove.",
-
-            confirmButtonText: "OK",
-
-            confirmButtonColor:
-                "#2563eb",
-
-            customClass: {
-
-                popup:
-                    "eam-swal-popup"
-
-            }
-
-        });
-
-
-        return;
-
+    if (!text) {
+        return "";
     }
 
+    // Supports the current UI format: DD-MMM-YYYY
+    const match = text.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
 
-    // =====================================================
-    // CONFIRM EMPTY CART
-    // =====================================================
-
-    const result =
-        await Swal.fire({
-
-            icon: "warning",
-
-            title: "Empty Cart?",
-
-            html: `
-
-                Are you sure you want to remove
-
-                <strong>
-
-                    all ${cart.length}
-
-                    selected asset${cart.length !== 1 ? "s" : ""}
-
-                </strong>
-
-                from the cart?
-
-            `,
-            showCancelButton: true,
-            confirmButtonText:
-                "Yes, Empty Cart",
-            cancelButtonText:
-                "Cancel",
-            confirmButtonColor:
-                "#dc2626",
-            cancelButtonColor:
-                "#64748b",
-            reverseButtons: true,
-            customClass: {
-                popup:
-                    "eam-swal-popup",
-                confirmButton:
-                    "eam-swal-danger",
-                cancelButton:
-                    "eam-swal-cancel"
-            }
-
-        });
-    if (!result.isConfirmed) {
-
-        return;
-
+    if (!match) {
+        return "";
     }
-    cart = [];
-    const selectAll =
-        document.getElementById(
-            "selectAllAssets"
-        );
-    if (selectAll) {
 
-        selectAll.checked = false;
+    const months = {
+        Jan: "01", Feb: "02", Mar: "03", Apr: "04",
+        May: "05", Jun: "06", Jul: "07", Aug: "08",
+        Sep: "09", Oct: "10", Nov: "11", Dec: "12"
+    };
 
+    const month = months[match[2].charAt(0).toUpperCase() + match[2].slice(1).toLowerCase()];
+
+    if (!month) {
+        return "";
     }
-    document
-        .querySelectorAll(
-            ".asset-checkbox"
-        )
-        .forEach(
-            function (checkbox) {
 
-                checkbox.checked = false;
+    return `${match[3]}-${month}-${String(match[1]).padStart(2, "0")}`;
+}
 
-            }
-        );
-    await Swal.fire({
-        icon: "success",
-        title: "Cart is Empty",
-        text:
-            "All selected assets have been removed from the cart.",
-        confirmButtonText: "OK",
-        confirmButtonColor:
-            "#16a34a",
-        customClass: {
-            popup:
-                "eam-swal-popup",
-
-            confirmButton:
-                "eam-swal-success"
-
-        }
+function getUniqueAssetValues(field) {
+    return [...new Set(
+        availableAssets
+            .map(function (asset) {
+                return String(asset[field] ?? "").trim();
+            })
+            .filter(Boolean)
+    )].sort(function (a, b) {
+        return a.localeCompare(b, undefined, { sensitivity: "base" });
     });
 }
 
-async function issueAssetsFromCart() {
-    if (cart.length === 0) {
-        await Swal.fire({
-            icon: "warning",
-            title: "Cart is Empty",
-            text:
-                "Please add assets to the cart before continuing.",
-            confirmButtonText: "OK",
-            confirmButtonColor:
-                "#2563eb",
-            customClass: {
-                popup:
-                    "eam-swal-popup"
-            }
+function populateAssetFilterDropdowns() {
+    const dropdowns = [
+        { id: "assetNameFilter", field: "assetName", allText: "All Asset Names" },
+        { id: "manufacturerFilter", field: "manufacturer", allText: "All Manufacturers" },
+        { id: "locationFilter", field: "location", allText: "All Locations" }
+    ];
+
+    dropdowns.forEach(function (config) {
+        const select = document.getElementById(config.id);
+
+        if (!select) {
+            return;
+        }
+
+        select.innerHTML = `<option value="">${config.allText}</option>`;
+
+        getUniqueAssetValues(config.field).forEach(function (value) {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = value;
+            select.appendChild(option);
         });
+    });
+}
+
+function updateFilterResultHint(count) {
+    const hint = document.getElementById("filterResultHint");
+
+    if (!hint) {
         return;
-
     }
-    sessionStorage.setItem(
-        "issueCart",
-        JSON.stringify(cart)
-    );
-    window.location.href =
-        "issue-form.html";
 
+    if (count === availableAssets.length) {
+        hint.textContent = `All ${count} assets`;
+        return;
+    }
+
+    hint.textContent = `${count} asset${count !== 1 ? "s" : ""} found`;
 }
 
 function filterAssets() {
-    const type =
-        document.getElementById(
-            "assetSearchType"
-        ).value;
-
-    const value =
-        document.getElementById(
-            "assetSearchInput"
-        ).value
-        .toLowerCase()
-        .trim();
-
-    if (!value) {
-        displayAssets(
-            availableAssets
-        );
-        return;
-    }
-
-    const filtered =
-        availableAssets.filter(
-            function (asset) {
-                return String(
-                    asset[type] || ""
-                )
-                .toLowerCase()
-                .includes(value);
-            }
-        );
-
-    displayAssets(
-        filtered
+    const assetName = normalizeFilterValue(
+        document.getElementById("assetNameFilter")?.value
     );
 
-    const selectAll =
-        document.getElementById(
-            "selectAllAssets"
+    const manufacturer = normalizeFilterValue(
+        document.getElementById("manufacturerFilter")?.value
+    );
+
+    const location = normalizeFilterValue(
+        document.getElementById("locationFilter")?.value
+    );
+
+    const commonSearch = normalizeFilterValue(
+        document.getElementById("assetCommonSearch")?.value
+    );
+
+    const registrationDate =
+        document.getElementById("registrationDateFilter")?.value || "";
+
+    const filtered = availableAssets.filter(function (asset) {
+
+        const matchesAssetName =
+            !assetName ||
+            normalizeFilterValue(asset.assetName) === assetName;
+
+        const matchesManufacturer =
+            !manufacturer ||
+            normalizeFilterValue(asset.manufacturer) === manufacturer;
+
+        const matchesLocation =
+            !location ||
+            normalizeFilterValue(asset.location) === location;
+
+        const matchesCommonSearch =
+            !commonSearch ||
+            [
+                asset.serialNo,
+                asset.model,
+                asset.erpNo,
+                asset.plateNo
+            ].some(function (value) {
+                return normalizeFilterValue(value).includes(commonSearch);
+            });
+
+        const matchesRegistrationDate =
+            !registrationDate ||
+            parseAssetDate(asset.registrationDate) === registrationDate;
+
+        return (
+            matchesAssetName &&
+            matchesManufacturer &&
+            matchesLocation &&
+            matchesCommonSearch &&
+            matchesRegistrationDate
         );
+    });
+
+    displayAssets(filtered);
+    updateFilterResultHint(filtered.length);
+
+    const selectAll = document.getElementById("selectAllAssets");
 
     if (selectAll) {
         selectAll.checked = false;
@@ -2513,39 +2757,36 @@ function filterAssets() {
 }
 
 function reloadAssets() {
+    const assetNameFilter = document.getElementById("assetNameFilter");
+    const manufacturerFilter = document.getElementById("manufacturerFilter");
+    const locationFilter = document.getElementById("locationFilter");
+    const commonSearch = document.getElementById("assetCommonSearch");
+    const registrationDate = document.getElementById("registrationDateFilter");
 
-    const searchInput =
-        document.getElementById(
-            "assetSearchInput"
-        );
-
-
-    if (searchInput) {
-
-        searchInput.value = "";
-
+    if (assetNameFilter) {
+        assetNameFilter.value = "";
     }
 
-    const searchType =
-        document.getElementById(
-            "assetSearchType"
-        );
-
-    if (searchType) {
-
-        searchType.value =
-            "assetName";
-
+    if (manufacturerFilter) {
+        manufacturerFilter.value = "";
     }
 
-    displayAssets(
-        availableAssets
-    );
+    if (locationFilter) {
+        locationFilter.value = "";
+    }
 
-    const selectAll =
-        document.getElementById(
-            "selectAllAssets"
-        );
+    if (commonSearch) {
+        commonSearch.value = "";
+    }
+
+    if (registrationDate) {
+        registrationDate.value = "";
+    }
+
+    displayAssets(availableAssets);
+    updateFilterResultHint(availableAssets.length);
+
+    const selectAll = document.getElementById("selectAllAssets");
 
     if (selectAll) {
         selectAll.checked = false;
@@ -2561,7 +2802,7 @@ document.addEventListener(
             event.key === "Enter" &&
             document.activeElement &&
             document.activeElement.id ===
-            "assetSearchInput"
+            "assetCommonSearch"
         ) {
 
             filterAssets();
@@ -2571,6 +2812,12 @@ document.addEventListener(
     }
 );
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    populateAssetFilterDropdowns();
+    displayAssets(availableAssets);
+    updateFilterResultHint(availableAssets.length);
+});
 
 function escapeJs(value) {
     return String(value ?? "")
@@ -2766,6 +3013,9 @@ document.addEventListener("keydown", function (event) {
 document.addEventListener(
     "DOMContentLoaded",
     function () {
+
+        loadCart();
+        updateCartCount();
 
         displayAssets(
             availableAssets

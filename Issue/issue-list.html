@@ -17,6 +17,68 @@
         href="./css/style.css"
     >
 
+    <style>
+        /* =====================================================
+           ISSUE LIST - SEPARATE FILTERS
+        ===================================================== */
+
+        .issue-filter-card {
+            display: grid;
+            grid-template-columns:
+                minmax(170px, 1fr)
+                minmax(160px, 1fr)
+                minmax(220px, 1.3fr)
+                minmax(190px, 1fr)
+                auto
+                auto;
+            align-items: end;
+            gap: 14px;
+        }
+
+        .issue-filter-card .filter-field {
+            min-width: 0;
+        }
+
+        .issue-filter-card .filter-field input,
+        .issue-filter-card .filter-field select {
+            width: 100%;
+        }
+
+        .secondary-filter-button {
+            background: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .secondary-filter-button:hover {
+            background: #f1f5f9;
+        }
+
+        @media (max-width: 1200px) {
+            .issue-filter-card {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .issue-filter-card .filter-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .issue-filter-card {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .issue-filter-card .filter-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
 </head>
 
 
@@ -109,75 +171,43 @@
                  FILTER CARD
             ================================================== -->
 
-            <section class="filter-card">
-
-
-                <!-- Search Type -->
+            <section class="filter-card issue-filter-card">
 
                 <div class="filter-field">
-
-                    <label>
-                        Search By
-                    </label>
-
-                    <select id="searchType">
-
-                        <option value="transactionNo">
-                            Transaction No
-                        </option>
-
-                        <option value="issueType">
-                            Issue Type
-                        </option>
-
-                        <option value="createdBy">
-                            Created By
-                        </option>
-
-                    </select>
-
+                    <label for="transactionDateFilter">Transaction Date</label>
+                    <input type="date" id="transactionDateFilter" aria-label="Filter by transaction date">
                 </div>
 
-
-
-                <!-- Search Value -->
+                <div class="filter-field">
+                    <label for="issueTypeFilter">Issue Type</label>
+                    <select id="issueTypeFilter" aria-label="Filter by issue type">
+                        <option value="">All Issue Types</option>
+                    </select>
+                </div>
 
                 <div class="filter-field filter-search">
-
-                    <label>
-                        Value
-                    </label>
-
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Enter search value..."
-                        autocomplete="off"
-                    >
-
+                    <label for="transactionNoFilter">Transaction No</label>
+                    <input type="text" id="transactionNoFilter" placeholder="Search transaction no..." autocomplete="off" aria-label="Search transaction number">
                 </div>
 
+                <div class="filter-field">
+                    <label for="createdByFilter">Created By</label>
+                    <select id="createdByFilter" aria-label="Filter by created by">
+                        <option value="">All Created By</option>
+                    </select>
+                </div>
 
-
-                <!-- Filter -->
-
-                <button
-                    type="button"
-                    class="filter-button"
-                    onclick="filterIssues()"
-                >
-
-                    <span>
-                        🔍
-                    </span>
-
+                <button type="button" class="filter-button" onclick="filterIssues()" title="Apply filters">
+                    <span>🔍</span>
                     Filter
-
                 </button>
 
+                <button type="button" class="filter-button secondary-filter-button" onclick="resetIssueFilters()" title="Clear all filters">
+                    <span>↻</span>
+                    Reset
+                </button>
 
             </section>
-
 
 
             <!-- =================================================
@@ -865,66 +895,142 @@
 
 
         /* =====================================================
+           POPULATE FILTER DROPDOWNS
+        ====================================================== */
+
+        function populateIssueFilters() {
+
+            const issueTypeSelect =
+                document.getElementById("issueTypeFilter");
+
+            const createdBySelect =
+                document.getElementById("createdByFilter");
+
+            const issueTypes = [
+                ...new Set(
+                    issueRows.map(issue => issue.issueType).filter(Boolean)
+                )
+            ].sort();
+
+            const createdByUsers = [
+                ...new Set(
+                    issueRows.map(issue => issue.createdBy).filter(Boolean)
+                )
+            ].sort();
+
+            issueTypes.forEach(function(type) {
+                const option = document.createElement("option");
+                option.value = type;
+                option.textContent = type;
+                issueTypeSelect.appendChild(option);
+            });
+
+            createdByUsers.forEach(function(user) {
+                const option = document.createElement("option");
+                option.value = user;
+                option.textContent = user;
+                createdBySelect.appendChild(option);
+            });
+        }
+
+
+        /* =====================================================
+           NORMALIZE TRANSACTION DATE
+        ====================================================== */
+
+        function getIssueDateValue(dateText) {
+
+            if (!dateText) {
+                return "";
+            }
+
+            const match = dateText.match(
+                /^(\d{1,2})-([A-Za-z]{3})-(\d{4})/
+            );
+
+            if (!match) {
+                return "";
+            }
+
+            const months = {
+                Jan: "01", Feb: "02", Mar: "03", Apr: "04",
+                May: "05", Jun: "06", Jul: "07", Aug: "08",
+                Sep: "09", Oct: "10", Nov: "11", Dec: "12"
+            };
+
+            const day = String(match[1]).padStart(2, "0");
+            const month = months[match[2]];
+            const year = match[3];
+
+            return month ? `${year}-${month}-${day}` : "";
+        }
+
+
+        /* =====================================================
            FILTER ISSUES
         ====================================================== */
 
         function filterIssues() {
 
+            const transactionDate =
+                document.getElementById("transactionDateFilter").value.trim();
 
-            const type =
-                document.getElementById(
-                    "searchType"
-                ).value;
+            const issueType =
+                document.getElementById("issueTypeFilter").value.trim();
 
+            const transactionNo =
+                document.getElementById("transactionNoFilter").value
+                    .toLowerCase()
+                    .trim();
 
+            const createdBy =
+                document.getElementById("createdByFilter").value.trim();
 
-            const value =
-                document.getElementById(
-                    "searchInput"
-                ).value
-                .toLowerCase()
-                .trim();
+            const filtered = issueRows.filter(function(issue) {
 
+                const matchesDate =
+                    !transactionDate ||
+                    getIssueDateValue(issue.transactionDate) === transactionDate;
 
+                const matchesIssueType =
+                    !issueType ||
+                    issue.issueType === issueType;
 
-            if (!value) {
-
-
-                displayIssues(
-                    issueRows
-                );
-
-
-                return;
-
-            }
-
-
-
-            const filtered =
-                issueRows.filter(
-                    function(issue) {
-
-
-                        return String(
-                            issue[type]
-                        )
+                const matchesTransactionNo =
+                    !transactionNo ||
+                    String(issue.transactionNo)
                         .toLowerCase()
-                        .includes(value);
+                        .includes(transactionNo);
 
+                const matchesCreatedBy =
+                    !createdBy ||
+                    issue.createdBy === createdBy;
 
-                    }
+                return (
+                    matchesDate &&
+                    matchesIssueType &&
+                    matchesTransactionNo &&
+                    matchesCreatedBy
                 );
+            });
 
-
-
-            displayIssues(
-                filtered
-            );
-
-
+            displayIssues(filtered);
         }
 
+
+        /* =====================================================
+           RESET ALL FILTERS
+        ====================================================== */
+
+        function resetIssueFilters() {
+
+            document.getElementById("transactionDateFilter").value = "";
+            document.getElementById("issueTypeFilter").value = "";
+            document.getElementById("transactionNoFilter").value = "";
+            document.getElementById("createdByFilter").value = "";
+
+            displayIssues(issueRows);
+        }
 
 
         /* =====================================================
@@ -933,50 +1039,14 @@
 
         function reloadIssues() {
 
+            resetIssueFilters();
 
-            // Clear search
-
-            document.getElementById(
-                "searchInput"
-            ).value = "";
-
-
-
-            // Reset search type
-
-            document.getElementById(
-                "searchType"
-            ).value =
-                "transactionNo";
-
-
-
-            // Reset select all
-
-            const selectAll =
-                document.getElementById(
-                    "selectAll"
-                );
-
+            const selectAll = document.getElementById("selectAll");
 
             if (selectAll) {
-
-                selectAll.checked =
-                    false;
-
+                selectAll.checked = false;
             }
-
-
-
-            // Display all records
-
-            displayIssues(
-                issueRows
-            );
-
-
         }
-
 
 
         /* =====================================================
@@ -1007,39 +1077,30 @@
 
 
         /* =====================================================
-           SEARCH WHEN ENTER IS PRESSED
+           TRANSACTION NO SEARCH - ENTER KEY
         ====================================================== */
 
         document
-            .getElementById(
-                "searchInput"
-            )
+            .getElementById("transactionNoFilter")
             .addEventListener(
                 "keydown",
                 function(event) {
 
-
-                    if (
-                        event.key === "Enter"
-                    ) {
-
+                    if (event.key === "Enter") {
                         filterIssues();
-
                     }
-
 
                 }
             );
 
 
-
         /* =====================================================
-           INITIAL LOAD
+           INITIALIZE ISSUE LIST
         ====================================================== */
 
-        displayIssues(
-            issueRows
-        );
+        populateIssueFilters();
+
+        displayIssues(issueRows);
 
 
     </script>
