@@ -502,10 +502,6 @@ menuItems.forEach(function (item) {
 });
 
 
-// =====================================================
-// OPEN ISSUE MENU WHEN ISSUE PAGE IS ACTIVE
-// =====================================================
-
 if (
     currentPage === "issue-list" ||
     currentPage === "issue-create"

@@ -2335,6 +2335,110 @@
 
 
         // -----------------------------------------------------
+        // SAVE ISSUE TRANSACTION
+        // -----------------------------------------------------
+        // Store the selected asset count so the Issue List
+        // can display it for this transaction.
+
+        const savedIssuesKey =
+            "savedIssueTransactions";
+
+        let savedIssueTransactions = [];
+
+        try {
+
+            const existingIssues =
+                sessionStorage.getItem(
+                    savedIssuesKey
+                );
+
+            savedIssueTransactions =
+                existingIssues
+                    ? JSON.parse(existingIssues)
+                    : [];
+
+            if (!Array.isArray(savedIssueTransactions)) {
+                savedIssueTransactions = [];
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Unable to load saved issue transactions:",
+                error
+            );
+
+            savedIssueTransactions = [];
+        }
+
+
+        savedIssueTransactions.unshift({
+
+            transactionNo:
+                transactionNo,
+
+            transactionDate:
+                new Date().toLocaleString(
+                    "en-GB",
+                    {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false
+                    }
+                ).replace(",", ""),
+
+            issueType:
+                document.getElementById(
+                    "issueAssetTo"
+                )?.value || "Custodian",
+
+            createdBy:
+                "ASADMIN [SYS-ADMIN]",
+
+            // THIS IS THE IMPORTANT COUNT
+            assetCount:
+                selectedAssets.length,
+
+            assets:
+                selectedAssets.map(
+                    function (asset) {
+
+                        return {
+                            assetTag:
+                                asset.assetTag || "",
+
+                            assetName:
+                                asset.assetName || "",
+
+                            serialNo:
+                                asset.serialNo || "",
+
+                            model:
+                                asset.model || "",
+
+                            manufacturer:
+                                asset.manufacturer || ""
+                        };
+
+                    }
+                )
+
+        });
+
+
+        sessionStorage.setItem(
+            savedIssuesKey,
+            JSON.stringify(
+                savedIssueTransactions
+            )
+        );
+
+
+        // -----------------------------------------------------
         // REMOVE SELECTED ASSETS FROM CART
         // -----------------------------------------------------
 
