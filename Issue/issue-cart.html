@@ -33,6 +33,145 @@
         .cart-back-button{border:1px solid #d8e1ec;background:#fff;color:#475569}.cart-back-button:hover{background:#f8fafc;color:#0f172a}
         .cart-empty-button{border:1px solid #fed7aa;background:#fff7ed;color:#c2410c}.cart-empty-button:hover{background:#ffedd5}
         .cart-issue-button{border:1px solid #16a34a;background:#16a34a;color:#fff;box-shadow:0 5px 12px rgba(22,163,74,.16)}.cart-issue-button:hover{background:#15803d;border-color:#15803d;transform:translateY(-1px)}
+
+        /* =====================================================
+           CART CHECKBOX SELECTION
+        ====================================================== */
+
+        .cart-delete-column {
+            width: 56px;
+            min-width: 56px;
+            text-align: center !important;
+        }
+
+        .cart-delete-button {
+            width: 34px;
+            height: 34px;
+            display: inline-grid;
+            place-items: center;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #dc2626;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .cart-delete-button:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            color: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        .cart-delete-button:focus-visible {
+            outline: 3px solid rgba(220, 38, 38, .15);
+            outline-offset: 2px;
+        }
+
+        .cart-checkbox-column {
+            width: 48px;
+            min-width: 48px;
+            text-align: center !important;
+        }
+
+        .cart-checkbox,
+        .cart-select-all {
+            width: 17px;
+            height: 17px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: #2563eb;
+            vertical-align: middle;
+        }
+
+        .cart-checkbox:focus-visible,
+        .cart-select-all:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, .18);
+            outline-offset: 2px;
+        }
+
+        .cart-table tbody tr.selected-row {
+            background: #eff6ff;
+        }
+
+        .cart-table tbody tr.selected-row:hover {
+            background: #dbeafe;
+        }
+
+        .cart-selection-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 11px 22px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f8fbff;
+        }
+
+        .cart-selection-info {
+            color: #475569;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .cart-selection-info strong {
+            color: #1d4ed8;
+        }
+
+        .cart-select-all-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .cart-remove-selected-button {
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 11px;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            background: #fff;
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .cart-remove-selected-button:hover:not(:disabled) {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        .cart-remove-selected-button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        @media(max-width:700px) {
+            .cart-selection-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cart-select-all-label {
+                justify-content: flex-start;
+            }
+
+            .cart-remove-selected-button {
+                width: 100%;
+            }
+
         @media(max-width:700px){.cart-page-header,.cart-page-footer{flex-direction:column;align-items:stretch}.cart-page-count{align-self:flex-start}.cart-actions{display:grid;grid-template-columns:1fr}.cart-action-button{width:100%}}
     </style>
 </head>
@@ -131,6 +270,15 @@
             const rows=cart.map(function(asset,index){
                 return `
                     <tr>
+                        <td class="cart-checkbox-column">
+                            <input
+                                type="checkbox"
+                                class="cart-checkbox"
+                                data-asset-tag="${escapeHtml(asset.assetTag)}"
+                                aria-label="Select ${escapeHtml(asset.assetName)}"
+                                onchange="updateCartSelection(this)"
+                            >
+                        </td>
                         <td class="cart-number">${index+1}</td>
                         <td><span class="cart-asset-tag">${escapeHtml(asset.assetTag)}</span></td>
                         <td><strong>${escapeHtml(asset.assetName)}</strong></td>
@@ -139,22 +287,244 @@
                         <td>${displayValue(asset.manufacturer)}</td>
                         <td>${displayValue(asset.location)}</td>
                         <td><span class="cart-stock-badge">${escapeHtml(asset.stockStatus||"In Stock")}</span></td>
-                    </tr>`;
+                                            <td class="cart-delete-column">
+                            <button
+                                type="button"
+                                class="cart-delete-button"
+                                onclick="deleteCartItem('${escapeHtml(asset.assetTag)}')"
+                                title="Remove this asset"
+                                aria-label="Remove ${escapeHtml(asset.assetName)} from cart"
+                            >🗑</button>
+                        </td>
+</tr>`;
             }).join("");
 
             content.innerHTML=`
+                <div class="cart-selection-bar">
+
+                    <label class="cart-select-all-label">
+                        <input
+                            type="checkbox"
+                            id="selectAllCartAssets"
+                            class="cart-select-all"
+                            onchange="toggleSelectAll(this)"
+                        >
+                        <span>Select all assets</span>
+                    </label>
+
+                    <div class="cart-selection-info">
+                        <strong id="selectedCartCount">0</strong>
+                        asset(s) selected
+                    </div>
+
+                    <button
+                        type="button"
+                        id="removeSelectedButton"
+                        class="cart-remove-selected-button"
+                        onclick="removeSelectedAssets()"
+                        disabled
+                    >
+                        ⊗ Remove Selected
+                    </button>
+
+                </div>
+
                 <div class="cart-table-wrapper">
                     <table class="cart-table">
                         <thead>
                             <tr>
-                                <th>Sl.No</th><th>Asset Tag</th><th>Asset Name</th>
+                                <th class="cart-checkbox-column"></th>
+                                <th>Sl.No</th>
+                                <th>Asset Tag</th>
+                                <th>Asset Name</th>
                                 <th>Serial No</th><th>Model</th><th>Manufacturer</th>
                                 <th>Location</th><th>Status</th>
+                                <th class="cart-delete-column">Action</th>
                             </tr>
                         </thead>
                         <tbody>${rows}</tbody>
                     </table>
                 </div>`;
+        }
+
+
+        /* =====================================================
+           CART SELECTION
+        ====================================================== */
+
+        function getSelectedCartTags() {
+            return Array.from(
+                document.querySelectorAll(".cart-checkbox:checked")
+            ).map(function (checkbox) {
+                return checkbox.dataset.assetTag;
+            });
+        }
+
+        function updateCartSelection(checkbox) {
+            const row = checkbox.closest("tr");
+
+            if (row) {
+                row.classList.toggle("selected-row", checkbox.checked);
+            }
+
+            updateSelectionState();
+        }
+
+        function toggleSelectAll(source) {
+            const checkboxes =
+                document.querySelectorAll(".cart-checkbox");
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = source.checked;
+
+                const row = checkbox.closest("tr");
+
+                if (row) {
+                    row.classList.toggle(
+                        "selected-row",
+                        source.checked
+                    );
+                }
+            });
+
+            updateSelectionState();
+        }
+
+        function updateSelectionState() {
+            const checkboxes = Array.from(
+                document.querySelectorAll(".cart-checkbox")
+            );
+
+            const selected = checkboxes.filter(
+                checkbox => checkbox.checked
+            );
+
+            const selectedCount =
+                document.getElementById("selectedCartCount");
+
+            const removeButton =
+                document.getElementById("removeSelectedButton");
+
+            const selectAll =
+                document.getElementById("selectAllCartAssets");
+
+            if (selectedCount) {
+                selectedCount.textContent = String(selected.length);
+            }
+
+            if (removeButton) {
+                removeButton.disabled = selected.length === 0;
+            }
+
+            if (selectAll) {
+                selectAll.checked =
+                    checkboxes.length > 0 &&
+                    selected.length === checkboxes.length;
+
+                selectAll.indeterminate =
+                    selected.length > 0 &&
+                    selected.length < checkboxes.length;
+            }
+        }
+
+        async function deleteCartItem(assetTag) {
+
+            const asset = cart.find(function (item) {
+                return String(item.assetTag) === String(assetTag);
+            });
+
+            if (!asset) return;
+
+            const result = await Swal.fire({
+                icon: "warning",
+                title: "Remove Asset?",
+                html:
+                    `Are you sure you want to remove ` +
+                    `<strong>${escapeHtml(asset.assetName)}</strong> ` +
+                    `(${escapeHtml(asset.assetTag)}) from the cart?`,
+                showCancelButton: true,
+                confirmButtonText: "Yes, Remove",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#64748b",
+                reverseButtons: true
+            });
+
+            if (!result.isConfirmed) return;
+
+            cart = cart.filter(function (item) {
+                return String(item.assetTag) !== String(assetTag);
+            });
+
+            saveCart();
+            renderCart();
+
+            await Swal.fire({
+                icon: "success",
+                title: "Asset Removed",
+                text: `${asset.assetName} has been removed from the cart.`,
+                confirmButtonText: "OK",
+                confirmButtonColor: "#16a34a"
+            });
+        }
+
+
+
+
+        async function removeSelectedAssets() {
+            const selectedTags = getSelectedCartTags();
+
+            if (selectedTags.length === 0) {
+                await Swal.fire({
+                    icon: "info",
+                    title: "No Asset Selected",
+                    text: "Please select at least one asset to remove.",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#2563eb"
+                });
+                return;
+            }
+
+            const result = await Swal.fire({
+                icon: "warning",
+                title: "Remove Selected Assets?",
+                html:
+                    `Are you sure you want to remove ` +
+                    `<strong>${selectedTags.length} selected asset` +
+                    `${selectedTags.length !== 1 ? "s" : ""}</strong> ` +
+                    `from the cart?`,
+                showCancelButton: true,
+                confirmButtonText: "Yes, Remove",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#64748b",
+                reverseButtons: true
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            cart = cart.filter(function (asset) {
+                return !selectedTags.includes(
+                    String(asset.assetTag)
+                );
+            });
+
+            saveCart();
+            renderCart();
+
+            await Swal.fire({
+                icon: "success",
+                title: "Assets Removed",
+                text:
+                    `${selectedTags.length} asset` +
+                    `${selectedTags.length !== 1 ? "s have" : " has"}` +
+                    ` been removed from the cart.`,
+                confirmButtonText: "OK",
+                confirmButtonColor: "#16a34a"
+            });
+            updateSelectionState();
         }
 
         async function emptyCart(){
