@@ -19,64 +19,311 @@
 
     <style>
         /* =====================================================
-           ISSUE LIST - SEPARATE FILTERS
-        ===================================================== */
+           MODERN ISSUE LIST FILTERS + KPI
+        ====================================================== */
 
-        .issue-filter-card {
-            display: grid;
-            grid-template-columns:
-                minmax(170px, 1fr)
-                minmax(160px, 1fr)
-                minmax(220px, 1.3fr)
-                minmax(190px, 1fr)
-                auto
-                auto;
-            align-items: end;
-            gap: 14px;
+        .modern-filter-card {
+            margin-bottom: 20px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
         }
 
-        .issue-filter-card .filter-field {
+        .modern-filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 20px;
+        }
+
+        .filter-eyebrow {
+            display: block;
+            margin-bottom: 4px;
+            color: #2563eb;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .08em;
+        }
+
+        .modern-filter-header h2 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 17px;
+        }
+
+        .modern-filter-header p {
+            margin: 4px 0 0;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .filter-toggle-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 14px;
+            border: 1px solid #dbe4ef;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .filter-toggle-button:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .modern-filter-body {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+            gap: 14px;
+            padding: 0 20px 20px;
+            border-top: 1px solid #eef2f7;
+        }
+
+        .modern-filter-body.hidden {
+            display: none;
+        }
+
+        .modern-filter-field {
             min-width: 0;
         }
 
-        .issue-filter-card .filter-field input,
-        .issue-filter-card .filter-field select {
-            width: 100%;
-        }
-
-        .secondary-filter-button {
-            background: #f8fafc;
+        .modern-filter-field label {
+            display: block;
+            margin: 16px 0 7px;
             color: #334155;
-            border: 1px solid #cbd5e1;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .secondary-filter-button:hover {
-            background: #f1f5f9;
+        .modern-filter-field input,
+        .modern-filter-field select {
+            width: 100%;
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #d8e1ec;
+            border-radius: 9px;
+            background: #f8fafc;
+            color: #0f172a;
+            outline: none;
+            transition: .2s ease;
+        }
+
+        .modern-filter-field input:focus,
+        .modern-filter-field select:focus {
+            background: #ffffff;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon span {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            pointer-events: none;
+        }
+
+        .input-icon input {
+            padding-left: 36px;
+        }
+
+        .modern-filter-actions {
+            display: flex;
+            align-items: end;
+            gap: 8px;
+            padding-bottom: 0;
+        }
+
+        .modern-primary-button,
+        .modern-secondary-button {
+            height: 42px;
+            padding: 0 15px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .modern-primary-button {
+            border: 1px solid #2563eb;
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .modern-primary-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .modern-secondary-button {
+            border: 1px solid #d8e1ec;
+            background: #ffffff;
+            color: #475569;
+        }
+
+        .modern-secondary-button:hover {
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        /* =====================================================
+           KPI CARDS
+        ====================================================== */
+
+        .issue-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .issue-kpi-card {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-height: 88px;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, .04);
+            transition: .2s ease;
+        }
+
+        .issue-kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(15, 23, 42, .07);
+        }
+
+        .issue-kpi-icon {
+            width: 44px;
+            height: 44px;
+            flex: 0 0 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            font-size: 19px;
+        }
+
+        .issue-kpi-icon.blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .issue-kpi-icon.green {
+            background: #ecfdf5;
+            color: #16a34a;
+        }
+
+        .issue-kpi-icon.orange {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .issue-kpi-icon.purple {
+            background: #f5f3ff;
+            color: #7c3aed;
+        }
+
+        .issue-kpi-card span {
+            display: block;
+            margin-bottom: 4px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .issue-kpi-card strong {
+            color: #0f172a;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+
+        .table-card tbody tr.selected-row {
+            background: #eff6ff;
+        }
+
+        .table-card tbody tr.selected-row td {
+            border-top-color: #dbeafe;
+        }
+
+        .transaction-link {
+            color: #2563eb;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color .15s ease;
+        }
+
+        .transaction-link:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
         }
 
         @media (max-width: 1200px) {
-            .issue-filter-card {
+            .modern-filter-body {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            .issue-filter-card .filter-button {
-                width: 100%;
-                justify-content: center;
+            .modern-filter-actions {
+                grid-column: 1 / -1;
+                justify-content: flex-start;
+            }
+
+            .issue-kpi-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
 
-        @media (max-width: 600px) {
-            .issue-filter-card {
-                display: flex;
+        @media (max-width: 700px) {
+            .modern-filter-header {
+                align-items: flex-start;
                 flex-direction: column;
-                align-items: stretch;
             }
 
-            .issue-filter-card .filter-button {
+            .filter-toggle-button {
                 width: 100%;
-                justify-content: center;
+            }
+
+            .modern-filter-body {
+                grid-template-columns: 1fr;
+            }
+
+            .modern-filter-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                width: 100%;
+            }
+
+            .modern-primary-button,
+            .modern-secondary-button {
+                width: 100%;
+            }
+
+            .issue-kpi-grid {
+                grid-template-columns: 1fr;
             }
         }
+
     </style>
 
 </head>
@@ -171,43 +418,210 @@
                  FILTER CARD
             ================================================== -->
 
-            <section class="filter-card issue-filter-card">
+            <!-- =================================================
+                 MODERN FILTER CARD
+            ================================================== -->
 
-                <div class="filter-field">
-                    <label for="transactionDateFilter">Transaction Date</label>
-                    <input type="date" id="transactionDateFilter" aria-label="Filter by transaction date">
+            <section class="modern-filter-card">
+
+                <div class="modern-filter-header">
+
+                    <div>
+                        <span class="filter-eyebrow">FILTERS</span>
+
+                        <h2>Find Issue Transactions</h2>
+
+                        <p>
+                            Search and filter asset issue transactions
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="filter-toggle-button"
+                        onclick="toggleIssueFilters()"
+                        title="Show or hide filters"
+                    >
+                        <span>☷</span>
+                        Filters
+                        <span id="filterChevron">⌄</span>
+                    </button>
+
                 </div>
 
-                <div class="filter-field">
-                    <label for="issueTypeFilter">Issue Type</label>
-                    <select id="issueTypeFilter" aria-label="Filter by issue type">
-                        <option value="">All Issue Types</option>
-                    </select>
+
+                <div
+                    id="issueFilters"
+                    class="modern-filter-body"
+                >
+
+                    <div class="modern-filter-field">
+
+                        <label for="transactionDateFilter">
+                            Transaction Date
+                        </label>
+
+                        <div class="input-icon">
+                            <span>◷</span>
+
+                            <input
+                                type="date"
+                                id="transactionDateFilter"
+                                aria-label="Filter by transaction date"
+                            >
+                        </div>
+
+                    </div>
+
+
+                    <div class="modern-filter-field">
+
+                        <label for="issueTypeFilter">
+                            Issue Type
+                        </label>
+
+                        <select
+                            id="issueTypeFilter"
+                            aria-label="Filter by issue type"
+                        >
+                            <option value="">
+                                All Issue Types
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="modern-filter-field">
+
+                        <label for="transactionNoFilter">
+                            Transaction No
+                        </label>
+
+                        <div class="input-icon">
+
+                            <span>⌕</span>
+
+                            <input
+                                type="text"
+                                id="transactionNoFilter"
+                                placeholder="Search transaction..."
+                                autocomplete="off"
+                                aria-label="Search transaction number"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modern-filter-field">
+
+                        <label for="createdByFilter">
+                            Created By
+                        </label>
+
+                        <select
+                            id="createdByFilter"
+                            aria-label="Filter by created by"
+                        >
+                            <option value="">
+                                All Users
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="modern-filter-actions">
+
+                        <button
+                            type="button"
+                            class="modern-primary-button"
+                            onclick="filterIssues()"
+                            title="Apply filters"
+                        >
+                            🔍 Search
+                        </button>
+
+                        <button
+                            type="button"
+                            class="modern-secondary-button"
+                            onclick="resetIssueFilters()"
+                            title="Clear all filters"
+                        >
+                            ↻ Reset
+                        </button>
+
+                    </div>
+
                 </div>
-
-                <div class="filter-field filter-search">
-                    <label for="transactionNoFilter">Transaction No</label>
-                    <input type="text" id="transactionNoFilter" placeholder="Search transaction no..." autocomplete="off" aria-label="Search transaction number">
-                </div>
-
-                <div class="filter-field">
-                    <label for="createdByFilter">Created By</label>
-                    <select id="createdByFilter" aria-label="Filter by created by">
-                        <option value="">All Created By</option>
-                    </select>
-                </div>
-
-                <button type="button" class="filter-button" onclick="filterIssues()" title="Apply filters">
-                    <span>🔍</span>
-                    Filter
-                </button>
-
-                <button type="button" class="filter-button secondary-filter-button" onclick="resetIssueFilters()" title="Clear all filters">
-                    <span>↻</span>
-                    Reset
-                </button>
 
             </section>
+
+
+            <!-- =================================================
+                 ISSUE SUMMARY
+            ================================================== -->
+
+            <div class="issue-kpi-grid">
+
+                <div class="issue-kpi-card">
+
+                    <div class="issue-kpi-icon blue">
+                        ▣
+                    </div>
+
+                    <div>
+                        <span>Total Issues</span>
+                        <strong id="totalIssueCount">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="issue-kpi-card">
+
+                    <div class="issue-kpi-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+                        <span>Custodian Issues</span>
+                        <strong id="custodianIssueCount">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="issue-kpi-card">
+
+                    <div class="issue-kpi-icon orange">
+                        ◇
+                    </div>
+
+                    <div>
+                        <span>Location Issues</span>
+                        <strong id="locationIssueCount">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="issue-kpi-card">
+
+                    <div class="issue-kpi-icon purple">
+                        ◷
+                    </div>
+
+                    <div>
+                        <span>Today's Issues</span>
+                        <strong id="todayIssueCount">0</strong>
+                    </div>
+
+                </div>
+
+            </div>
 
 
             <!-- =================================================
@@ -675,6 +1089,96 @@
 
 
         /* =====================================================
+           UPDATE ISSUE SUMMARY
+        ====================================================== */
+
+        function updateIssueKPIs(data) {
+
+            const total =
+                document.getElementById("totalIssueCount");
+
+            const custodian =
+                document.getElementById("custodianIssueCount");
+
+            const location =
+                document.getElementById("locationIssueCount");
+
+            const today =
+                document.getElementById("todayIssueCount");
+
+            if (total) {
+                total.textContent = data.length;
+            }
+
+            if (custodian) {
+                custodian.textContent =
+                    data.filter(
+                        issue => issue.issueType === "Custodian"
+                    ).length;
+            }
+
+            if (location) {
+                location.textContent =
+                    data.filter(
+                        issue => issue.issueType === "Location"
+                    ).length;
+            }
+
+            if (today) {
+
+                const now = new Date();
+
+                const todayYear =
+                    now.getFullYear();
+
+                const todayMonth =
+                    now.getMonth();
+
+                const todayDay =
+                    now.getDate();
+
+                const monthMap = {
+                    Jan: 0,
+                    Feb: 1,
+                    Mar: 2,
+                    Apr: 3,
+                    May: 4,
+                    Jun: 5,
+                    Jul: 6,
+                    Aug: 7,
+                    Sep: 8,
+                    Oct: 9,
+                    Nov: 10,
+                    Dec: 11
+                };
+
+                const todayCount =
+                    data.filter(function(issue) {
+
+                        const match =
+                            String(issue.transactionDate || "")
+                                .match(
+                                    /^(\d{1,2})-([A-Za-z]{3})-(\d{4})/
+                                );
+
+                        if (!match) {
+                            return false;
+                        }
+
+                        return (
+                            Number(match[1]) === todayDay &&
+                            monthMap[match[2]] === todayMonth &&
+                            Number(match[3]) === todayYear
+                        );
+
+                    }).length;
+
+                today.textContent = todayCount;
+            }
+        }
+
+
+        /* =====================================================
            DISPLAY ISSUES
         ====================================================== */
 
@@ -730,6 +1234,7 @@
                 ).textContent =
                     "0 Records";
 
+                updateIssueKPIs(data);
 
                 return;
 
@@ -857,6 +1362,8 @@
             ).textContent =
                 `${data.length} Records`;
 
+            updateIssueKPIs(data);
+
 
         }
 
@@ -892,6 +1399,32 @@
 
         }
 
+
+
+        /* =====================================================
+           TOGGLE FILTERS
+        ====================================================== */
+
+        function toggleIssueFilters() {
+
+            const filters =
+                document.getElementById("issueFilters");
+
+            const chevron =
+                document.getElementById("filterChevron");
+
+            if (!filters || !chevron) {
+                return;
+            }
+
+            filters.classList.toggle("hidden");
+
+            if (filters.classList.contains("hidden")) {
+                chevron.textContent = "›";
+            } else {
+                chevron.textContent = "⌄";
+            }
+        }
 
 
         /* =====================================================
@@ -934,10 +1467,6 @@
         }
 
 
-        /* =====================================================
-           NORMALIZE TRANSACTION DATE
-        ====================================================== */
-
         function getIssueDateValue(dateText) {
 
             if (!dateText) {
@@ -964,11 +1493,6 @@
 
             return month ? `${year}-${month}-${day}` : "";
         }
-
-
-        /* =====================================================
-           FILTER ISSUES
-        ====================================================== */
 
         function filterIssues() {
 
@@ -1018,10 +1542,6 @@
         }
 
 
-        /* =====================================================
-           RESET ALL FILTERS
-        ====================================================== */
-
         function resetIssueFilters() {
 
             document.getElementById("transactionDateFilter").value = "";
@@ -1032,10 +1552,6 @@
             displayIssues(issueRows);
         }
 
-
-        /* =====================================================
-           RELOAD ISSUES
-        ====================================================== */
 
         function reloadIssues() {
 
@@ -1048,10 +1564,6 @@
             }
         }
 
-
-        /* =====================================================
-           SELECT ALL ISSUES
-        ====================================================== */
 
         function selectAllIssues(source) {
 
@@ -1092,12 +1604,6 @@
 
                 }
             );
-
-
-        /* =====================================================
-           INITIALIZE ISSUE LIST
-        ====================================================== */
-
         populateIssueFilters();
 
         displayIssues(issueRows);

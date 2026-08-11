@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Asset Details - EAM</title>
+
+    <!-- Same application CSS used by the other EAM pages -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        /* =====================================================
+           ASSET DETAILS PAGE
+        ====================================================== */
+
+        .asset-details-page {
+            max-width: 1450px;
+            margin: 0 auto;
+        }
+
+        .asset-details-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .asset-details-page-title h1 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 24px;
+            line-height: 1.25;
+        }
+
+        .asset-details-page-title p {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .asset-details-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 40px;
+            padding: 0 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .asset-details-back:hover {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            color: #1d4ed8;
+        }
+
+        /* Summary cards */
+
+        .asset-details-summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .asset-summary-card {
+            min-width: 0;
+            padding: 14px 16px;
+            border: 1px solid #dbe4ef;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .04);
+        }
+
+        .asset-summary-card span {
+            display: block;
+            margin-bottom: 5px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .asset-summary-card strong {
+            display: block;
+            color: #0f172a;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .asset-summary-card.status strong {
+            color: #15803d;
+        }
+
+        /* =====================================================
+           ACCORDION
+        ====================================================== */
+
+        .asset-details-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .asset-accordion-item {
+            overflow: hidden;
+            border: 1px solid #dbe4ef;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .035);
+        }
+
+        .asset-accordion-trigger {
+            width: 100%;
+            min-height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 11px 17px;
+            border: 0;
+            background: #ffffff;
+            color: #0f172a;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .asset-accordion-trigger:hover {
+            background: #f8fbff;
+        }
+
+        .asset-accordion-item.open .asset-accordion-trigger {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            color: #ffffff;
+        }
+
+        .accordion-left {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .accordion-icon {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .asset-accordion-item.open .accordion-icon {
+            background: rgba(255,255,255,.18);
+            color: #ffffff;
+        }
+
+        .accordion-title {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .accordion-subtitle {
+            display: block;
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        .asset-accordion-item.open .accordion-subtitle {
+            color: #dbeafe;
+        }
+
+        .accordion-chevron {
+            flex: 0 0 auto;
+            font-size: 18px;
+            color: #64748b;
+            transition: transform .2s ease;
+        }
+
+        .asset-accordion-item.open .accordion-chevron {
+            color: #ffffff;
+            transform: rotate(180deg);
+        }
+
+        .asset-accordion-panel {
+            display: none;
+            padding: 16px;
+            border-top: 1px solid #dbe4ef;
+            background: #ffffff;
+        }
+
+        .asset-accordion-item.open .asset-accordion-panel {
+            display: block;
+        }
+
+        /* =====================================================
+           INFORMATION GRID
+        ====================================================== */
+
+        .asset-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .asset-info-item {
+            min-height: 46px;
+            display: grid;
+            grid-template-columns: 180px minmax(0, 1fr);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .asset-info-item:nth-child(odd) {
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .asset-info-item.full {
+            grid-column: 1 / -1;
+            border-right: 0;
+        }
+
+        .asset-info-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: #f8fafc;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .asset-info-value {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            padding: 10px 12px;
+            color: #1e3a5f;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .asset-info-value.empty {
+            color: #94a3b8;
+        }
+
+        .asset-info-value.status-value {
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           TABLES
+        ====================================================== */
+
+        .asset-detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .asset-detail-table th {
+            padding: 10px 11px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+            text-align: left;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .asset-detail-table td {
+            padding: 11px;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .asset-empty {
+            padding: 16px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            color: #64748b;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .asset-empty.error {
+            color: #dc2626;
+            background: #fff7f7;
+            border-color: #fecaca;
+        }
+
+        .asset-table-space {
+            height: 10px;
+        }
+
+        .asset-details-bottom {
+            display: flex;
+            justify-content: flex-start;
+            padding: 16px 0 30px;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 900px) {
+            .asset-details-summary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .asset-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-info-item,
+            .asset-info-item.full {
+                grid-template-columns: 155px minmax(0, 1fr);
+                border-right: 0;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .asset-details-page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .asset-details-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-accordion-panel {
+                padding: 10px;
+            }
+
+            .asset-info-item,
+            .asset-info-item.full {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-info-label {
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .asset-detail-table-wrapper {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SAME GENERIC SIDEBAR
+========================================================== -->
+<div id="sidebar"></div>
+
+<!-- =========================================================
+     MAIN APPLICATION
+========================================================== -->
+<div class="main-content">
+
+    <!-- SAME GENERIC HEADER -->
+    <div id="header"></div>
+
+    <main class="page-content">
+
+        <!-- Breadcrumb -->
+        <div class="page-breadcrumb">
+            <span>EAM</span>
+            <span>›</span>
+            <span>Issue</span>
+            <span>›</span>
+            <strong>Asset Details</strong>
+        </div>
+
+        <!-- Page Header -->
+        <div class="asset-details-page-header">
+            <div class="asset-details-page-title">
+                <h1 id="pageTitle">Asset Details</h1>
+                <p>View complete information about the selected asset.</p>
+            </div>
+
+            <button
+                type="button"
+                class="asset-details-back"
+                onclick="goBackToIssueList()"
+            >
+                ← Back to Issue Asset
+            </button>
+        </div>
+
+        <!-- Summary -->
+        <div class="asset-details-summary" id="assetDetailsSummary"></div>
+
+        <!-- =================================================
+             ACCORDION SECTIONS
+        ================================================== -->
+        <div class="asset-details-accordion">
+
+            <!-- 1. Asset Details -->
+            <section class="asset-accordion-item open">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="true"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">▣</span>
+                        <span>
+                            <span class="accordion-title">Asset Details</span>
+                            <span class="accordion-subtitle">
+                                Basic information and identification
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-info-grid" id="basicAssetInfo"></div>
+                </div>
+            </section>
+
+            <!-- 2. Parent Asset -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">↳</span>
+                        <span>
+                            <span class="accordion-title">Parent Asset Details</span>
+                            <span class="accordion-subtitle">
+                                Parent asset relationship
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-empty">
+                        No parent asset information available.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Child Asset -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">↳</span>
+                        <span>
+                            <span class="accordion-title">Child Asset Details</span>
+                            <span class="accordion-subtitle">
+                                Assets linked below this asset
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-empty">
+                        No child assets available.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Stakeholder -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">◉</span>
+                        <span>
+                            <span class="accordion-title">Asset Stakeholder</span>
+                            <span class="accordion-subtitle">
+                                User, department and custodian information
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-info-grid">
+                        <div class="asset-info-item">
+                            <div class="asset-info-label">User</div>
+                            <div class="asset-info-value" id="stakeholderUser">-</div>
+                        </div>
+
+                        <div class="asset-info-item">
+                            <div class="asset-info-label">Department</div>
+                            <div class="asset-info-value" id="stakeholderDepartment">-</div>
+                        </div>
+
+                        <div class="asset-info-item full">
+                            <div class="asset-info-label">Custodian</div>
+                            <div class="asset-info-value" id="stakeholderCustodian">-</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Finance -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">₹</span>
+                        <span>
+                            <span class="accordion-title">Asset Finance Info</span>
+                            <span class="accordion-subtitle">
+                                Financial and accounting information
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-info-grid" id="financeInfo"></div>
+                </div>
+            </section>
+
+            <!-- 6. Warranty -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">✓</span>
+                        <span>
+                            <span class="accordion-title">Warranty Details</span>
+                            <span class="accordion-subtitle">
+                                Warranty and coverage information
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-info-grid" id="warrantyInfo"></div>
+                </div>
+            </section>
+
+            <!-- 7. Custom Cost -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">¤</span>
+                        <span>
+                            <span class="accordion-title">Custom Cost</span>
+                            <span class="accordion-subtitle">
+                                Additional cost information
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-info-grid" id="customCostInfo"></div>
+                </div>
+            </section>
+
+            <!-- 8. Maintenance -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">⚙</span>
+                        <span>
+                            <span class="accordion-title">Maintenance Details</span>
+                            <span class="accordion-subtitle">
+                                Maintenance status, tasks and spares
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+
+                    <div class="asset-detail-table-wrapper">
+                        <table class="asset-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Maintenance No</th>
+                                    <th>Maintenance Type</th>
+                                    <th>Estimated Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" class="asset-empty error">
+                                        * Asset is not defined under Maintenance
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="asset-table-space"></div>
+
+                    <div class="asset-detail-table-wrapper">
+                        <table class="asset-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Task Name</th>
+                                    <th>Maintenance No</th>
+                                    <th>Maintenance Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" class="asset-empty error">
+                                        * Task Not Assigned
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="asset-table-space"></div>
+
+                    <div class="asset-detail-table-wrapper">
+                        <table class="asset-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Maintenance No</th>
+                                    <th>Maintenance Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="asset-empty error">
+                                        * Asset Not Required
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 9. Meter -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">◌</span>
+                        <span>
+                            <span class="accordion-title">Asset Meter Readings</span>
+                            <span class="accordion-subtitle">
+                                Meter and usage readings
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-empty">
+                        No meter readings available.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. Work Order -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">▤</span>
+                        <span>
+                            <span class="accordion-title">WorkOrder Details</span>
+                            <span class="accordion-subtitle">
+                                Related work orders
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-detail-table-wrapper">
+                        <table class="asset-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>WorkOrder No</th>
+                                    <th>WorkOrder Date</th>
+                                    <th>WorkRequest No</th>
+                                    <th>WorkRequest Date</th>
+                                    <th>Maintenance No</th>
+                                    <th>Maintenance Type</th>
+                                    <th>WorkOrder Status</th>
+                                    <th>Spent Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="8" class="asset-empty error">
+                                        * Maintenance Not done
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. Contract -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">▱</span>
+                        <span>
+                            <span class="accordion-title">Asset Contract Details</span>
+                            <span class="accordion-subtitle">
+                                Contract information
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-detail-table-wrapper">
+                        <table class="asset-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Contract No</th>
+                                    <th>Contract Name</th>
+                                    <th>Contract Type</th>
+                                    <th>From Date</th>
+                                    <th>To Date</th>
+                                    <th>Contractor</th>
+                                    <th>Contract Cost Of Asset</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="7" class="asset-empty error">
+                                        * There is no contract for this Asset
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. Spares -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">▧</span>
+                        <span>
+                            <span class="accordion-title">Asset Spare Details</span>
+                            <span class="accordion-subtitle">
+                                Spare parts linked to this asset
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-detail-table-wrapper">
+                        <table class="asset-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Item Type</th>
+                                    <th>Min Required Qty</th>
+                                    <th>Max Required Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="asset-empty error">
+                                        * Spares not Added for the Asset
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 13. Issued Spare -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">▧</span>
+                        <span>
+                            <span class="accordion-title">Issued Spare Details</span>
+                            <span class="accordion-subtitle">
+                                Issued spare information
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-empty">
+                        No issued spare details available.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 14. Fund Sources -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">$</span>
+                        <span>
+                            <span class="accordion-title">Fund Sources</span>
+                            <span class="accordion-subtitle">
+                                Funding information
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-empty">
+                        No fund source information available.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 15. Attachment -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">⌕</span>
+                        <span>
+                            <span class="accordion-title">Attachment</span>
+                            <span class="accordion-subtitle">
+                                Documents and files
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-empty">
+                        No attachments available.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 16. GRN Attachments -->
+            <section class="asset-accordion-item">
+                <button
+                    type="button"
+                    class="asset-accordion-trigger"
+                    onclick="toggleAssetAccordion(this)"
+                    aria-expanded="false"
+                >
+                    <span class="accordion-left">
+                        <span class="accordion-icon">⌕</span>
+                        <span>
+                            <span class="accordion-title">GRN Attachments</span>
+                            <span class="accordion-subtitle">
+                                Goods receipt documents
+                            </span>
+                        </span>
+                    </span>
+                    <span class="accordion-chevron">⌄</span>
+                </button>
+
+                <div class="asset-accordion-panel">
+                    <div class="asset-empty">
+                        No GRN attachments available.
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="asset-details-bottom">
+            <button
+                type="button"
+                class="asset-details-back"
+                onclick="goBackToIssueList()"
+            >
+                ← Back to Issue Asset
+            </button>
+        </div>
+
+    </main>
+
+    <!-- SAME GENERIC FOOTER -->
+    <div id="footer"></div>
+
+</div>
+
+<!-- SAME GENERIC LAYOUT JS: populates sidebar, header and footer -->
+<script src="./js/layout.js"></script>
+
+<script>
+const availableAssets = [
+
+    {
+        assetName: "Desktop",
+        assetTag: "ITE-0001276",
+        serialNo: "",
+        model: "",
+        manufacturer: "",
+        location:
+            "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+        stockStatus: "In Stock",
+        erpNo: "",
+        plateNo: "",
+        registrationDate: "",
+        user: "",
+        department: "",
+        custodian:
+            "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "Dell",
+        assetTag: "FUN-0001616",
+        serialNo: "Dell01",
+        model: "",
+        manufacturer: "",
+        location: "Ad Dakhliyah",
+        stockStatus: "In Stock",
+        erpNo: "",
+        plateNo: "",
+        registrationDate: "",
+        user: "",
+        department: "",
+        custodian:
+            "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "Desktop",
+        assetTag: "ITE-0001272",
+        serialNo: "",
+        model: "",
+        manufacturer: "",
+        location:
+            "Ad Dakhliyah-Adam TS-Admin building-Female Toilet",
+        stockStatus: "In Stock",
+        erpNo: "",
+        plateNo: "",
+        registrationDate: "",
+        user: "",
+        department: "",
+        custodian: "",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "AC",
+        assetTag: "OFE-0000409",
+        serialNo: "",
+        model: "samsung24",
+        manufacturer: "SAMSUNG",
+        location: "Ad Dakhliyah",
+        stockStatus: "In Stock",
+        erpNo: "1",
+        plateNo: "4456",
+        registrationDate: "29-Mar-2021",
+        user: "",
+        department: "",
+        custodian: "",
+        assetType: "Capitalized"
+    },
+
+
+    {
+        assetName: "KEYBOARD",
+        assetTag: "ITE-0001263",
+        serialNo: "",
+        model: "sam-098",
+        manufacturer: "ASUS",
+        location:
+            "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+        stockStatus: "In Stock",
+        erpNo: "01",
+        plateNo: "5665",
+        registrationDate: "27-Mar-2021",
+        user: "",
+        department: "",
+        custodian: "",
+        assetType: "Capitalized"
+    }
+
+];
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function assetDetailValue(value) {
+    if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+    ) {
+        return '<span class="empty">-</span>';
+    }
+
+    return escapeHtml(String(value));
+}
+
+function createAssetInfoItem(label, value, full = false, status = false) {
+    const classes = [
+        "asset-info-item",
+        full ? "full" : ""
+    ].filter(Boolean).join(" ");
+
+    const valueClass = [
+        "asset-info-value",
+        (!value || String(value).trim() === "") ? "empty" : "",
+        status ? "status-value" : ""
+    ].filter(Boolean).join(" ");
+
+    return `
+        <div class="${classes}">
+            <div class="asset-info-label">${escapeHtml(label)}</div>
+            <div class="${valueClass}">
+                ${assetDetailValue(value)}
+            </div>
+        </div>
+    `;
+}
+
+function toggleAssetAccordion(button) {
+    const item = button.closest(".asset-accordion-item");
+
+    if (!item) {
+        return;
+    }
+
+    const isOpen = item.classList.contains("open");
+
+    item.classList.toggle("open", !isOpen);
+    button.setAttribute("aria-expanded", String(!isOpen));
+}
+
+function renderAssetDetails(asset) {
+    document.getElementById("pageTitle").textContent =
+        `${asset.assetName || "Asset"} Details`;
+
+    document.getElementById("assetDetailsSummary").innerHTML = `
+        <div class="asset-summary-card">
+            <span>Asset Name</span>
+            <strong>${assetDetailValue(asset.assetName)}</strong>
+        </div>
+
+        <div class="asset-summary-card">
+            <span>Asset Tag</span>
+            <strong>${assetDetailValue(asset.assetTag)}</strong>
+        </div>
+
+        <div class="asset-summary-card">
+            <span>Serial No</span>
+            <strong>${assetDetailValue(asset.serialNo)}</strong>
+        </div>
+
+        <div class="asset-summary-card status">
+            <span>Stock Status</span>
+            <strong>${assetDetailValue(asset.stockStatus)}</strong>
+        </div>
+    `;
+
+    document.getElementById("basicAssetInfo").innerHTML = [
+        createAssetInfoItem("Branch", asset.branch || "BEAH"),
+        createAssetInfoItem("Account Head", asset.accountHead || "FURNITURE"),
+        createAssetInfoItem("Asset Class", asset.assetClass || asset.manufacturer),
+        createAssetInfoItem("Type", asset.type || "General"),
+        createAssetInfoItem("Asset Name", asset.assetName),
+        createAssetInfoItem("Serial No", asset.serialNo),
+        createAssetInfoItem("Asset Tag", asset.assetTag),
+        createAssetInfoItem("Asset Badge", asset.assetBadge || asset.assetTag),
+        createAssetInfoItem("Manufacturer", asset.manufacturer),
+        createAssetInfoItem("Manufacturer Year", asset.manufacturerYear),
+        createAssetInfoItem("Description", asset.description || asset.assetName),
+        createAssetInfoItem("Maintainable", asset.maintainable || "Yes"),
+        createAssetInfoItem("Model", asset.model),
+        createAssetInfoItem("Registration Date", asset.registrationDate),
+        createAssetInfoItem("Criticality", asset.criticality || "MEDIUM"),
+        createAssetInfoItem("Stock Status", asset.stockStatus, false, true),
+        createAssetInfoItem("ERP No", asset.erpNo),
+        createAssetInfoItem("Plate No", asset.plateNo),
+        createAssetInfoItem("Location Path", asset.location, true),
+        createAssetInfoItem("Location Description", asset.locationDescription, true),
+        createAssetInfoItem("Picture", asset.picture || "No picture available", true)
+    ].join("");
+
+    document.getElementById("stakeholderUser").textContent =
+        asset.user || "-";
+
+    document.getElementById("stakeholderDepartment").textContent =
+        asset.department || "-";
+
+    document.getElementById("stakeholderCustodian").textContent =
+        asset.custodian || "-";
+
+    document.getElementById("financeInfo").innerHTML = [
+        createAssetInfoItem("Acquisition Method", asset.acquisitionMethod || "Purchased / Owned"),
+        createAssetInfoItem("PO Number", asset.poNumber || "PO200428"),
+        createAssetInfoItem("PO Date", asset.poDate || "22/Sep/2020"),
+        createAssetInfoItem("Invoice No", asset.invoiceNo || "2020/02"),
+        createAssetInfoItem("Invoice Date", asset.invoiceDate || "13/Sep/2020"),
+        createAssetInfoItem("Currency", asset.currency || "OMR"),
+        createAssetInfoItem("Exchange Rate", asset.exchangeRate || "1.000"),
+        createAssetInfoItem("Asset Cost", asset.assetCost || "0.000"),
+        createAssetInfoItem("Capitalization Date", asset.capitalizationDate),
+        createAssetInfoItem("Asset with revised Cost", asset.revisedCost || "0.000"),
+        createAssetInfoItem("Useful Life (Years)", asset.usefulLife || "5.00"),
+        createAssetInfoItem("Capital work in progress", asset.capitalWorkInProgress || "Yes"),
+        createAssetInfoItem("Asset Type", asset.assetType || "Capitalized"),
+        createAssetInfoItem("GRN No", asset.grnNo || "GRN/2023/70"),
+        createAssetInfoItem("GRN Date", asset.grnDate || "20/Nov/2023"),
+        createAssetInfoItem(
+            "Supplier",
+            asset.supplier || "JAWWHARAT AL SHARQ AL SHAMELA LLC [V-000426]"
+        ),
+        createAssetInfoItem("Installation Date", asset.installationDate),
+        createAssetInfoItem("Salvage Value", asset.salvageValue),
+        createAssetInfoItem("Remarks", asset.remarks || "Air Regulator")
+    ].join("");
+
+    document.getElementById("warrantyInfo").innerHTML = [
+        createAssetInfoItem("Warranty Start", asset.warrantyStart),
+        createAssetInfoItem("Warranty End", asset.warrantyEnd),
+        createAssetInfoItem("Warranty Scope", asset.warrantyScope),
+        createAssetInfoItem("ROP Registration Date", asset.ropRegistrationDate),
+        createAssetInfoItem("Insurance Date", asset.insuranceDate)
+    ].join("");
+
+    document.getElementById("customCostInfo").innerHTML = [
+        createAssetInfoItem(
+            "Field Name",
+            asset.customCostFieldName || "OTHERS CHARGES"
+        ),
+        createAssetInfoItem(
+            "OP Type",
+            asset.customCostOpType || "Addition"
+        ),
+        createAssetInfoItem("Currency", asset.customCostCurrency),
+        createAssetInfoItem(
+            "Exchange Rate",
+            asset.customCostExchangeRate || "0.000"
+        ),
+        createAssetInfoItem(
+            "Amount",
+            asset.customCostAmount || "0.000"
+        ),
+        createAssetInfoItem(
+            "Net Cost",
+            asset.customCostNetCost || "0.000"
+        )
+    ].join("");
+}
+
+function goBackToIssueList() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = "issue-create.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const assetTag = params.get("assetTag") || "";
+
+    const asset = availableAssets.find(function (item) {
+        return item.assetTag === assetTag;
+    });
+
+    if (!asset) {
+        document.getElementById("pageTitle").textContent = "Asset Details";
+
+        document.getElementById("assetDetailsSummary").innerHTML = `
+            <div class="asset-summary-card" style="grid-column:1/-1">
+                <span>Asset</span>
+                <strong>Asset information not found.</strong>
+            </div>
+        `;
+
+        document.getElementById("basicAssetInfo").innerHTML = `
+            <div class="asset-empty error" style="grid-column:1/-1">
+                The selected asset could not be found.
+            </div>
+        `;
+
+        return;
+    }
+    
+    renderAssetDetails(asset);
+});
+</script>
+
+</body>
+</html>
