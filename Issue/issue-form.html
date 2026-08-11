@@ -571,12 +571,10 @@
                                 <span class="mandatory">*</span>
                             </label>
 
-                            <select id="issueAssetTo" class="form-select">
+                            <select id="issueAssetTo" class="form-select" onchange="handleIssueAssetToChange()">
                                 <option value="">Select issue type</option>
                                 <option value="all">All</option>
-                                <option value="employee">Employee</option>
-                                <option value="custodian">Custodian</option>
-                                <option value="location">Location</option>
+                                <option value="supplier">Supplier</option>
                             </select>
 
                         </div>
@@ -709,7 +707,7 @@
                     <div class="form-column">
 
 
-                        <div class="form-field">
+                        <div class="form-field issue-all-only-field" id="searchDepartmentField">
 
                             <label>
                                 Search Department
@@ -738,7 +736,7 @@
                         </div>
 
 
-                        <div class="form-field">
+                        <div class="form-field issue-all-only-field" id="departmentInchargeField">
 
                             <label>
                                 Department Incharge
@@ -754,7 +752,7 @@
                         </div>
 
 
-                        <div class="form-field">
+                        <div class="form-field issue-all-only-field" id="searchEmployeeField">
 
                             <label>
                                 Search Employee
@@ -783,7 +781,7 @@
                         </div>
 
 
-                        <div class="form-field">
+                        <div class="form-field issue-all-only-field" id="searchLocationField">
 
                             <label>
                                 Search Location
@@ -813,7 +811,7 @@
                         </div>
 
 
-                        <div class="form-field">
+                        <div class="form-field issue-all-only-field" id="searchCustodianField">
 
                             <label>
                                 Search Custodian
@@ -844,7 +842,7 @@
                         </div>
 
 
-                        <div class="form-field">
+                        <div class="form-field issue-all-only-field" id="custodianDepartmentField">
 
                             <label>
                                 Custodian Department
@@ -880,6 +878,36 @@
                                 </option>
 
                             </select>
+
+                        </div>
+
+                        <!-- SUPPLIER FIELD: shown only when Issue Asset To = Supplier -->
+                        <div class="form-field" id="supplierField" style="display:none;">
+
+                            <label>
+                                Search Supplier
+                                <span class="mandatory">*</span>
+                            </label>
+
+                            <div class="search-row">
+
+                                <input
+                                    type="text"
+                                    id="supplier"
+                                    class="form-control"
+                                    placeholder="Type supplier name..."
+                                >
+
+                                <button
+                                    type="button"
+                                    class="help-button"
+                                    title="Search Supplier"
+                                    onclick="showSupplierInfo()"
+                                >
+                                    ?
+                                </button>
+
+                            </div>
 
                         </div>
 
@@ -1227,6 +1255,9 @@
             setDefaultDates();
 
             renderCart();
+
+            // Keep all fields visible by default; hide them only for Supplier.
+            handleIssueAssetToChange();
 
             updateSaveButton();
 
@@ -2139,6 +2170,58 @@
 
 
     // =========================================================
+    // ISSUE ASSET TO CHANGE
+    // =========================================================
+
+    function handleIssueAssetToChange() {
+
+        const issueAssetTo =
+            document.getElementById("issueAssetTo")?.value || "";
+
+        const allOnlyFields = [
+            "searchDepartmentField",
+            "departmentInchargeField",
+            "searchEmployeeField",
+            "searchLocationField",
+            "searchCustodianField",
+            "custodianDepartmentField"
+        ];
+
+        allOnlyFields.forEach(function (fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.style.display =
+                    issueAssetTo === "supplier" ? "none" : "";
+            }
+        });
+
+        const supplierField =
+            document.getElementById("supplierField");
+
+        if (supplierField) {
+            supplierField.style.display =
+                issueAssetTo === "supplier" ? "block" : "none";
+        }
+    }
+
+
+    // =========================================================
+    // SUPPLIER HELP
+    // =========================================================
+
+    function showSupplierInfo() {
+
+        Swal.fire({
+            icon: "info",
+            title: "Search Supplier",
+            text: "Supplier lookup can be connected to your backend API later.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#2563eb"
+        });
+    }
+
+
+    // =========================================================
     // SAVE ISSUE
     // =========================================================
 
@@ -2194,7 +2277,12 @@
         const custodian =
             document.getElementById(
                 "custodian"
-            ).value;
+            )?.value || "";
+
+        const supplier =
+            document.getElementById(
+                "supplier"
+            )?.value.trim() || "";
 
 
         if (!issueAssetTo) {
@@ -2243,26 +2331,31 @@
         }
 
 
-        if (!custodian) {
+        if (issueAssetTo === "supplier") {
+
+            if (!supplier) {
+                await Swal.fire({
+                    icon: "warning",
+                    title: "Supplier Required",
+                    text: "Please select a supplier using the Search Supplier button.",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#2563eb"
+                });
+
+                return;
+            }
+
+        } else if (!custodian) {
 
             await Swal.fire({
-
                 icon: "warning",
-
                 title: "Custodian Required",
-
-                text:
-                    "Please select a custodian using the Search Custodian button.",
-
+                text: "Please select a custodian using the Search Custodian button.",
                 confirmButtonText: "OK",
-
                 confirmButtonColor: "#2563eb"
-
             });
 
-
             return;
-
         }
 
 

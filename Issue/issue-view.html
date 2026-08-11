@@ -1,645 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Issue Details - EAM</title>
-
-    <link
-        rel="stylesheet"
-        href="./css/style.css"
-    >
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Issue Details - EAM</title>
+<link rel="stylesheet" href="./css/style.css">
+<style>
+/* =========================================================
+   FRIENDLY ISSUE DETAILS
+   Existing application functionality is preserved.
+========================================================= */
+.details-page{max-width:1500px;margin:0 auto}
+.details-page *{box-sizing:border-box}
+.details-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:20px}
+.details-hero h1{margin:0;color:#172554;font-size:25px}
+.details-hero p{margin:6px 0 0;color:#64748b;font-size:13px}
+.back-btn{height:40px;padding:0 16px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#334155;font-weight:700;cursor:pointer}
+.back-btn:hover{background:#f8fafc}
+.details-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:0 4px 18px rgba(15,23,42,.06);overflow:hidden;margin-bottom:18px}
+.details-card-header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 20px;border-bottom:1px solid #e5e7eb;background:linear-gradient(180deg,#fff,#f8fafc)}
+.header-left{display:flex;align-items:center;gap:13px}
+.header-icon{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-weight:800;font-size:19px}
+.section-label{display:block;font-size:10px;font-weight:800;letter-spacing:.08em;color:#64748b;margin-bottom:3px}
+.details-card-header h2{margin:0;color:#172554;font-size:18px}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+.status-badge.returnable{background:#dcfce7;color:#166534}
+.status-badge.non-returnable{background:#f1f5f9;color:#475569}
+.details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#e5e7eb}
+.detail-item{background:#fff;padding:16px 18px;min-height:72px}
+.detail-label{display:block;color:#64748b;font-size:11px;font-weight:700;margin-bottom:6px}
+.detail-item strong{display:block;color:#1e293b;font-size:13px;line-height:1.45;word-break:break-word}
+.info-section{padding:18px 20px}
+.info-title{margin:0 0 13px;color:#1e293b;font-size:15px}
+.assignment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.info-box{border:1px solid #e2e8f0;border-radius:10px;padding:13px;background:#f8fafc}
+.info-box .label{display:block;color:#64748b;font-size:11px;font-weight:700;margin-bottom:5px}
+.info-box .value{display:block;color:#1e293b;font-size:13px;font-weight:700;line-height:1.4}
+.remarks-box{margin-top:14px;border:1px solid #e2e8f0;border-radius:10px;padding:14px;background:#fff}
+.remarks-box p{margin:5px 0 0;color:#475569;font-size:13px;line-height:1.6;white-space:pre-wrap}
+.assets-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:17px 20px;border-bottom:1px solid #e5e7eb}
+.assets-header h2{margin:0;color:#172554;font-size:17px}
+.asset-count{padding:6px 10px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800}
+.asset-summary{display:flex;align-items:center;gap:13px;padding:16px 20px;background:#f8fafc;border-bottom:1px solid #e5e7eb}
+.asset-icon{width:42px;height:42px;flex:0 0 42px;border-radius:10px;display:grid;place-items:center;background:#e0f2fe;color:#0369a1;font-size:19px;font-weight:800}
+.asset-summary h3{margin:0 0 3px;color:#1e293b;font-size:15px}
+.asset-summary span{color:#64748b;font-size:12px}
+.asset-table-wrap{overflow-x:auto}
+.asset-table{width:100%;border-collapse:collapse;min-width:760px}
+.asset-table th{padding:11px 14px;text-align:left;background:#f8fafc;color:#64748b;font-size:11px;font-weight:800;border-bottom:1px solid #e2e8f0}
+.asset-table td{padding:13px 14px;color:#334155;font-size:12px;border-bottom:1px solid #eef2f7;vertical-align:top}
+.asset-table tr:last-child td{border-bottom:0}
+.asset-tag{font-weight:800;color:#1d4ed8}
+.asset-name{font-weight:700;color:#1e293b}
+.asset-status{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:800}
+.asset-status.yes{background:#dcfce7;color:#166534}
+.asset-status.no{background:#fef2f2;color:#b91c1c}
+.location-box{margin:16px 20px;border:1px solid #dbeafe;border-radius:10px;padding:13px 15px;background:#eff6ff}
+.location-box .detail-label{color:#1d4ed8;margin-bottom:4px}
+.location-box strong{color:#1e40af;font-size:13px}
+.empty-state{padding:55px 20px;text-align:center;background:#fff;border:1px solid #e2e8f0;border-radius:14px}
+.empty-icon{width:48px;height:48px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:#fef2f2;color:#dc2626;font-size:22px;font-weight:800}
+.empty-state h2{margin:0;color:#1e293b;font-size:18px}
+.empty-state p{color:#64748b;font-size:13px;margin:7px 0 18px}
+.primary-button{height:40px;padding:0 16px;border:0;border-radius:8px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
+.bottom-actions{display:flex;justify-content:flex-end;margin-top:4px;padding-bottom:20px}
+@media(max-width:1000px){
+  .details-grid,.assignment-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  .details-hero{align-items:flex-start;flex-direction:column}
+  .details-grid,.assignment-grid{grid-template-columns:1fr}
+  .details-card-header{align-items:flex-start;flex-direction:column}
+  .bottom-actions{justify-content:flex-start}
+}
+</style>
 </head>
-
-
 <body>
-
-
-    <!-- Generic Sidebar -->
-
-    <div id="sidebar"></div>
-
-
-    <!-- Main Application -->
-
-    <div class="main-content">
-
-
-        <!-- Generic Header -->
-
-        <div id="header"></div>
-
-
-        <!-- Page -->
-
-        <main class="page-content">
-
-
-            <!-- Breadcrumb -->
-
-            <div class="page-breadcrumb">
-
-                <span>EAM</span>
-
-                <span>›</span>
-
-                <span>Issue</span>
-
-                <span>›</span>
-
-                <span>List</span>
-
-                <span>›</span>
-
-                <strong>View</strong>
-
-            </div>
-
-
-            <!-- Page Header -->
-
-            <div class="page-header">
-
-                <div>
-
-                    <h1>
-                        Issue Details
-                    </h1>
-
-                    <p>
-                        View complete information about this asset issue.
-                    </p>
-
-                </div>
-
-
-                <button
-                    class="secondary-button"
-                    onclick="goBackToList()"
-                >
-
-                    ←
-
-                    Back to List
-
-                </button>
-
-            </div>
-
-
-            <!-- Transaction Summary -->
-
-            <section class="details-card">
-
-
-                <div class="details-card-header">
-
-                    <div>
-
-                        <span class="section-label">
-                            ISSUE TRANSACTION
-                        </span>
-
-                        <h2 id="transactionNumber">
-                            --
-                        </h2>
-
-                    </div>
-
-
-                    <span
-                        class="status-badge"
-                        id="returnableBadge"
-                    >
-                        --
-                    </span>
-
-                </div>
-
-
-                <div class="details-grid">
-
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Transaction Date
-                        </span>
-
-                        <strong id="transactionDate">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Issue Type
-                        </span>
-
-                        <strong id="issueType">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            From Date
-                        </span>
-
-                        <strong id="fromDate">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            To Date
-                        </span>
-
-                        <strong id="toDate">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Issued To
-                        </span>
-
-                        <strong id="issuedTo">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="detail-item">
-
-                        <span class="detail-label">
-                            Created By
-                        </span>
-
-                        <strong id="createdBy">
-                            --
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Remarks -->
-
-                <div class="remarks-section">
-
-                    <span class="detail-label">
-                        Remarks
-                    </span>
-
-                    <p id="remarks">
-                        No remarks available.
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            <!-- Asset Information -->
-
-            <section class="details-card">
-
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <span class="section-label">
-                            ASSET INFORMATION
-                        </span>
-
-                        <h2>
-                            Issued Asset
-                        </h2>
-
-                    </div>
-
-                </div>
-
-
-                <div class="asset-summary">
-
-                    <div class="asset-icon">
-                        ◇
-                    </div>
-
-
-                    <div>
-
-                        <h3 id="assetName">
-                            --
-                        </h3>
-
-                        <span id="assetTag">
-                            --
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Asset Grid -->
-
-                <div class="asset-details-grid">
-
-
-                    <div class="asset-detail">
-
-                        <span>
-                            Asset Tag
-                        </span>
-
-                        <strong id="assetTagValue">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="asset-detail">
-
-                        <span>
-                            Serial No
-                        </span>
-
-                        <strong id="serialNo">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="asset-detail">
-
-                        <span>
-                            Model
-                        </span>
-
-                        <strong id="model">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="asset-detail">
-
-                        <span>
-                            Manufacturer
-                        </span>
-
-                        <strong id="manufacturer">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="asset-detail">
-
-                        <span>
-                            Description
-                        </span>
-
-                        <strong id="description">
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <div class="asset-detail">
-
-                        <span>
-                            Returned
-                        </span>
-
-                        <strong
-                            id="returned"
-                            class="returned-status"
-                        >
-                            --
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Location -->
-
-                <div class="location-box">
-
-                    <span class="detail-label">
-                        Asset Location
-                    </span>
-
-                    <strong id="location">
-                        --
-                    </strong>
-
-                </div>
-
-            </section>
-
-
-            <!-- Bottom Action -->
-
-            <div class="bottom-actions">
-
-                <button
-                    class="secondary-button"
-                    onclick="goBackToList()"
-                >
-
-                    ←
-
-                    Back to List
-
-                </button>
-
-            </div>
-
-
-        </main>
-
-
-        <!-- Footer -->
-
-        <div id="footer"></div>
-
+<div id="sidebar"></div>
+<div class="main-content">
+<div id="header"></div>
+<main class="page-content">
+<div class="details-page">
+
+<div class="page-breadcrumb">
+<span>EAM</span><span>›</span><span>Issue</span><span>›</span><span>List</span><span>›</span><strong>View</strong>
+</div>
+
+<div class="details-hero">
+  <div>
+    <h1>Issue Details</h1>
+    <p>Review the issue transaction, recipient, dates and issued asset information in one place.</p>
+  </div>
+  <button class="back-btn" onclick="goBackToList()">← Back to List</button>
+</div>
+
+<section class="details-card">
+  <div class="details-card-header">
+    <div class="header-left">
+      <div class="header-icon">✓</div>
+      <div>
+        <span class="section-label">ISSUE TRANSACTION</span>
+        <h2 id="transactionNumber">--</h2>
+      </div>
+    </div>
+    <span class="status-badge" id="returnableBadge">--</span>
+  </div>
+
+  <div class="details-grid">
+    <div class="detail-item"><span class="detail-label">Transaction Date</span><strong id="transactionDate">--</strong></div>
+    <div class="detail-item"><span class="detail-label">Issue Asset To</span><strong id="issueType">--</strong></div>
+    <div class="detail-item"><span class="detail-label">From Date</span><strong id="fromDate">--</strong></div>
+    <div class="detail-item"><span class="detail-label">To Date</span><strong id="toDate">--</strong></div>
+    <div class="detail-item"><span class="detail-label">Issued To</span><strong id="issuedTo">--</strong></div>
+    <div class="detail-item"><span class="detail-label">Created By</span><strong id="createdBy">--</strong></div>
+  </div>
+
+  <div class="info-section">
+    <h3 class="info-title">Assignment Information</h3>
+    <div class="assignment-grid">
+      <div class="info-box"><span class="label">Department</span><span class="value" id="department">Not available</span></div>
+      <div class="info-box"><span class="label">Department Incharge</span><span class="value" id="departmentIncharge">Not available</span></div>
+      <div class="info-box"><span class="label">Employee</span><span class="value" id="employee">Not available</span></div>
+      <div class="info-box"><span class="label">Location</span><span class="value" id="assignmentLocation">Not available</span></div>
+      <div class="info-box"><span class="label">Custodian</span><span class="value" id="custodian">Not available</span></div>
+      <div class="info-box"><span class="label">Custodian Department</span><span class="value" id="custodianDepartment">Not available</span></div>
+      <div class="info-box" id="supplierInfoBox" style="display:none"><span class="label">Supplier</span><span class="value" id="supplier">Not available</span></div>
+    </div>
+    <div class="remarks-box">
+      <span class="detail-label">Remarks</span>
+      <p id="remarks">No remarks available.</p>
+    </div>
+  </div>
+</section>
+
+<section class="details-card">
+  <div class="assets-header">
+    <div>
+      <span class="section-label">ASSET INFORMATION</span>
+      <h2>Issued Assets</h2>
+    </div>
+    <span class="asset-count" id="assetCount">0 Assets</span>
+  </div>
+
+  <div id="assetContent"></div>
+</section>
+
+<div class="bottom-actions">
+  <button class="back-btn" onclick="goBackToList()">← Back to List</button>
+</div>
+
+</div>
+</main>
+<div id="footer"></div>
+</div>
+
+<script src="./js/layout.js"></script>
+<script src="./js/issue.js"></script>
+<script>
+function getIssueId(){
+  return new URLSearchParams(window.location.search).get("id");
+}
+
+function showValue(value){
+  if(value===null || value===undefined || String(value).trim()==="") return "Not available";
+  return String(value);
+}
+
+function setText(id,value){
+  const el=document.getElementById(id);
+  if(el) el.textContent=showValue(value);
+}
+
+function formatDate(value){
+  if(!value) return "Not available";
+  const raw=String(value);
+  const datePart=raw.includes("T") ? raw.split("T")[0] : raw;
+  const parts=datePart.split("-");
+  if(parts.length===3 && parts[0].length===4) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  return raw;
+}
+
+function getAssets(issue){
+  if(Array.isArray(issue.assets) && issue.assets.length) return issue.assets;
+  if(issue.asset) return [issue.asset];
+  return [];
+}
+
+function renderAssets(issue){
+  const assets=getAssets(issue);
+  const countEl=document.getElementById("assetCount");
+  countEl.textContent=`${assets.length} ${assets.length===1 ? "Asset" : "Assets"}`;
+
+  const container=document.getElementById("assetContent");
+
+  if(!assets.length){
+    container.innerHTML=`<div class="empty-state" style="border:0;border-radius:0">
+      <div class="empty-icon">!</div>
+      <h2>No asset information</h2>
+      <p>No issued asset details are available for this transaction.</p>
+    </div>`;
+    return;
+  }
+
+  const first=assets[0];
+  container.innerHTML=`
+    <div class="asset-summary">
+      <div class="asset-icon">◇</div>
+      <div>
+        <h3>${escapeHtml(showValue(first.assetName))}</h3>
+        <span>Asset Tag: ${escapeHtml(showValue(first.assetTag))}</span>
+      </div>
     </div>
 
-
-    <!-- Generic Layout -->
-
-    <script src="./js/layout.js"></script>
-
-
-    <!-- Issue Data -->
-
-    <script src="./js/issue.js"></script>
-
-
-    <!-- Load Issue -->
-
-    <script>
-
-        function getIssueId() {
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-            return params.get("id");
-
-        }
-
-
-        function showValue(value) {
-
-            if (
-                value === null ||
-                value === undefined ||
-                value === ""
-            ) {
-
-                return "Not available";
-
-            }
-
-            return value;
-
-        }
-
-
-        function loadIssue() {
-
-            const issueId =
-                getIssueId();
-
-
-            const issue =
-                issueData[issueId];
-
-
-            if (!issue) {
-
-                document.querySelector(
-                    ".page-content"
-                ).innerHTML = `
-
-                    <div class="empty-state">
-
-                        <div class="empty-icon">
-                            !
-                        </div>
-
-                        <h2>
-                            Issue Not Found
-                        </h2>
-
-                        <p>
-                            The requested issue could not be found.
-                        </p>
-
-                        <button
-                            class="primary-button"
-                            onclick="goBackToList()"
-                        >
-                            Back to List
-                        </button>
-
-                    </div>
-
-                `;
-
-                return;
-
-            }
-
-
-            // Transaction
-
-            document.getElementById(
-                "transactionNumber"
-            ).textContent =
-                issue.transactionNo;
-
-
-            document.getElementById(
-                "transactionDate"
-            ).textContent =
-                issue.transactionDate;
-
-
-            document.getElementById(
-                "issueType"
-            ).textContent =
-                issue.issueType;
-
-
-            document.getElementById(
-                "fromDate"
-            ).textContent =
-                issue.fromDate;
-
-
-            document.getElementById(
-                "toDate"
-            ).textContent =
-                issue.toDate;
-
-
-            document.getElementById(
-                "issuedTo"
-            ).textContent =
-                issue.issuedTo;
-
-
-            document.getElementById(
-                "createdBy"
-            ).textContent =
-                issue.createdBy;
-
-
-            document.getElementById(
-                "remarks"
-            ).textContent =
-                showValue(issue.remarks);
-
-
-            // Returnable
-
-            const badge =
-                document.getElementById(
-                    "returnableBadge"
-                );
-
-
-            badge.textContent =
-                issue.returnable === "Yes"
-                    ? "Returnable"
-                    : "Non-returnable";
-
-
-            badge.classList.add(
-                issue.returnable === "Yes"
-                    ? "returnable"
-                    : "non-returnable"
-            );
-
-
-            // Asset
-
-            const asset =
-                issue.asset;
-
-
-            document.getElementById(
-                "assetName"
-            ).textContent =
-                showValue(asset.assetName);
-
-
-            document.getElementById(
-                "assetTag"
-            ).textContent =
-                showValue(asset.assetTag);
-
-
-            document.getElementById(
-                "assetTagValue"
-            ).textContent =
-                showValue(asset.assetTag);
-
-
-            document.getElementById(
-                "serialNo"
-            ).textContent =
-                showValue(asset.serialNo);
-
-
-            document.getElementById(
-                "model"
-            ).textContent =
-                showValue(asset.model);
-
-
-            document.getElementById(
-                "manufacturer"
-            ).textContent =
-                showValue(asset.manufacturer);
-
-
-            document.getElementById(
-                "description"
-            ).textContent =
-                showValue(asset.description);
-
-
-            document.getElementById(
-                "location"
-            ).textContent =
-                showValue(asset.location);
-
-
-            const returned =
-                document.getElementById(
-                    "returned"
-                );
-
-
-            returned.textContent =
-                asset.returned;
-
-
-            returned.classList.add(
-                asset.returned === "Yes"
-                    ? "returned-yes"
-                    : "returned-no"
-            );
-
-        }
-        function goBackToList() {
-
-            window.location.href =
-                "issue-list.html";
-
-        }
-        loadIssue();
-    </script>
+    <div class="asset-table-wrap">
+      <table class="asset-table">
+        <thead>
+          <tr>
+            <th>Asset Tag</th>
+            <th>Asset Name</th>
+            <th>Serial Number</th>
+            <th>Model</th>
+            <th>Manufacturer</th>
+            <th>Returned</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${assets.map(asset=>`
+            <tr>
+              <td><span class="asset-tag">${escapeHtml(showValue(asset.assetTag))}</span></td>
+              <td><span class="asset-name">${escapeHtml(showValue(asset.assetName))}</span></td>
+              <td>${escapeHtml(showValue(asset.serialNo))}</td>
+              <td>${escapeHtml(showValue(asset.model))}</td>
+              <td>${escapeHtml(showValue(asset.manufacturer))}</td>
+              <td>
+                <span class="asset-status ${String(asset.returned).toLowerCase()==="yes" ? "yes":"no"}">
+                  ${escapeHtml(showValue(asset.returned))}
+                </span>
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="location-box">
+      <span class="detail-label">Asset Location</span>
+      <strong id="location">--</strong>
+    </div>
+  `;
+
+  setText("location", first.location);
+}
+
+function loadIssue(){
+  const issueId=getIssueId();
+  const issue=typeof issueData!=="undefined" ? issueData[issueId] : null;
+
+  if(!issue){
+    document.querySelector(".details-page").innerHTML=`
+      <div class="page-breadcrumb"><span>EAM</span><span>›</span><span>Issue</span><span>›</span><span>List</span><span>›</span><strong>View</strong></div>
+      <div class="empty-state">
+        <div class="empty-icon">!</div>
+        <h2>Issue Not Found</h2>
+        <p>The requested issue could not be found. Please return to the Issue List and select a valid transaction.</p>
+        <button class="primary-button" onclick="goBackToList()">Back to List</button>
+      </div>`;
+    return;
+  }
+
+  setText("transactionNumber",issue.transactionNo);
+  setText("transactionDate",issue.transactionDate);
+  setText("issueType",issue.issueType);
+  setText("fromDate",formatDate(issue.fromDate));
+  setText("toDate",formatDate(issue.toDate));
+  setText("issuedTo",issue.issuedTo || issue.custodian || issue.employee || issue.supplier);
+  setText("createdBy",issue.createdBy);
+  setText("remarks",issue.remarks);
+
+  setText("department",issue.department);
+  setText("departmentIncharge",issue.departmentIncharge);
+  setText("employee",issue.employee);
+  setText("assignmentLocation",issue.location);
+  setText("custodian",issue.custodian);
+  setText("custodianDepartment",issue.custodianDepartment);
+
+  if(issue.supplier){
+    document.getElementById("supplierInfoBox").style.display="";
+    setText("supplier",issue.supplier);
+  }
+
+  const badge=document.getElementById("returnableBadge");
+  const returnable=String(issue.returnable||"").toLowerCase()==="yes";
+  badge.textContent=returnable ? "● Returnable" : "● Non-returnable";
+  badge.classList.add(returnable ? "returnable" : "non-returnable");
+
+  renderAssets(issue);
+}
+
+function goBackToList(){
+  window.location.href="issue-list.html";
+}
+
+function escapeHtml(value){
+  if(value===null || value===undefined) return "";
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+loadIssue();
+</script>
 </body>
 </html>
