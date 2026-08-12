@@ -225,6 +225,28 @@
             text-overflow: ellipsis;
         }
 
+        .issue-list-row-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 9px;
+            color: #475569;
+            font-size: 11px;
+        }
+
+        .issue-list-row-details span {
+            white-space: nowrap;
+        }
+
+        .issue-list-asset,
+        .issue-list-range,
+        .issue-list-remarks {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
         .issue-type-pill {
             display: inline-flex;
             align-items: center;
@@ -1502,29 +1524,50 @@
 
             data.forEach(function(issue, index) {
 
+                const issueDetail = mergeIssueData(issue);
                 const row = document.createElement("div");
-                const badgeClass = String(issue.issueType || "").toLowerCase();
+                const badgeClass = String(issueDetail.issueType || "").toLowerCase();
+                const assets = getIssueAssets(issueDetail);
+                const primaryAsset = assets[0] || {};
+                const assetSummary = issueValue(
+                    primaryAsset.assetName || primaryAsset.assetTag || primaryAsset.serialNo,
+                    "No asset details"
+                );
+                const dateRange = issueDetail.fromDate && issueDetail.toDate
+                    ? `${escapeIssueHtml(issueDetail.fromDate)} → ${escapeIssueHtml(issueDetail.toDate)}`
+                    : "";
 
                 row.className = "issue-list-row";
-                row.dataset.transaction = issue.transactionNo || "";
+                row.dataset.transaction = issueDetail.transactionNo || "";
 
                 row.innerHTML = `
                     <div class="issue-list-row-top">
                         <span class="issue-list-transaction">
-                            ${issue.transactionNo || "-"}
+                            ${escapeIssueHtml(issueDetail.transactionNo || "-")}
                         </span>
 
                         <span class="issue-type-pill ${badgeClass}">
-                            ● ${issue.issueType || "-"}
+                            ● ${escapeIssueHtml(issueDetail.issueType || "-")}
                         </span>
                     </div>
 
+                    <div class="issue-list-row-details">
+                        <span>Issued to: ${escapeIssueHtml(issueValue(issueDetail.issuedTo, "Unknown"))}</span>
+                        <span>Returnable: ${escapeIssueHtml(issueValue(issueDetail.returnable, "N/A"))}</span>
+                    </div>
+
+                    ${dateRange ? `<div class="issue-list-range">${dateRange}</div>` : ""}
+
+                    <div class="issue-list-asset">
+                        ${escapeIssueHtml(assetSummary)}
+                    </div>
+
                     <div class="issue-list-date">
-                        ${issue.transactionDate || "-"}
+                        ${escapeIssueHtml(issueDetail.transactionDate || "-")}
                     </div>
 
                     <div class="issue-list-created">
-                        ${issue.createdBy || "-"}
+                        ${escapeIssueHtml(issueDetail.createdBy || "-")}
                     </div>
                 `;
 
@@ -1584,6 +1627,23 @@
             }
 
             return String(value);
+        }
+
+        function mergeIssueData(issue) {
+            if (!issue || !issue.transactionNo) {
+                return issue;
+            }
+
+            const details = issueData?.[issue.transactionNo];
+
+            if (!details) {
+                return issue;
+            }
+
+            return {
+                ...issue,
+                ...details
+            };
         }
 
         function getIssueAssets(issue) {
@@ -2185,32 +2245,34 @@
 
             const filtered = allIssueRows.filter(function(issue) {
 
+                const issueDetail = mergeIssueData(issue);
+
                 const matchesDate =
                     !transactionDate ||
-                    getIssueDateValue(issue.transactionDate) === transactionDate;
+                    getIssueDateValue(issueDetail.transactionDate) === transactionDate;
 
                 const matchesIssueType =
                     !issueType ||
-                    issue.issueType === issueType;
+                    issueDetail.issueType === issueType;
 
                 const matchesTransactionNo =
                     !transactionNo ||
-                    String(issue.transactionNo)
+                    String(issueDetail.transactionNo)
                         .toLowerCase()
                         .includes(transactionNo);
 
                 const matchesCreatedBy =
                     !createdBy ||
-                    issue.createdBy === createdBy;
+                    issueDetail.createdBy === createdBy;
 
                 const matchesIssuedTo =
                     !issuedTo ||
                     String(
-                        issue.issuedTo ??
-                        issue.issuedToName ??
-                        issue.employee ??
-                        issue.custodian ??
-                        issue.supplier ??
+                        issueDetail.issuedTo ??
+                        issueDetail.issuedToName ??
+                        issueDetail.employee ??
+                        issueDetail.custodian ??
+                        issueDetail.supplier ??
                         ""
                     )
                         .toLowerCase()
@@ -2303,16 +2365,20 @@
 
                 const filtered = allIssueRows.filter(function(issue) {
 
+                    const issueDetail = mergeIssueData(issue);
+
                     const searchable = [
-                        issue.transactionNo,
-                        issue.transactionDate,
-                        issue.issueType,
-                        issue.createdBy,
-                        issue.issuedTo,
-                        issue.issuedToName,
-                        issue.employee,
-                        issue.custodian,
-                        issue.supplier
+                        issueDetail.transactionNo,
+                        issueDetail.transactionDate,
+                        issueDetail.issueType,
+                        issueDetail.createdBy,
+                        issueDetail.issuedTo,
+                        issueDetail.issuedToName,
+                        issueDetail.employee,
+                        issueDetail.custodian,
+                        issueDetail.supplier,
+                        issueDetail.asset?.assetName,
+                        issueDetail.asset?.assetTag
                     ].filter(Boolean).join(" ").toLowerCase();
 
                     return searchable.includes(query);
