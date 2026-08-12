@@ -101,111 +101,73 @@
         }
 
         /* =====================================================
-           ACCORDION
+           TAB BASED ASSET DETAILS
+           Design change only - existing data/rendering retained.
         ====================================================== */
 
-        .asset-details-accordion {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .asset-accordion-item {
-            overflow: hidden;
+        .asset-details-tabs {
+            width: 100%;
             border: 1px solid #dbe4ef;
             border-radius: 10px;
             background: #ffffff;
-            box-shadow: 0 2px 8px rgba(15, 23, 42, .035);
+            overflow: hidden;
         }
 
-        .asset-accordion-trigger {
-            width: 100%;
-            min-height: 62px;
+        .asset-tab-nav {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 11px 17px;
-            border: 0;
-            background: #ffffff;
+            align-items: flex-end;
+            min-height: 48px;
+            padding: 0 8px;
+            background: #f5f6f8;
+            border-bottom: 1px solid #dbe4ef;
+            overflow-x: auto;
+        }
+
+        .asset-tab-button {
+            min-height: 48px;
+            padding: 0 18px;
+            border: 1px solid transparent;
+            border-bottom: 0;
+            border-radius: 9px 9px 0 0;
+            background: transparent;
             color: #0f172a;
-            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
             cursor: pointer;
+            transition: all .18s ease;
         }
 
-        .asset-accordion-trigger:hover {
-            background: #f8fbff;
-        }
-
-        .asset-accordion-item.open .asset-accordion-trigger {
-            background: linear-gradient(90deg, #2563eb, #3b82f6);
-            color: #ffffff;
-        }
-
-        .accordion-left {
-            min-width: 0;
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
-
-        .accordion-icon {
-            width: 34px;
-            height: 34px;
-            flex: 0 0 34px;
-            display: grid;
-            place-items: center;
-            border-radius: 8px;
-            background: #eff6ff;
+        .asset-tab-button:hover {
             color: #2563eb;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .asset-accordion-item.open .accordion-icon {
-            background: rgba(255,255,255,.18);
-            color: #ffffff;
-        }
-
-        .accordion-title {
-            display: block;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .accordion-subtitle {
-            display: block;
-            margin-top: 3px;
-            color: #64748b;
-            font-size: 11px;
-            font-weight: 400;
-        }
-
-        .asset-accordion-item.open .accordion-subtitle {
-            color: #dbeafe;
-        }
-
-        .accordion-chevron {
-            flex: 0 0 auto;
-            font-size: 18px;
-            color: #64748b;
-            transition: transform .2s ease;
-        }
-
-        .asset-accordion-item.open .accordion-chevron {
-            color: #ffffff;
-            transform: rotate(180deg);
-        }
-
-        .asset-accordion-panel {
-            display: none;
-            padding: 16px;
-            border-top: 1px solid #dbe4ef;
             background: #ffffff;
         }
 
-        .asset-accordion-item.open .asset-accordion-panel {
+        .asset-tab-button.active {
+            border-color: #dbe4ef;
+            background: #ffffff;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .asset-tab-panel {
+            display: none;
+            min-height: 360px;
+            padding: 16px;
+            background: #ffffff;
+        }
+
+        .asset-tab-panel.active {
             display: block;
+        }
+
+        .asset-tab-panel .asset-info-grid {
+            margin: 0;
+        }
+
+        .asset-tab-panel .asset-detail-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
         }
 
         /* =====================================================
@@ -325,6 +287,10 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
+            .asset-tab-button {
+                padding: 0 14px;
+            }
+
             .asset-info-grid {
                 grid-template-columns: 1fr;
             }
@@ -346,8 +312,14 @@
                 grid-template-columns: 1fr;
             }
 
-            .asset-accordion-panel {
+            .asset-tab-panel {
                 padding: 10px;
+            }
+
+            .asset-tab-button {
+                min-height: 44px;
+                padding: 0 12px;
+                font-size: 12px;
             }
 
             .asset-info-item,
@@ -412,111 +384,196 @@
         <div class="asset-details-summary" id="assetDetailsSummary"></div>
 
         <!-- =================================================
-             ACCORDION SECTIONS
+             TAB VIEW
+             Existing content/data is retained.
         ================================================== -->
-        <div class="asset-details-accordion">
+        <section class="asset-details-tabs">
 
-            <!-- 1. Asset Details -->
-            <section class="asset-accordion-item open">
+            <div class="asset-tab-nav" role="tablist" aria-label="Asset details">
                 <button
+                    id="asset-tab-1-button"
                     type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="true"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">▣</span>
-                        <span>
-                            <span class="accordion-title">Asset Details</span>
-                            <span class="accordion-subtitle">
-                                Basic information and identification
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-info-grid" id="basicAssetInfo"></div>
-                </div>
-            </section>
-
-            <!-- 2. Parent Asset -->
-            <section class="asset-accordion-item">
+                    class="asset-tab-button active"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="asset-tab-1"
+                    onclick="showAssetTab('asset-tab-1', this)"
+                >Asset Details</button>
                 <button
+                    id="asset-tab-2-button"
                     type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">↳</span>
-                        <span>
-                            <span class="accordion-title">Parent Asset Details</span>
-                            <span class="accordion-subtitle">
-                                Parent asset relationship
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-2"
+                    onclick="showAssetTab('asset-tab-2', this)"
+                >Parent Asset Details</button>
+                <button
+                    id="asset-tab-3-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-3"
+                    onclick="showAssetTab('asset-tab-3', this)"
+                >Child Asset Details</button>
+                <button
+                    id="asset-tab-4-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-4"
+                    onclick="showAssetTab('asset-tab-4', this)"
+                >Asset Stakeholder</button>
+                <button
+                    id="asset-tab-5-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-5"
+                    onclick="showAssetTab('asset-tab-5', this)"
+                >Asset Finance Info</button>
+                <button
+                    id="asset-tab-6-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-6"
+                    onclick="showAssetTab('asset-tab-6', this)"
+                >Warranty Details</button>
+                <button
+                    id="asset-tab-7-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-7"
+                    onclick="showAssetTab('asset-tab-7', this)"
+                >Custom Cost</button>
+                <button
+                    id="asset-tab-8-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-8"
+                    onclick="showAssetTab('asset-tab-8', this)"
+                >Maintenance Details</button>
+                <button
+                    id="asset-tab-9-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-9"
+                    onclick="showAssetTab('asset-tab-9', this)"
+                >Asset Meter Readings</button>
+                <button
+                    id="asset-tab-10-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-10"
+                    onclick="showAssetTab('asset-tab-10', this)"
+                >WorkOrder Details</button>
+                <button
+                    id="asset-tab-11-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-11"
+                    onclick="showAssetTab('asset-tab-11', this)"
+                >Asset Contract Details</button>
+                <button
+                    id="asset-tab-12-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-12"
+                    onclick="showAssetTab('asset-tab-12', this)"
+                >Asset Spare Details</button>
+                <button
+                    id="asset-tab-13-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-13"
+                    onclick="showAssetTab('asset-tab-13', this)"
+                >Issued Spare Details</button>
+                <button
+                    id="asset-tab-14-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-14"
+                    onclick="showAssetTab('asset-tab-14', this)"
+                >Fund Sources</button>
+                <button
+                    id="asset-tab-15-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-15"
+                    onclick="showAssetTab('asset-tab-15', this)"
+                >Attachment</button>
+                <button
+                    id="asset-tab-16-button"
+                    type="button"
+                    class="asset-tab-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="asset-tab-16"
+                    onclick="showAssetTab('asset-tab-16', this)"
+                >GRN Attachments</button>
+            </div>
 
-                <div class="asset-accordion-panel">
-                    <div class="asset-empty">
+            <div
+                id="asset-tab-1"
+                class="asset-tab-panel active"
+                role="tabpanel"
+                aria-labelledby="asset-tab-1-button"
+            >
+<div class="asset-info-grid" id="basicAssetInfo"></div>
+            </div>
+
+            <div
+                id="asset-tab-2"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-2-button"
+            >
+<div class="asset-empty">
                         No parent asset information available.
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 3. Child Asset -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">↳</span>
-                        <span>
-                            <span class="accordion-title">Child Asset Details</span>
-                            <span class="accordion-subtitle">
-                                Assets linked below this asset
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-empty">
+            <div
+                id="asset-tab-3"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-3-button"
+            >
+<div class="asset-empty">
                         No child assets available.
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 4. Stakeholder -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">◉</span>
-                        <span>
-                            <span class="accordion-title">Asset Stakeholder</span>
-                            <span class="accordion-subtitle">
-                                User, department and custodian information
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-info-grid">
+            <div
+                id="asset-tab-4"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-4-button"
+            >
+<div class="asset-info-grid">
                         <div class="asset-info-item">
                             <div class="asset-info-label">User</div>
                             <div class="asset-info-value" id="stakeholderUser">-</div>
@@ -532,107 +589,42 @@
                             <div class="asset-info-value" id="stakeholderCustodian">-</div>
                         </div>
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 5. Finance -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">₹</span>
-                        <span>
-                            <span class="accordion-title">Asset Finance Info</span>
-                            <span class="accordion-subtitle">
-                                Financial and accounting information
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
+            <div
+                id="asset-tab-5"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-5-button"
+            >
+<div class="asset-info-grid" id="financeInfo"></div>
+            </div>
 
-                <div class="asset-accordion-panel">
-                    <div class="asset-info-grid" id="financeInfo"></div>
-                </div>
-            </section>
+            <div
+                id="asset-tab-6"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-6-button"
+            >
+<div class="asset-info-grid" id="warrantyInfo"></div>
+            </div>
 
-            <!-- 6. Warranty -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">✓</span>
-                        <span>
-                            <span class="accordion-title">Warranty Details</span>
-                            <span class="accordion-subtitle">
-                                Warranty and coverage information
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
+            <div
+                id="asset-tab-7"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-7-button"
+            >
+<div class="asset-info-grid" id="customCostInfo"></div>
+            </div>
 
-                <div class="asset-accordion-panel">
-                    <div class="asset-info-grid" id="warrantyInfo"></div>
-                </div>
-            </section>
-
-            <!-- 7. Custom Cost -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">¤</span>
-                        <span>
-                            <span class="accordion-title">Custom Cost</span>
-                            <span class="accordion-subtitle">
-                                Additional cost information
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-info-grid" id="customCostInfo"></div>
-                </div>
-            </section>
-
-            <!-- 8. Maintenance -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">⚙</span>
-                        <span>
-                            <span class="accordion-title">Maintenance Details</span>
-                            <span class="accordion-subtitle">
-                                Maintenance status, tasks and spares
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-
-                    <div class="asset-detail-table-wrapper">
+            <div
+                id="asset-tab-8"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-8-button"
+            >
+<div class="asset-detail-table-wrapper">
                         <table class="asset-detail-table">
                             <thead>
                                 <tr>
@@ -693,59 +685,26 @@
                             </tbody>
                         </table>
                     </div>
+            </div>
 
-                </div>
-            </section>
-
-            <!-- 9. Meter -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">◌</span>
-                        <span>
-                            <span class="accordion-title">Asset Meter Readings</span>
-                            <span class="accordion-subtitle">
-                                Meter and usage readings
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-empty">
+            <div
+                id="asset-tab-9"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-9-button"
+            >
+<div class="asset-empty">
                         No meter readings available.
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 10. Work Order -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">▤</span>
-                        <span>
-                            <span class="accordion-title">WorkOrder Details</span>
-                            <span class="accordion-subtitle">
-                                Related work orders
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-detail-table-wrapper">
+            <div
+                id="asset-tab-10"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-10-button"
+            >
+<div class="asset-detail-table-wrapper">
                         <table class="asset-detail-table">
                             <thead>
                                 <tr>
@@ -768,31 +727,15 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 11. Contract -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">▱</span>
-                        <span>
-                            <span class="accordion-title">Asset Contract Details</span>
-                            <span class="accordion-subtitle">
-                                Contract information
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-detail-table-wrapper">
+            <div
+                id="asset-tab-11"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-11-button"
+            >
+<div class="asset-detail-table-wrapper">
                         <table class="asset-detail-table">
                             <thead>
                                 <tr>
@@ -814,31 +757,15 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 12. Spares -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">▧</span>
-                        <span>
-                            <span class="accordion-title">Asset Spare Details</span>
-                            <span class="accordion-subtitle">
-                                Spare parts linked to this asset
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-detail-table-wrapper">
+            <div
+                id="asset-tab-12"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-12-button"
+            >
+<div class="asset-detail-table-wrapper">
                         <table class="asset-detail-table">
                             <thead>
                                 <tr>
@@ -857,118 +784,53 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 13. Issued Spare -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">▧</span>
-                        <span>
-                            <span class="accordion-title">Issued Spare Details</span>
-                            <span class="accordion-subtitle">
-                                Issued spare information
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-empty">
+            <div
+                id="asset-tab-13"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-13-button"
+            >
+<div class="asset-empty">
                         No issued spare details available.
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 14. Fund Sources -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">$</span>
-                        <span>
-                            <span class="accordion-title">Fund Sources</span>
-                            <span class="accordion-subtitle">
-                                Funding information
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-empty">
+            <div
+                id="asset-tab-14"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-14-button"
+            >
+<div class="asset-empty">
                         No fund source information available.
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 15. Attachment -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">⌕</span>
-                        <span>
-                            <span class="accordion-title">Attachment</span>
-                            <span class="accordion-subtitle">
-                                Documents and files
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-empty">
+            <div
+                id="asset-tab-15"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-15-button"
+            >
+<div class="asset-empty">
                         No attachments available.
                     </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 16. GRN Attachments -->
-            <section class="asset-accordion-item">
-                <button
-                    type="button"
-                    class="asset-accordion-trigger"
-                    onclick="toggleAssetAccordion(this)"
-                    aria-expanded="false"
-                >
-                    <span class="accordion-left">
-                        <span class="accordion-icon">⌕</span>
-                        <span>
-                            <span class="accordion-title">GRN Attachments</span>
-                            <span class="accordion-subtitle">
-                                Goods receipt documents
-                            </span>
-                        </span>
-                    </span>
-                    <span class="accordion-chevron">⌄</span>
-                </button>
-
-                <div class="asset-accordion-panel">
-                    <div class="asset-empty">
+            <div
+                id="asset-tab-16"
+                class="asset-tab-panel"
+                role="tabpanel"
+                aria-labelledby="asset-tab-16-button"
+            >
+<div class="asset-empty">
                         No GRN attachments available.
                     </div>
-                </div>
-            </section>
+            </div>
 
-        </div>
+        </section>
 
         <div class="asset-details-bottom">
             <button
@@ -1136,6 +998,28 @@ function createAssetInfoItem(label, value, full = false, status = false) {
     `;
 }
 
+function showAssetTab(tabId, button) {
+    document.querySelectorAll(".asset-tab-button").forEach(function (tabButton) {
+        tabButton.classList.remove("active");
+        tabButton.setAttribute("aria-selected", "false");
+    });
+
+    document.querySelectorAll(".asset-tab-panel").forEach(function (panel) {
+        panel.classList.remove("active");
+    });
+
+    const selectedPanel = document.getElementById(tabId);
+
+    if (selectedPanel) {
+        selectedPanel.classList.add("active");
+    }
+
+    if (button) {
+        button.classList.add("active");
+        button.setAttribute("aria-selected", "true");
+    }
+}
+
 function toggleAssetAccordion(button) {
     const item = button.closest(".asset-accordion-item");
 
@@ -1300,7 +1184,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return;
     }
-    
     renderAssetDetails(asset);
 });
 </script>

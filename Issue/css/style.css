@@ -4635,3 +4635,440 @@ textarea {
         align-items: flex-start;
     }
 }
+
+/* =========================================================
+   FINAL FILTER POPUP
+   Matches the Issue List reference design.
+   Functionality / IDs / JavaScript are unchanged.
+   ========================================================= */
+
+/* Filter container itself */
+.asset-filter-card {
+    position: relative !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+}
+
+/* The old standalone filter header is not used */
+.asset-filter-card > .asset-filter-header {
+    display: none !important;
+}
+
+/* =========================================================
+   FILTER POPUP
+   ========================================================= */
+
+.asset-filter-content:not(.filters-hidden) {
+    position: fixed !important;
+
+    /* These values are set dynamically by JavaScript */
+    top: var(--asset-filter-popup-top, 70px) !important;
+    left: var(--asset-filter-popup-left, 15px) !important;
+
+    right: auto !important;
+
+    width: min(525px, calc(100vw - 30px)) !important;
+    height: auto !important;
+    max-height: calc(100vh - 85px) !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: block !important;
+
+    overflow: hidden !important;
+
+    border: 1px solid #d9e0ea !important;
+    border-radius: 10px !important;
+
+    background: #ffffff !important;
+
+    box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.14),
+        0 2px 8px rgba(15, 23, 42, 0.06) !important;
+
+    z-index: 9999 !important;
+}
+
+/* =========================================================
+   POPUP HEADER
+   ========================================================= */
+
+.asset-filter-content:not(.filters-hidden) .filter-popup-header {
+    width: 100% !important;
+    height: 44px !important;
+    min-height: 44px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    box-sizing: border-box !important;
+
+    margin: 0 !important;
+    padding: 0 14px !important;
+
+    border-bottom: 1px solid #e5e7eb !important;
+
+    background: #ffffff !important;
+}
+
+.asset-filter-content:not(.filters-hidden) .filter-popup-header strong {
+    margin: 0 !important;
+
+    color: #111827 !important;
+
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+.asset-filter-content:not(.filters-hidden) .filter-clear-button {
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+
+    background: transparent !important;
+
+    color: #64748b !important;
+
+    font-size: 11px !important;
+    font-weight: 600 !important;
+
+    cursor: pointer !important;
+}
+
+.asset-filter-content:not(.filters-hidden) .filter-clear-button:hover {
+    color: #4f46e5 !important;
+}
+
+/* =========================================================
+   FILTER FIELDS
+   ========================================================= */
+
+.asset-filter-content:not(.filters-hidden) .asset-filter-grid {
+    width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 17px 14px !important;
+
+    padding: 16px 14px 18px !important;
+
+    margin: 0 !important;
+
+    max-height: 400px !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    align-content: start !important;
+
+    scrollbar-width: thin !important;
+    scrollbar-color: #cbd5e1 transparent !important;
+}
+
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Field */
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field {
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+/* Label */
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field label {
+    display: block !important;
+
+    margin: 0 0 7px !important;
+
+    color: #111827 !important;
+
+    font-size: 11px !important;
+    font-weight: 700 !important;
+
+    line-height: 1.2 !important;
+}
+
+/* Inputs + Selects */
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field select,
+
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field input {
+    width: 100% !important;
+
+    height: 36px !important;
+    min-height: 36px !important;
+
+    box-sizing: border-box !important;
+
+    padding: 0 10px !important;
+
+    border: 1px solid #cfd8e6 !important;
+    border-radius: 7px !important;
+
+    background: #ffffff !important;
+
+    color: #374151 !important;
+
+    font-family: inherit !important;
+    font-size: 11px !important;
+
+    outline: none !important;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease !important;
+}
+
+/* Select arrow spacing */
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field select {
+    padding-right: 30px !important;
+}
+
+/* Input */
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field input {
+    padding-left: 10px !important;
+}
+
+/* Focus */
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field select:focus,
+
+.asset-filter-content:not(.filters-hidden)
+.asset-filter-field input:focus {
+    border-color: #6366f1 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.10) !important;
+}
+
+/* =========================================================
+   SEARCH ASSETS FIELD
+   ========================================================= */
+
+.asset-filter-content:not(.filters-hidden)
+.asset-common-search-wrap {
+    position: relative !important;
+}
+
+.asset-filter-content:not(.filters-hidden)
+.asset-common-search-wrap .asset-search-icon {
+    position: absolute !important;
+
+    left: 10px !important;
+    top: 50% !important;
+
+    transform: translateY(-50%) !important;
+
+    color: #64748b !important;
+
+    font-size: 12px !important;
+
+    pointer-events: none !important;
+
+    z-index: 2 !important;
+}
+
+.asset-filter-content:not(.filters-hidden)
+.asset-common-search-wrap input#assetCommonSearch {
+    padding-left: 30px !important;
+    padding-right: 38px !important;
+}
+
+/* Help button */
+.asset-filter-content:not(.filters-hidden)
+.asset-common-search-wrap .search-help-button {
+    position: absolute !important;
+
+    right: 6px !important;
+    top: 50% !important;
+
+    width: 25px !important;
+    height: 25px !important;
+
+    transform: translateY(-50%) !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    padding: 0 !important;
+
+    border: 1px solid #d9e0ea !important;
+    border-radius: 50% !important;
+
+    background: #f8fafc !important;
+
+    color: #64748b !important;
+
+    font-size: 10px !important;
+    font-weight: 700 !important;
+
+    cursor: help !important;
+}
+
+/* =========================================================
+   DATE FIELD
+   ========================================================= */
+
+.asset-filter-content:not(.filters-hidden)
+.asset-date-wrap {
+    position: relative !important;
+}
+
+.asset-filter-content:not(.filters-hidden)
+.asset-date-wrap .asset-date-icon {
+    position: absolute !important;
+
+    left: 10px !important;
+    top: 50% !important;
+
+    transform: translateY(-50%) !important;
+
+    color: #64748b !important;
+
+    font-size: 11px !important;
+
+    pointer-events: none !important;
+
+    z-index: 2 !important;
+}
+
+.asset-filter-content:not(.filters-hidden)
+.asset-date-wrap input {
+    padding-left: 30px !important;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.asset-filter-card:has(
+    #assetFilterContent:not(.filters-hidden)
+) > .asset-filter-actions {
+    position: static !important;
+
+    width: 100% !important;
+
+    height: 50px !important;
+    min-height: 50px !important;
+
+    box-sizing: border-box !important;
+
+    display: block !important;
+
+    margin: 0 !important;
+
+    padding: 8px 14px !important;
+
+    border: 0 !important;
+    border-top: 1px solid #e5e7eb !important;
+
+    border-radius: 0 0 10px 10px !important;
+
+    background: #ffffff !important;
+
+    box-shadow: none !important;
+}
+
+/* Show Results */
+.asset-filter-card:has(
+    #assetFilterContent:not(.filters-hidden)
+) .filter-popup-apply {
+    width: 100% !important;
+
+    height: 34px !important;
+    min-height: 34px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+    padding: 0 10px !important;
+
+    border: 1px solid #4f46e5 !important;
+    border-radius: 7px !important;
+
+    background: #4f46e5 !important;
+
+    color: #ffffff !important;
+
+    font-size: 11px !important;
+    font-weight: 700 !important;
+
+    box-shadow: none !important;
+
+    cursor: pointer !important;
+}
+
+.asset-filter-card:has(
+    #assetFilterContent:not(.filters-hidden)
+) .filter-popup-apply:hover {
+    background: #4338ca !important;
+    border-color: #4338ca !important;
+}
+
+/* Hide Reset */
+.asset-filter-card:has(
+    #assetFilterContent:not(.filters-hidden)
+) .filter-popup-reset-hidden {
+    display: none !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .asset-filter-content:not(.filters-hidden) {
+        top: 16px !important;
+        left: 16px !important;
+
+        width: calc(100vw - 32px) !important;
+
+        max-height: calc(100vh - 32px) !important;
+    }
+
+    .asset-filter-content:not(.filters-hidden)
+    .asset-filter-grid {
+        grid-template-columns: 1fr !important;
+
+        max-height: calc(100vh - 140px) !important;
+    }
+
+    .asset-filter-card:has(
+        #assetFilterContent:not(.filters-hidden)
+    ) > .asset-filter-actions {
+        width: 100% !important;
+    }
+}

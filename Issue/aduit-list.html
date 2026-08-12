@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit List - EAM</title>
+
+    <!-- Keep the same application styling used by the other EAM pages -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        /* =========================================================
+           AUDIT LIST PAGE
+           Screenshot-inspired design; functionality is local/demo.
+        ========================================================== */
+
+        .audit-page {
+            width: 100%;
+            max-width: 1550px;
+            margin: 0 auto;
+        }
+
+        .audit-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 44px;
+            padding: 0 22px;
+            margin-bottom: 10px;
+            background: #eef0f2;
+            border-bottom: 1px solid #d7dce1;
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        .audit-breadcrumb strong {
+            color: #334155;
+        }
+
+        /* Filter area */
+        .audit-filter {
+            display: grid;
+            grid-template-columns: 385px 385px 110px;
+            gap: 12px;
+            align-items: end;
+            padding: 0 0 18px;
+        }
+
+        .audit-field {
+            min-width: 0;
+        }
+
+        .audit-field label {
+            display: block;
+            margin-bottom: 7px;
+            color: #0f172a;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .audit-field select,
+        .audit-field input {
+            width: 100%;
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background: #ffffff;
+            color: #334155;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        .audit-field select:focus,
+        .audit-field input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 2px rgba(59,130,246,.12);
+        }
+
+        .audit-btn {
+            height: 36px;
+            padding: 0 22px;
+            border: 1px solid #1e64a5;
+            border-radius: 16px;
+            background: linear-gradient(#5da9e2, #2474b8);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: inset 0 1px rgba(255,255,255,.35),
+                        0 2px 4px rgba(0,0,0,.18);
+        }
+
+        .audit-btn:hover {
+            background: linear-gradient(#6bb5eb, #1f6aa8);
+        }
+
+        .audit-btn.secondary {
+            background: #ffffff;
+            color: #2563eb;
+            border-color: #bfdbfe;
+            box-shadow: none;
+        }
+
+        /* Main audit grid */
+        .audit-grid-card {
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            background: #ffffff;
+        }
+
+        .audit-grid-header {
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 0 12px;
+            background: linear-gradient(#67a9dd, #2777b9);
+            color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        .audit-grid-title {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .audit-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .audit-toolbar button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 2px;
+            border: 0;
+            background: transparent;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .audit-toolbar button:hover {
+            text-decoration: underline;
+        }
+
+        .toolbar-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .audit-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .audit-table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .audit-table th {
+            height: 40px;
+            padding: 0 9px;
+            border-right: 1px solid #d1d5db;
+            border-bottom: 1px solid #cbd5e1;
+            background: linear-gradient(#fafafa, #e8e8e8);
+            color: #111827;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .audit-table th:first-child,
+        .audit-table td:first-child {
+            width: 36px;
+            text-align: center;
+        }
+
+        .audit-table th:nth-child(2) { width: 25%; }
+        .audit-table th:nth-child(3) { width: 25%; }
+        .audit-table th:nth-child(4) { width: 21%; }
+        .audit-table th:nth-child(5) { width: 24%; }
+
+        .audit-table td {
+            height: 46px;
+            padding: 0 9px;
+            border-right: 1px dotted #cbd5e1;
+            border-bottom: 1px dotted #cbd5e1;
+            color: #334155;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .audit-table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .audit-table a {
+            color: #0f4f86;
+            text-decoration: none;
+        }
+
+        .audit-table a:hover {
+            text-decoration: underline;
+        }
+
+        .audit-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .report-btn {
+            min-width: 180px;
+            height: 34px;
+            padding: 0 15px;
+            border: 1px solid #4c9d22;
+            border-radius: 17px;
+            background: linear-gradient(#83d04e, #55ad29);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: inset 0 1px rgba(255,255,255,.35);
+        }
+
+        .report-btn:hover {
+            background: linear-gradient(#91db5e, #4ca124);
+        }
+
+        .report-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .report-icon {
+            margin-right: 5px;
+        }
+
+        /* Pagination */
+        .audit-pagination {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            min-height: 34px;
+            padding: 0 8px;
+            border-top: 1px solid #d1d5db;
+            background: #ffffff;
+            font-size: 12px;
+        }
+
+        .page-button {
+            min-width: 29px;
+            height: 27px;
+            padding: 0 7px;
+            border: 1px solid #d1d5db;
+            border-left: 0;
+            background: #ffffff;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .page-button:first-child {
+            border-left: 1px solid #d1d5db;
+        }
+
+        .page-button:hover {
+            background: #eef6ff;
+        }
+
+        .page-button.active {
+            background: #1d5b93;
+            color: #ffffff;
+            border-color: #1d5b93;
+            font-weight: 700;
+        }
+
+        .pagination-label {
+            margin-left: 10px;
+            color: #334155;
+        }
+
+        .pagination-select {
+            height: 26px;
+            margin: 0 7px;
+            border: 1px solid #bfc6ce;
+            background: #ffffff;
+            font-size: 12px;
+        }
+
+        .audit-count {
+            margin-left: auto;
+            padding-right: 4px;
+            color: #334155;
+        }
+
+        .audit-empty {
+            padding: 28px;
+            text-align: center;
+            color: #64748b;
+            background: #ffffff;
+        }
+
+        .audit-toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 9999;
+            min-width: 240px;
+            padding: 12px 15px;
+            border-radius: 7px;
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 13px;
+            box-shadow: 0 8px 25px rgba(0,0,0,.2);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: .2s ease;
+        }
+
+        .audit-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .audit-filter {
+                grid-template-columns: 1fr 1fr 110px;
+            }
+
+            .audit-toolbar {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .audit-filter {
+                grid-template-columns: 1fr;
+            }
+
+            .audit-btn {
+                width: 110px;
+            }
+
+            .audit-grid-header {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 9px 12px;
+            }
+
+            .audit-toolbar {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .audit-pagination {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Same application layout -->
+    <div id="sidebar"></div>
+
+    <div class="main-content">
+
+        <div id="header"></div>
+
+        <main class="page-content">
+
+            <div class="audit-page">
+
+                <!-- Breadcrumb -->
+                <div class="audit-breadcrumb">
+                    <span>EAM</span>
+                    <span>/</span>
+                    <span>Audit</span>
+                    <span>/</span>
+                    <strong>List</strong>
+                </div>
+
+                <!-- Filters -->
+                <section class="audit-filter" aria-label="Audit filters">
+
+                    <div class="audit-field">
+                        <label for="auditFilter">Select</label>
+                        <select id="auditFilter">
+                            <option value="auditName">Audit Name</option>
+                            <option value="organizationName">Organization Name</option>
+                            <option value="auditDate">Audit Date</option>
+                            <option value="notes">Notes</option>
+                        </select>
+                    </div>
+
+                    <div class="audit-field">
+                        <label for="auditValue">Value</label>
+                        <input
+                            id="auditValue"
+                            type="text"
+                            placeholder="Enter value..."
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <button type="button" class="audit-btn" onclick="filterAudits()">
+                        Filter
+                    </button>
+
+                </section>
+
+                <!-- Audit list -->
+                <section class="audit-grid-card">
+
+                    <div class="audit-grid-header">
+
+                        <div class="audit-grid-title">
+                            Audit
+                        </div>
+
+                        <div class="audit-toolbar">
+                            <button type="button" onclick="exportAudits()">
+                                <span class="toolbar-icon">▣</span>
+                                Export
+                            </button>
+
+                            <button type="button" onclick="deleteSelectedAudits()">
+                                <span class="toolbar-icon">▥</span>
+                                Delete
+                            </button>
+
+                            <button type="button" onclick="reloadAudits()">
+                                <span class="toolbar-icon">⟳</span>
+                                Reload
+                            </button>
+
+                            <button type="button" onclick="createAudit()">
+                                <span class="toolbar-icon">✚</span>
+                                Create Audit
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="audit-table-wrap">
+
+                        <table class="audit-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input
+                                            id="selectAll"
+                                            class="audit-checkbox"
+                                            type="checkbox"
+                                            aria-label="Select all audits"
+                                            onchange="toggleSelectAll(this)"
+                                        >
+                                    </th>
+                                    <th>Organization Name</th>
+                                    <th>Audit Name</th>
+                                    <th>Audit Date</th>
+                                    <th>Notes</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="auditTableBody"></tbody>
+                        </table>
+
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="audit-pagination">
+
+                        <button class="page-button" onclick="goToPage(1)" title="First page">&lt;&lt;</button>
+                        <button class="page-button" onclick="previousPage()" title="Previous page">&lt;</button>
+
+                        <span id="pageButtons"></span>
+
+                        <button class="page-button" onclick="nextPage()" title="Next page">&gt;</button>
+                        <button class="page-button" onclick="goToLastPage()" title="Last page">&gt;&gt;</button>
+
+                        <span class="pagination-label">Go to page:</span>
+
+                        <select
+                            id="pageSelect"
+                            class="pagination-select"
+                            onchange="goToPage(Number(this.value))"
+                        ></select>
+
+                        <span>Row count:</span>
+
+                        <select
+                            id="rowCount"
+                            class="pagination-select"
+                            onchange="changePageSize(Number(this.value))"
+                        >
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+
+                        <span class="audit-count" id="auditCount"></span>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+        <div id="footer"></div>
+
+    </div>
+
+    <div id="auditToast" class="audit-toast"></div>
+
+    <!-- Same generic layout JS -->
+    <script src="./js/layout.js"></script>
+
+    <script>
+        /* =========================================================
+           AUDIT DATA
+           Replace this array with API data later.
+        ========================================================== */
+
+        const auditData = [
+            {
+                id: 1,
+                organizationName: "Beah",
+                auditName: "Audit11022020",
+                auditDate: "02-Nov-2020",
+                notes: ""
+            },
+            {
+                id: 2,
+                organizationName: "Beah",
+                auditName: "Audit29102020",
+                auditDate: "29-Oct-2020",
+                notes: ""
+            }
+        ];
+
+        let filteredAudits = [...auditData];
+        let currentPage = 1;
+        let pageSize = 10;
+
+        function escapeHtml(value) {
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("auditToast");
+
+            toast.textContent = message;
+            toast.classList.add("show");
+
+            clearTimeout(window.auditToastTimer);
+
+            window.auditToastTimer = setTimeout(function () {
+                toast.classList.remove("show");
+            }, 2200);
+        }
+
+        function renderAudits() {
+            const tbody = document.getElementById("auditTableBody");
+
+            const totalPages = Math.max(
+                1,
+                Math.ceil(filteredAudits.length / pageSize)
+            );
+
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+
+            const pageData = filteredAudits.slice(start, end);
+
+            if (!pageData.length) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="audit-empty">
+                            No audit records found.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = pageData.map(function (audit) {
+                    return `
+                        <tr>
+                            <td>
+                                <input
+                                    class="audit-checkbox audit-row-checkbox"
+                                    type="checkbox"
+                                    value="${escapeHtml(audit.id)}"
+                                    aria-label="Select ${escapeHtml(audit.auditName)}"
+                                    onchange="updateSelectAllState()"
+                                >
+                            </td>
+
+                            <td>
+                                <a href="javascript:void(0)"
+                                   onclick="viewAudit(${audit.id})">
+                                    ${escapeHtml(audit.organizationName)}
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="javascript:void(0)"
+                                   onclick="viewAudit(${audit.id})">
+                                    ${escapeHtml(audit.auditName)}
+                                </a>
+                            </td>
+
+                            <td>${escapeHtml(audit.auditDate)}</td>
+
+                            <td>${escapeHtml(audit.notes || "")}</td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    class="report-btn"
+                                    onclick="generateReport(${audit.id})"
+                                >
+                                    <span class="report-icon">▣</span>
+                                    Generate Report
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+            }
+
+            renderPagination(totalPages);
+            updateSelectAllState();
+        }
+
+        function renderPagination(totalPages) {
+            const pageButtons = document.getElementById("pageButtons");
+            const pageSelect = document.getElementById("pageSelect");
+
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            let buttons = "";
+
+            for (let page = startPage; page <= endPage; page++) {
+                buttons += `
+                    <button
+                        class="page-button ${page === currentPage ? "active" : ""}"
+                        onclick="goToPage(${page})"
+                    >
+                        ${page}
+                    </button>
+                `;
+            }
+
+            pageButtons.innerHTML = buttons;
+
+            pageSelect.innerHTML = "";
+
+            for (let page = 1; page <= totalPages; page++) {
+                pageSelect.innerHTML += `
+                    <option value="${page}" ${page === currentPage ? "selected" : ""}>
+                        ${page}
+                    </option>
+                `;
+            }
+
+            const start = filteredAudits.length
+                ? ((currentPage - 1) * pageSize) + 1
+                : 0;
+
+            const end = Math.min(
+                currentPage * pageSize,
+                filteredAudits.length
+            );
+
+            document.getElementById("auditCount").textContent =
+                `Showing ${start}-${end} of ${filteredAudits.length}`;
+        }
+
+        function filterAudits() {
+            const field = document.getElementById("auditFilter").value;
+            const value = document
+                .getElementById("auditValue")
+                .value
+                .trim()
+                .toLowerCase();
+
+            if (!value) {
+                filteredAudits = [...auditData];
+            } else {
+                filteredAudits = auditData.filter(function (audit) {
+                    return String(audit[field] || "")
+                        .toLowerCase()
+                        .includes(value);
+                });
+            }
+
+            currentPage = 1;
+            renderAudits();
+        }
+
+        document.getElementById("auditValue").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                filterAudits();
+            }
+        });
+
+        function toggleSelectAll(checkbox) {
+            document.querySelectorAll(".audit-row-checkbox").forEach(function (item) {
+                item.checked = checkbox.checked;
+            });
+        }
+
+        function updateSelectAllState() {
+            const checkboxes =
+                document.querySelectorAll(".audit-row-checkbox");
+
+            const selectAll =
+                document.getElementById("selectAll");
+
+            if (!checkboxes.length) {
+                selectAll.checked = false;
+                selectAll.indeterminate = false;
+                return;
+            }
+
+            const selected =
+                document.querySelectorAll(".audit-row-checkbox:checked").length;
+
+            selectAll.checked = selected === checkboxes.length;
+            selectAll.indeterminate =
+                selected > 0 && selected < checkboxes.length;
+        }
+
+        function getSelectedIds() {
+            return Array.from(
+                document.querySelectorAll(".audit-row-checkbox:checked")
+            ).map(function (checkbox) {
+                return Number(checkbox.value);
+            });
+        }
+
+        function deleteSelectedAudits() {
+            const selectedIds = getSelectedIds();
+
+            if (!selectedIds.length) {
+                showToast("Please select at least one audit.");
+                return;
+            }
+
+            const confirmed = window.confirm(
+                `Delete ${selectedIds.length} selected audit record(s)?`
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            selectedIds.forEach(function (id) {
+                const index = auditData.findIndex(function (audit) {
+                    return audit.id === id;
+                });
+
+                if (index !== -1) {
+                    auditData.splice(index, 1);
+                }
+            });
+
+            filteredAudits = [...auditData];
+            currentPage = 1;
+            renderAudits();
+
+            showToast("Selected audit record(s) deleted.");
+        }
+
+        function reloadAudits() {
+            document.getElementById("auditValue").value = "";
+            filteredAudits = [...auditData];
+            currentPage = 1;
+            renderAudits();
+            showToast("Audit list reloaded.");
+        }
+
+        function createAudit() {
+            // Change this path when the Create Audit page is created.
+            window.location.href = "audit-create.html";
+        }
+
+        function viewAudit(id) {
+            // Change this path when the Audit Details page is created.
+            window.location.href = `audit-details.html?id=${encodeURIComponent(id)}`;
+        }
+
+        function generateReport(id) {
+            const audit = auditData.find(function (item) {
+                return item.id === id;
+            });
+
+            if (!audit) {
+                return;
+            }
+
+            showToast(`Generating report for ${audit.auditName}...`);
+
+            /*
+             * Connect your report API here later.
+             * Example:
+             *
+             * fetch("/api/audit/" + id + "/report", {
+             *     method: "GET"
+             * });
+             */
+        }
+
+        function exportAudits() {
+            if (!filteredAudits.length) {
+                showToast("No audit records available to export.");
+                return;
+            }
+
+            const headers = [
+                "Organization Name",
+                "Audit Name",
+                "Audit Date",
+                "Notes"
+            ];
+
+            const rows = filteredAudits.map(function (audit) {
+                return [
+                    audit.organizationName,
+                    audit.auditName,
+                    audit.auditDate,
+                    audit.notes || ""
+                ];
+            });
+
+            const csv = [
+                headers,
+                ...rows
+            ].map(function (row) {
+                return row.map(function (value) {
+                    return `"${String(value).replace(/"/g, '""')}"`;
+                }).join(",");
+            }).join("\n");
+
+            const blob = new Blob([csv], {
+                type: "text/csv;charset=utf-8;"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "audit-list.csv";
+            link.click();
+
+            URL.revokeObjectURL(url);
+
+            showToast("Audit list exported.");
+        }
+
+        function goToPage(page) {
+            const totalPages = Math.max(
+                1,
+                Math.ceil(filteredAudits.length / pageSize)
+            );
+
+            currentPage = Math.min(
+                Math.max(1, page),
+                totalPages
+            );
+
+            renderAudits();
+        }
+
+        function previousPage() {
+            goToPage(currentPage - 1);
+        }
+
+        function nextPage() {
+            goToPage(currentPage + 1);
+        }
+
+        function goToLastPage() {
+            const totalPages = Math.max(
+                1,
+                Math.ceil(filteredAudits.length / pageSize)
+            );
+
+            goToPage(totalPages);
+        }
+
+        function changePageSize(size) {
+            pageSize = size;
+            currentPage = 1;
+            renderAudits();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            renderAudits();
+        });
+    </script>
+
+</body>
+</html>

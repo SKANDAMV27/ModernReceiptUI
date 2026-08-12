@@ -1,311 +1,822 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Asset | EAM</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Issue Asset - EAM</title>
-
-
-    <!-- =====================================================
-         MAIN CSS
-    ====================================================== -->
-
-    <link
-        rel="stylesheet"
-        href="./css/style.css"
-    >
-
-
-    <!-- =====================================================
-         SWEETALERT2
-    ====================================================== -->
-
+    <link rel="stylesheet" href="./css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* =====================================================
-           ASSET VIEW BUTTON
-        ====================================================== */
+        /* =========================================================
+           ISSUE ASSET - BASE DESIGN
+           ========================================================= */
 
-        .action-column {
-            min-width: 112px;
-            width: 112px;
-            text-align: center;
+        :root {
+            --ia-primary: #4f46e5;
+            --ia-primary-dark: #4338ca;
+            --ia-primary-soft: #eef2ff;
+            --ia-teal: #0f766e;
+            --ia-green: #16a34a;
+            --ia-green-dark: #15803d;
+            --ia-green-soft: #ecfdf5;
+            --ia-orange: #ea580c;
+            --ia-red: #dc2626;
+            --ia-blue: #2563eb;
+            --ia-blue-soft: #eff6ff;
+            --ia-text: #0f172a;
+            --ia-muted: #64748b;
+            --ia-faint: #94a3b8;
+            --ia-border: #e5e7eb;
+            --ia-bg: #f7f8fb;
+            --ia-card: #fff;
+            --ia-radius: 12px;
+            --ia-radius-sm: 8px;
+            --ia-shadow: 0 1px 2px rgba(15,23,42,.04), 0 1px 8px rgba(15,23,42,.03);
+
+            /* Filter popup position is set by JavaScript. */
+            --asset-filter-popup-top: 70px;
+            --asset-filter-popup-left: 15px;
         }
 
-        .asset-view-button {
-            display: inline-flex;
+        html,
+        body {
+            background: var(--ia-bg) !important;
+            color: var(--ia-text) !important;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+        }
+
+        .main-content,
+        .page-content {
+            background: var(--ia-bg) !important;
+        }
+
+        .page-content {
+            padding: 0 24px 32px !important;
+        }
+
+        /* ---------- Breadcrumb ---------- */
+
+        .page-breadcrumb {
+            display: flex !important;
             align-items: center;
-            justify-content: center;
-            gap: 7px;
-            min-width: 82px;
-            padding: 8px 12px;
-            border: 1px solid #d7e0ee;
-            border-radius: 9px;
-            background: #ffffff;
-            color: #1d4ed8;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all .2s ease;
-            box-shadow: 0 2px 6px rgba(15, 23, 42, .05);
+            gap: 8px;
+            margin: 0 0 10px !important;
+            padding: 14px 0 2px !important;
+            color: var(--ia-faint) !important;
+            font-size: 12px !important;
         }
 
-        .asset-view-button:hover {
-            color: #ffffff;
-            background: #2563eb;
-            border-color: #2563eb;
-            transform: translateY(-1px);
-            box-shadow: 0 5px 14px rgba(37, 99, 235, .22);
+        .page-breadcrumb strong {
+            color: var(--ia-text) !important;
         }
 
-        .view-icon {
-            font-size: 13px;
-            line-height: 1;
+        /* ---------- Page header ---------- */
+
+        .page-header {
+            margin: 0 0 18px !important;
+            padding: 0 0 18px !important;
+            display: flex !important;
+            align-items: flex-end !important;
+            justify-content: space-between !important;
+            border-bottom: 1px solid var(--ia-border) !important;
         }
 
-        /* =====================================================
-           ASSET VIEW BUTTON
-        ====================================================== */
-
-        .action-column {
-            min-width: 112px;
-            width: 112px;
-            text-align: center;
+        .page-header h1 {
+            margin: 0 !important;
+            font-size: 24px !important;
+            font-weight: 800 !important;
         }
 
-        .asset-view-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            min-width: 82px;
-            padding: 8px 12px;
-            border: 1px solid #d7e0ee;
-            border-radius: 9px;
-            background: #ffffff;
-            color: #1d4ed8;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all .2s ease;
-            box-shadow: 0 2px 6px rgba(15, 23, 42, .05);
+        .page-header p {
+            margin: 4px 0 0 !important;
+            color: var(--ia-muted) !important;
+            font-size: 13px !important;
         }
 
-        .asset-view-button:hover {
-            color: #ffffff;
-            background: #2563eb;
-            border-color: #2563eb;
-            transform: translateY(-1px);
-            box-shadow: 0 5px 14px rgba(37, 99, 235, .22);
+        /* =========================================================
+           TOP TOOLBAR
+           ========================================================= */
+
+        .create-toolbar.issue-toolbar-modern {
+            margin: 0 0 16px !important;
+            padding: 14px 16px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+            flex-wrap: wrap;
+            border: 1px solid var(--ia-border) !important;
+            border-radius: var(--ia-radius) !important;
+            background: var(--ia-card) !important;
+            box-shadow: var(--ia-shadow) !important;
         }
 
-        .view-icon {
-            font-size: 13px;
-            line-height: 1;
+        .issue-target-group,
+        .issue-target-control {
+            display: flex !important;
+            align-items: center !important;
+            gap: 9px !important;
         }
 
-        /* =====================================================
-           MODERN ASSET FILTERS
-        ====================================================== */
-        .asset-filter-card {
-            margin: 0 0 20px;
-            padding: 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            background: #ffffff;
-            box-shadow: 0 4px 18px rgba(15, 23, 42, .05);
-        }
-
-        .asset-filter-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 18px;
-        }
-
-        .asset-filter-eyebrow {
-            display: block;
-            margin-bottom: 4px;
-            color: #2563eb;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-        }
-
-        .asset-filter-header h2 {
-            margin: 0;
-            color: #0f172a;
-            font-size: 18px;
-            line-height: 1.25;
-        }
-
-        .asset-filter-header p {
-            margin: 5px 0 0;
-            color: #64748b;
-            font-size: 12px;
-        }
-
-        .filter-result-hint {
-            flex: 0 0 auto;
-            padding: 8px 11px;
-            border: 1px solid #dbeafe;
-            border-radius: 999px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            font-size: 12px;
-            font-weight: 700;
+        .issue-target-group label,
+        .issue-target-control label {
+            color: var(--ia-text) !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
             white-space: nowrap;
         }
 
-        .asset-filter-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
+        .issue-target-group select,
+        .issue-target-input-wrap input {
+            height: 40px !important;
+            border: 1px solid var(--ia-border) !important;
+            border-radius: var(--ia-radius-sm) !important;
+            background: #fff !important;
+            color: var(--ia-text) !important;
+            font-size: 13px !important;
+            outline: none !important;
         }
 
-        .asset-filter-field {
-            min-width: 0;
-        }
-
-        .asset-filter-field label {
-            display: block;
-            margin: 0 0 7px;
-            color: #334155;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .asset-filter-field select,
-        .asset-filter-field input {
-            width: 100%;
-            height: 42px;
-            border: 1px solid #d8e1ec;
-            border-radius: 10px;
-            outline: none;
-            background: #fff;
-            color: #0f172a;
-            font: inherit;
-            font-size: 13px;
-            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
-        }
-
-        .asset-filter-field select {
-            padding: 0 36px 0 12px;
+        .issue-target-group select {
+            min-width: 190px !important;
+            padding: 0 34px 0 12px !important;
             cursor: pointer;
         }
 
-        .asset-filter-field input {
-            padding: 0 42px 0 36px;
-        }
-
-        .asset-filter-field select:hover,
-        .asset-filter-field input:hover {
-            border-color: #b8c7db;
-        }
-
-        .asset-filter-field select:focus,
-        .asset-filter-field input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
-        }
-
-        .asset-select-wrap,
-        .asset-common-search-wrap,
-        .asset-date-wrap {
+        .issue-target-input-wrap {
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
-        .asset-common-search-wrap .asset-search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            z-index: 1;
-            transform: translateY(-50%);
-            color: #64748b;
+        .issue-target-input-wrap input {
+            width: 300px !important;
+            padding: 0 46px 0 12px !important;
+        }
+
+        .issue-target-help,
+        .issue-help-button {
+            position: absolute !important;
+            right: 5px !important;
+            width: 30px !important;
+            height: 30px !important;
+            border: 0 !important;
+            border-radius: 7px !important;
+            background: var(--ia-primary) !important;
+            color: #fff !important;
+            font-weight: 800 !important;
+            cursor: pointer !important;
+        }
+
+        .issue-toolbar-actions {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            margin-left: auto !important;
+        }
+
+        .create-action-button {
+            min-height: 40px !important;
+            height: 40px !important;
+            padding: 0 16px !important;
+            border-radius: var(--ia-radius-sm) !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .show-cart-button {
+            background: var(--ia-primary) !important;
+            border-color: var(--ia-primary) !important;
+            color: #fff !important;
+        }
+
+        .empty-cart-button {
+            background: #fff !important;
+            border-color: var(--ia-border) !important;
+            color: var(--ia-red) !important;
+        }
+
+        .issue-cart-button {
+            background: var(--ia-green) !important;
+            border-color: var(--ia-green) !important;
+            color: #fff !important;
+        }
+
+        .empty-cart-button:disabled,
+        .issue-cart-button:disabled {
+            opacity: .5 !important;
+            cursor: not-allowed !important;
+        }
+
+        .cart-count-badge {
+            min-width: 20px !important;
+            height: 20px !important;
+            padding: 0 6px !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px !important;
+            background: rgba(255,255,255,.2) !important;
+            color: #fff !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+        }
+
+        /* =========================================================
+           TARGET MODAL
+           ========================================================= */
+
+        /* =========================================================
+           ASSET / TARGET SELECTION MODAL
+           ========================================================= */
+
+        .issue-target-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, .58);
+            backdrop-filter: blur(4px);
+        }
+
+        .issue-target-modal.open {
+            display: flex;
+        }
+
+        .issue-target-modal-card {
+            width: min(900px, calc(100vw - 40px));
+            max-height: calc(100vh - 70px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #dfe5ee;
+            border-radius: 15px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .24);
+        }
+
+        .issue-target-modal-header {
+            min-height: 78px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e9f0;
+            background: #fff;
+        }
+
+        .issue-target-modal-header h3 {
+            margin: 0;
+            color: #1e293b;
             font-size: 18px;
-            pointer-events: none;
-        }
-
-        .asset-common-search-wrap .search-help-button {
-            position: absolute;
-            right: 7px;
-            top: 50%;
-            z-index: 2;
-            width: 27px;
-            height: 27px;
-            transform: translateY(-50%);
-            display: grid;
-            place-items: center;
-            border: 1px solid #cbd5e1;
-            border-radius: 50%;
-            background: #f8fafc;
-            color: #475569;
-            font-size: 12px;
+            line-height: 1.25;
             font-weight: 800;
-            cursor: help;
         }
 
-        .search-help-button:hover {
-            border-color: #93c5fd;
-            background: #eff6ff;
-            color: #2563eb;
+        .issue-target-modal-header p {
+            margin: 4px 0 0;
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.4;
         }
 
+        .modal-close-button {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            border: 0;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 21px;
+            line-height: 1;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .modal-close-button:hover {
+            background: #e8eef5;
+            color: #334155;
+        }
+
+        .issue-target-modal-body {
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .target-popup-filter-row {
+            display: grid;
+            grid-template-columns: 190px minmax(240px, 1fr) auto auto;
+            align-items: end;
+            gap: 10px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e9f0;
+            background: #fff;
+        }
+
+        .target-popup-filter-field {
+            min-width: 0;
+        }
+
+        .target-popup-filter-field label {
+            display: block;
+            margin: 0 0 6px;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .target-popup-filter-field select,
+        .target-popup-filter-field input {
+            width: 100%;
+            height: 38px;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            outline: none;
+            background: #fff;
+            color: #1e293b;
+            font-size: 12px;
+            padding: 0 12px;
+        }
+
+        .target-popup-filter-field select:focus,
+        .target-popup-filter-field input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, .08);
+        }
+
+        .target-popup-filter-button,
+        .target-popup-clear-button {
+            height: 38px;
+            border-radius: 7px;
+            padding: 0 15px;
+            border: 0;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .target-popup-filter-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .target-popup-filter-button:hover {
+            background: #1d4ed8;
+        }
+
+        .target-popup-clear-button {
+            background: #e8eef5;
+            color: #334155;
+        }
+
+        .target-popup-clear-button:hover {
+            background: #dbe4ee;
+        }
+
+        .target-popup-table-wrap {
+            max-height: 430px;
+            overflow: auto;
+            background: #fff;
+        }
+
+        .target-popup-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .target-popup-table thead th {
+            height: 48px;
+            box-sizing: border-box;
+            padding: 0 14px;
+            border-bottom: 1px solid #cfd8e3;
+            background: #f1f5f9;
+            color: #334155;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .02em;
+        }
+
+        .target-popup-table tbody tr {
+            height: 58px;
+            border-bottom: 1px solid #e5e9f0;
+            cursor: pointer;
+            transition: background .12s ease;
+        }
+
+        .target-popup-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .target-popup-table tbody tr.selected {
+            background: #eef4ff;
+        }
+
+        .target-popup-table td {
+            padding: 9px 14px;
+            color: #475569;
+            font-size: 11px;
+            line-height: 1.35;
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .target-popup-table td:first-of-type {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .target-popup-table .target-radio-column {
+            width: 42px;
+            padding-left: 14px;
+            padding-right: 4px;
+        }
+
+        .target-popup-table thead .target-radio-column {
+            width: 42px;
+        }
+
+        .target-popup-radio {
+            width: 17px;
+            height: 17px;
+            margin: 0;
+            accent-color: #2563eb;
+            cursor: pointer;
+        }
+
+        .target-popup-empty {
+            padding: 36px 20px;
+            color: #64748b;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .target-popup-record-summary {
+            flex: 1;
+            min-width: 0;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .issue-target-modal-footer {
+            min-height: 67px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 12px 20px;
+            border-top: 1px solid #e5e9f0;
+            background: #fff;
+        }
+
+        .target-popup-footer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .modal-primary-button,
+        .modal-secondary-button {
+            min-width: 112px;
+            height: 40px;
+            border-radius: 7px;
+            padding: 0 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .modal-primary-button {
+            border: 1px solid #4f46e5;
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .modal-primary-button:hover:not(:disabled) {
+            background: #4338ca;
+        }
+
+        .modal-primary-button:disabled {
+            border-color: #cbd5e1;
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .modal-secondary-button {
+            border: 1px solid #dbe1e8;
+            background: #fff;
+            color: #475569;
+        }
+
+        .modal-secondary-button:hover {
+            background: #f8fafc;
+        }
+
+        .issue-popup-hidden-select {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+
+        /* =========================================================
+           FILTER POPUP
+
+           IMPORTANT:
+           This is the ONLY filter-popup positioning block.
+           It replaces the conflicting popup CSS from the old file.
+           ========================================================= */
+
+        .asset-filter-card {
+            position: relative !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            overflow: visible !important;
+        }
+
+        .asset-filter-card > .asset-filter-header {
+            display: none !important;
+        }
+
+        .asset-filter-content.filters-hidden {
+            display: none !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) {
+            position: fixed !important;
+
+            top: var(--asset-filter-popup-top, 70px) !important;
+            left: var(--asset-filter-popup-left, 15px) !important;
+
+            right: auto !important;
+
+            width: min(525px, calc(100vw - 30px)) !important;
+            max-height: calc(100vh - 70px) !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+
+            display: block !important;
+
+            overflow: hidden !important;
+
+            border: 1px solid #d9e0ea !important;
+            border-radius: 10px !important;
+
+            background: #fff !important;
+
+            box-shadow:
+                0 12px 30px rgba(15,23,42,.14),
+                0 2px 8px rgba(15,23,42,.06) !important;
+
+            z-index: 9999 !important;
+        }
+
+        /* Popup header */
+        .asset-filter-content:not(.filters-hidden) .filter-popup-header {
+            width: 100% !important;
+            height: 44px !important;
+            min-height: 44px !important;
+            box-sizing: border-box !important;
+
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+
+            margin: 0 !important;
+            padding: 0 14px !important;
+
+            border-bottom: 1px solid #e5e7eb !important;
+            background: #fff !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-popup-header strong {
+            color: #111827 !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-clear-button {
+            border: 0 !important;
+            padding: 0 !important;
+            background: transparent !important;
+            color: #64748b !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-clear-button:hover {
+            color: var(--ia-primary) !important;
+        }
+
+        /* Two-column fields */
+        .asset-filter-content:not(.filters-hidden) .asset-filter-grid {
+            width: 100% !important;
+            box-sizing: border-box !important;
+
+            display: grid !important;
+            grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+
+            gap: 17px 14px !important;
+
+            padding: 16px 14px 18px !important;
+            margin: 0 !important;
+
+            max-height: 385px !important;
+
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+
+            align-content: start !important;
+
+            scrollbar-width: thin !important;
+            scrollbar-color: #cbd5e1 transparent !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-grid::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-field {
+            min-width: 0 !important;
+            margin: 0 !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-field label {
+            display: block !important;
+            margin: 0 0 7px !important;
+
+            color: #111827 !important;
+
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-field select,
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-field input {
+            width: 100% !important;
+
+            height: 36px !important;
+            min-height: 36px !important;
+
+            box-sizing: border-box !important;
+
+            padding: 0 10px !important;
+
+            border: 1px solid #cfd8e6 !important;
+            border-radius: 7px !important;
+
+            background: #fff !important;
+            color: #374151 !important;
+
+            font-family: inherit !important;
+            font-size: 11px !important;
+
+            outline: none !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-field select {
+            padding-right: 30px !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-field select:focus,
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-filter-field input:focus {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99,102,241,.10) !important;
+        }
+
+        /* Search field */
+        .asset-filter-content:not(.filters-hidden)
+        .asset-common-search-wrap {
+            position: relative !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-common-search-wrap .asset-search-icon {
+            position: absolute !important;
+            left: 10px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            color: #64748b !important;
+            font-size: 12px !important;
+            pointer-events: none !important;
+            z-index: 2 !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-common-search-wrap input#assetCommonSearch {
+            padding-left: 30px !important;
+            padding-right: 38px !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
+        .asset-common-search-wrap .search-help-button {
+            position: absolute !important;
+            right: 6px !important;
+            top: 50% !important;
+            width: 25px !important;
+            height: 25px !important;
+            transform: translateY(-50%) !important;
+
+            display: grid !important;
+            place-items: center !important;
+
+            padding: 0 !important;
+
+            border: 1px solid #d9e0ea !important;
+            border-radius: 50% !important;
+
+            background: #f8fafc !important;
+            color: #64748b !important;
+
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            cursor: help !important;
+        }
+
+        /* Search help tooltip */
         .search-help-tooltip {
             position: absolute;
             right: -8px;
-            bottom: calc(100% + 10px);
-            width: 190px;
-            padding: 12px;
+            bottom: calc(100% + 8px);
+            width: 180px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            border: 1px solid #dbe4f0;
-            border-radius: 10px;
+            gap: 4px;
+            border-radius: 8px;
             background: #0f172a;
             color: #e2e8f0;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, .18);
-            font-size: 11px;
+            box-shadow: 0 10px 25px rgba(15,23,42,.18);
+            font-size: 10px;
             line-height: 1.4;
             text-align: left;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(5px);
-            transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
             pointer-events: none;
-        }
-
-        .search-help-tooltip::after {
-            content: "";
-            position: absolute;
-            right: 15px;
-            bottom: -6px;
-            width: 11px;
-            height: 11px;
-            background: #0f172a;
-            transform: rotate(45deg);
+            transform: translateY(4px);
+            transition: .15s ease;
+            z-index: 20;
         }
 
         .search-help-tooltip strong {
-            margin-bottom: 2px;
-            color: #ffffff;
-            font-size: 12px;
-        }
-
-        .search-help-tooltip span::before {
-            content: "•";
-            margin-right: 6px;
-            color: #60a5fa;
+            color: #fff;
+            font-size: 11px;
         }
 
         .search-help-button:hover .search-help-tooltip,
@@ -315,566 +826,965 @@
             transform: translateY(0);
         }
 
+        /* Date field */
+        .asset-filter-content:not(.filters-hidden)
+        .asset-date-wrap {
+            position: relative !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden)
         .asset-date-wrap .asset-date-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
-            font-size: 14px;
-            pointer-events: none;
+            position: absolute !important;
+            left: 10px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            color: #64748b !important;
+            font-size: 11px !important;
+            pointer-events: none !important;
+            z-index: 2 !important;
         }
 
+        .asset-filter-content:not(.filters-hidden)
         .asset-date-wrap input {
-            padding-left: 36px;
-            padding-right: 12px;
+            padding-left: 30px !important;
         }
 
-        .asset-filter-actions {
-            display: flex;
-            justify-content: flex-end;
+        /* Popup footer - kept INSIDE the filter popup */
+        .asset-filter-content:not(.filters-hidden) .asset-filter-actions {
+            width: 100% !important;
+            height: 56px !important;
+            min-height: 56px !important;
+
+            box-sizing: border-box !important;
+
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            align-items: center !important;
+            gap: 10px !important;
+
+            margin: 0 !important;
+            padding: 10px 14px !important;
+
+            border: 0 !important;
+            border-top: 1px solid #e5e7eb !important;
+
+            border-radius: 0 0 10px 10px !important;
+
+            background: #fff !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-popup-apply,
+        .asset-filter-content:not(.filters-hidden) .filter-popup-reset {
+            width: 100% !important;
+
+            height: 34px !important;
+            min-height: 34px !important;
+
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            margin: 0 !important;
+            padding: 0 10px !important;
+
+            border-radius: 7px !important;
+
+            font-size: 11px !important;
+            font-weight: 700 !important;
+
+            cursor: pointer !important;
+            box-sizing: border-box !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-popup-apply {
+            border: 1px solid var(--ia-primary) !important;
+            background: var(--ia-primary) !important;
+            color: #fff !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-popup-apply:hover {
+            background: var(--ia-primary-dark) !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-popup-reset {
+            border: 1px solid #d1d5db !important;
+            background: #fff !important;
+            color: #475569 !important;
+        }
+
+        .asset-filter-content:not(.filters-hidden) .filter-popup-reset:hover {
+            border-color: #94a3b8 !important;
+            background: #f8fafc !important;
+            color: #1e293b !important;
+        }
+
+        /* =========================================================
+           AVAILABLE ASSETS
+           ========================================================= */
+
+        .issue-workspace {
+            display: grid !important;
+            grid-template-columns: minmax(360px,440px) 1fr !important;
+            align-items: start !important;
+            gap: 16px !important;
+        }
+
+        .table-card {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 1px solid var(--ia-border) !important;
+            border-radius: var(--ia-radius) !important;
+            background: #fff !important;
+            box-shadow: var(--ia-shadow) !important;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 16px 18px !important;
+            border-bottom: 1px solid var(--ia-border) !important;
+        }
+
+        .table-header h2 {
+            margin: 0 !important;
+            font-size: 16px !important;
+            font-weight: 800 !important;
+        }
+
+        .table-header-actions {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        #assetCount {
+            display: inline-block;
+            margin-top: 3px;
+            color: var(--ia-muted) !important;
+            font-size: 12px !important;
+        }
+
+        /* Filters button */
+        .asset-filter-toggle-button {
+            min-width: 96px !important;
+            height: 38px !important;
+
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 7px !important;
+
+            padding: 0 14px !important;
+
+            border: 1px solid var(--ia-primary) !important;
+            border-radius: 8px !important;
+
+            background: #fff !important;
+            color: var(--ia-primary) !important;
+
+            font-size: 12px !important;
+            font-weight: 700 !important;
+
+            cursor: pointer !important;
+        }
+
+        .asset-filter-toggle-button:hover,
+        .asset-filter-toggle-button.active {
+            background: var(--ia-primary) !important;
+            color: #fff !important;
+        }
+
+        .asset-filter-toggle-icon {
+            font-size: 13px;
+        }
+
+        .small-action-button {
+            height: 38px !important;
+            min-height: 38px !important;
+            padding: 0 14px !important;
+
+            border: 1px solid var(--ia-primary) !important;
+            border-radius: 8px !important;
+
+            background: var(--ia-primary) !important;
+            color: #fff !important;
+
+            font-size: 12px !important;
+            font-weight: 700 !important;
+
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           ASSET LIST
+           ========================================================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .asset-table {
+            width: 100% !important;
+            min-width: 1180px;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            font-size: 12.5px !important;
+        }
+
+        .asset-table thead th {
+            height: 42px !important;
+            padding: 0 12px !important;
+            background: #fafbfd !important;
+            border-bottom: 1px solid var(--ia-border) !important;
+            color: var(--ia-muted) !important;
+            font-size: 10.5px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .asset-table tbody td {
+            padding: 12px !important;
+            background: #fff !important;
+            border-bottom: 1px solid #f1f3f7 !important;
+            color: #334155 !important;
+            vertical-align: middle !important;
+        }
+
+        .asset-table tbody tr:hover td {
+            background: #fafbff !important;
+        }
+
+        .checkbox-column {
+            width: 40px !important;
+            min-width: 40px !important;
+            text-align: center !important;
+        }
+
+        .asset-table input[type="checkbox"] {
+            width: 16px !important;
+            height: 16px !important;
+            accent-color: var(--ia-primary);
+            cursor: pointer;
+        }
+
+        .asset-tag-text {
+            display: inline-block;
+            padding: 4px 9px !important;
+            border-radius: 999px !important;
+            background: var(--ia-blue-soft) !important;
+            border: 1px solid #dbeafe !important;
+            color: var(--ia-blue) !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+        }
+
+        .stock-badge {
+            display: inline-flex !important;
             align-items: center;
-            gap: 9px;
-            margin-top: 16px;
-            padding-top: 15px;
-            border-top: 1px solid #eef2f7;
+            gap: 5px;
+            padding: 5px 10px !important;
+            border-radius: 999px !important;
+            background: var(--ia-green-soft) !important;
+            border: 1px solid #bbf7d0 !important;
+            color: var(--ia-green-dark) !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
         }
 
-        .modern-filter-button,
-        .modern-reload-button {
-            min-width: 102px;
-            height: 40px;
+        .stock-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--ia-green);
+        }
+
+        .empty-value {
+            color: var(--ia-faint) !important;
+        }
+
+        .location-cell,
+        .custodian-cell {
+            max-width: 210px;
+            line-height: 1.4;
+        }
+
+        .action-column {
+            min-width: 96px !important;
+            width: 96px !important;
+            text-align: center !important;
+        }
+
+        .asset-view-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 6px;
+
+            min-width: 74px !important;
+            height: 32px !important;
+
+            padding: 0 10px !important;
+
+            border: 1px solid var(--ia-border) !important;
+            border-radius: 8px !important;
+
+            background: #fff !important;
+            color: var(--ia-primary) !important;
+
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+
+            cursor: pointer !important;
+        }
+
+        .asset-view-button:hover {
+            color: #fff !important;
+            background: var(--ia-primary) !important;
+            border-color: var(--ia-primary) !important;
+        }
+
+        /* Workspace list as compact cards */
+        .issue-workspace .asset-table {
+            min-width: 0 !important;
+            width: 100% !important;
+        }
+
+        .issue-workspace .asset-table thead {
+            display: none !important;
+        }
+
+        .issue-workspace .asset-table,
+        .issue-workspace .asset-table tbody {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        .issue-workspace .asset-table tr {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+
+            padding: 13px 16px !important;
+
+            border-bottom: 1px solid #f1f3f7 !important;
+
+            cursor: pointer;
+        }
+
+        .issue-workspace .asset-table tr:hover {
+            background: #fafbff !important;
+        }
+
+        .issue-workspace .asset-table tr.active-row {
+            background: var(--ia-primary-soft) !important;
+            box-shadow: inset 3px 0 0 var(--ia-primary);
+        }
+
+        .issue-workspace .asset-table td {
+            display: block !important;
+            padding: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+        }
+
+        .issue-workspace .asset-table td:nth-child(4),
+        .issue-workspace .asset-table td:nth-child(5),
+        .issue-workspace .asset-table td:nth-child(6),
+        .issue-workspace .asset-table td:nth-child(7),
+        .issue-workspace .asset-table td:nth-child(9),
+        .issue-workspace .asset-table td:nth-child(10),
+        .issue-workspace .asset-table td:nth-child(11),
+        .issue-workspace .asset-table td:nth-child(12),
+        .issue-workspace .asset-table td:nth-child(13),
+        .issue-workspace .asset-table td:nth-child(14),
+        .issue-workspace .asset-table td:nth-child(15),
+        .issue-workspace .asset-table td.action-column {
+            display: none !important;
+        }
+
+        .issue-workspace .asset-table td:nth-child(1) {
+            flex: 0 0 auto;
+        }
+
+        .issue-workspace .asset-table td:nth-child(2) {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .issue-workspace .asset-table td:nth-child(2) strong {
+            font-size: 13.5px !important;
+        }
+
+        .issue-workspace .asset-table td:nth-child(3),
+        .issue-workspace .asset-table td:nth-child(8) {
+            flex: 0 0 auto;
+        }
+
+        .list-row-meta {
+            display: block;
+            margin-top: 3px;
+            color: var(--ia-muted);
+            font-size: 11.5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .issue-workspace .table-wrapper {
+            max-height: 640px;
+            overflow-y: auto;
+        }
+
+        .no-assets-cell {
+            padding: 48px 16px !important;
+            text-align: center;
+            color: var(--ia-muted) !important;
+        }
+
+        .no-assets-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .no-assets-cell strong {
+            display: block;
+            margin-bottom: 3px;
+            color: var(--ia-text);
+        }
+
+        /* =========================================================
+           PAGINATION
+           ========================================================= */
+
+        .pagination {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+
+            margin: 0 !important;
+            padding: 14px 18px !important;
+
+            border-top: 1px solid var(--ia-border) !important;
+            background: #fff !important;
+        }
+
+        .pagination-buttons {
+            display: flex !important;
+            gap: 5px !important;
+        }
+
+        .pagination-buttons button {
+            min-width: 32px !important;
+            height: 32px !important;
+            padding: 0 8px !important;
+
+            border: 1px solid var(--ia-border) !important;
+            border-radius: 7px !important;
+
+            background: #fff !important;
+            color: var(--ia-muted) !important;
+
+            font-size: 12px !important;
+            cursor: pointer;
+        }
+
+        .pagination-buttons button.active-page {
+            background: var(--ia-primary) !important;
+            border-color: var(--ia-primary) !important;
+            color: #fff !important;
+        }
+
+        .pagination-info {
+            color: var(--ia-muted) !important;
+            font-size: 12.5px !important;
+        }
+
+        /* =========================================================
+           DETAIL PANEL
+           ========================================================= */
+
+        .detail-panel {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 1px solid var(--ia-border) !important;
+            border-radius: var(--ia-radius) !important;
+            background: #fff !important;
+            box-shadow: var(--ia-shadow) !important;
+            overflow: hidden;
+            min-height: 320px;
+        }
+
+        .detail-panel-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 60px 20px;
+            color: var(--ia-muted);
+            text-align: center;
+        }
+
+        .detail-panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #f1f3f7;
+        }
+
+        .detail-panel-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .detail-panel-title-row h2 {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .detail-panel-subline {
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ia-muted);
+            font-size: 12.5px;
+        }
+
+        .detail-view-button {
+            display: inline-flex;
+            align-items: center;
             gap: 7px;
+
+            height: 38px;
+            padding: 0 16px;
+
             border-radius: 9px;
-            font-size: 13px;
+            border: 1px solid var(--ia-border);
+
+            background: #fff;
+            color: var(--ia-primary);
+
+            font-size: 12.5px;
             font-weight: 700;
             cursor: pointer;
-            transition: .2s ease;
+            white-space: nowrap;
         }
 
-        .modern-filter-button {
-            border: 1px solid #2563eb;
-            background: #2563eb;
-            color: #fff;
-            box-shadow: 0 5px 12px rgba(37, 99, 235, .18);
+        .detail-panel-body {
+            padding: 20px;
         }
 
-        .modern-filter-button:hover {
-            background: #1d4ed8;
-            border-color: #1d4ed8;
-            transform: translateY(-1px);
+        .detail-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4,minmax(0,1fr));
+            gap: 12px;
         }
 
-        .modern-reload-button {
-            border: 1px solid #d8e1ec;
-            background: #fff;
-            color: #475569;
-        }
-
-        .modern-reload-button:hover {
-            border-color: #c0ccdb;
-            background: #f8fafc;
-            color: #0f172a;
-        }
-
-        @media (max-width: 1100px) {
-            .asset-filter-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 700px) {
-            .asset-filter-card {
-                padding: 15px;
-                border-radius: 13px;
-            }
-
-            .asset-filter-header {
-                flex-direction: column;
-                margin-bottom: 15px;
-            }
-
-            .filter-result-hint {
-                align-self: flex-start;
-            }
-
-            .asset-filter-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .asset-filter-actions {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .modern-filter-button,
-            .modern-reload-button {
-                width: 100%;
-            }
-
-            .search-help-tooltip {
-                right: -4px;
-                width: 175px;
-            }
-        }
-
-        @media (hover: none) {
-            .search-help-tooltip {
-                display: none;
-            }
-
-            .search-help-button:focus-visible .search-help-tooltip {
-                display: flex;
-            }
-        }
-
-        /* =====================================================
-           COLLAPSIBLE ASSET FILTERS
-        ====================================================== */
-
-        .asset-filter-title {
+        .detail-info-box {
+            padding: 12px 14px;
+            border: 1px solid #eef1f6;
+            border-radius: 10px;
+            background: #fafbfd;
             min-width: 0;
         }
 
-        .asset-filter-header-actions {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .asset-filter-content {
-            overflow: hidden;
-            max-height: 800px;
-            opacity: 1;
-            transform: translateY(0);
-            transition:
-                max-height .25s ease,
-                opacity .2s ease,
-                transform .25s ease;
-        }
-
-        .asset-filter-content.filters-hidden {
-            max-height: 0;
-            opacity: 0;
-            transform: translateY(-6px);
-            pointer-events: none;
-        }
-
-        .asset-filter-toggle-button {
-            height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 0 15px;
-            border: 1px solid #d8e1ec;
-            border-radius: 9px;
-            background: #ffffff;
-            color: #2563eb;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background .2s ease, border-color .2s ease,
-                        color .2s ease, transform .2s ease;
-        }
-
-        .asset-filter-toggle-button:hover {
-            background: #eff6ff;
-            border-color: #93c5fd;
-            color: #1d4ed8;
-            transform: translateY(-1px);
-        }
-
-        .asset-filter-toggle-button.active {
-            background: #2563eb;
-            border-color: #2563eb;
-            color: #ffffff;
-        }
-
-        .asset-filter-toggle-icon {
-            width: 20px;
-            height: 20px;
-            display: grid;
-            place-items: center;
-            border-radius: 50%;
-            background: #eff6ff;
-            color: #2563eb;
-            font-size: 16px;
+        .detail-info-box .detail-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--ia-muted);
+            font-size: 10px;
             font-weight: 800;
-            line-height: 1;
+            letter-spacing: .04em;
+            text-transform: uppercase;
         }
 
-        .asset-filter-toggle-button.active .asset-filter-toggle-icon {
-            background: rgba(255,255,255,.18);
-            color: #ffffff;
+        .detail-info-box .detail-value {
+            display: block;
+            color: var(--ia-text);
+            font-size: 13.5px;
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .asset-filter-actions {
+        /* Detail merged information */
+        .detail-merged-summary {
+            display: grid;
+            grid-template-columns: repeat(5,minmax(0,1fr));
+            border: 1px solid var(--ia-border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            background: #fff;
+        }
+
+        .detail-merged-summary .summary-item {
+            padding: 11px 12px;
+            border-right: 1px solid var(--ia-border);
+        }
+
+        .detail-merged-summary .summary-item:last-child {
+            border-right: 0;
+        }
+
+        .summary-label {
+            display: block;
+            font-size: 10px;
+            color: var(--ia-muted);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 4px;
+        }
+
+        .summary-value {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ia-text);
+            overflow-wrap: anywhere;
+        }
+
+        .merged-detail-tabs {
+            border: 1px solid var(--ia-border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .merged-detail-tab-nav {
             display: flex;
-            justify-content: flex-end;
+            gap: 0;
+            overflow-x: auto;
+            background: #f5f6f8;
+            border-bottom: 1px solid var(--ia-border);
+            padding: 0 5px;
+        }
+
+        .merged-detail-tab {
+            flex: 0 0 auto;
+            height: 42px;
+            padding: 0 14px;
+            border: 0;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+            color: var(--ia-text);
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .merged-detail-tab.active {
+            color: var(--ia-primary);
+            background: #fff;
+            border-bottom-color: var(--ia-primary);
+        }
+
+        .merged-detail-panel {
+            display: none;
+            padding: 14px;
+        }
+
+        .merged-detail-panel.active {
+            display: block;
+        }
+
+        .merged-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .merged-info-item {
+            display: grid;
+            grid-template-columns: 165px minmax(0,1fr);
+            min-height: 40px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .merged-info-item:nth-child(odd) {
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .merged-info-item.full {
+            grid-column: 1/-1;
+            border-right: 0;
+        }
+
+        .merged-info-label {
+            display: flex;
             align-items: center;
-            gap: 9px;
-            margin-top: 16px;
-            padding-top: 15px;
-            border-top: 1px solid #eef2f7;
+            padding: 8px 10px;
+            background: #f8fafc;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 700;
         }
 
-        @media (min-width: 1001px) {
-            .asset-filter-header {
-                align-items: center;
-            }
+        .merged-info-value {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            padding: 8px 10px;
+            color: #1e3a5f;
+            font-size: 11.5px;
+            overflow-wrap: anywhere;
         }
 
-        @media (max-width: 900px) {
-            .asset-filter-header {
-                align-items: center;
+        .merged-info-value.empty {
+            color: #94a3b8;
+        }
+
+        .merged-table-wrap {
+            overflow-x: auto;
+        }
+
+        .merged-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .merged-table th,
+        .merged-table td {
+            padding: 9px 10px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        .merged-table th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .merged-empty {
+            padding: 14px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            color: #64748b;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* SweetAlert */
+        .eam-swal-popup {
+            border-radius: 16px !important;
+        }
+
+        .swal-message {
+            font-size: 14px;
+            color: var(--ia-text);
+            line-height: 1.5;
+        }
+
+        .swal-selected-count {
+            margin-top: 10px;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: var(--ia-primary-soft);
+            color: var(--ia-primary);
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .swal-warning-text {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--ia-orange);
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 1150px) {
+            .issue-workspace {
+                grid-template-columns: 1fr !important;
             }
 
-            .asset-filter-header-actions {
-                flex-wrap: wrap;
+            .issue-workspace .table-wrapper {
+                max-height: 420px;
             }
         }
 
         @media (max-width: 700px) {
-            .asset-filter-header {
-                flex-direction: column;
+
+            .issue-target-modal {
+                padding: 12px;
+            }
+
+            .issue-target-modal-card {
+                width: calc(100vw - 24px);
+                max-height: calc(100vh - 24px);
+                border-radius: 12px;
+            }
+
+            .target-popup-filter-row {
+                grid-template-columns: 1fr;
                 align-items: stretch;
             }
 
-            .asset-filter-header-actions {
+            .target-popup-filter-button,
+            .target-popup-clear-button {
                 width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
             }
 
-            .asset-filter-toggle-button {
+            .target-popup-table-wrap {
+                max-height: 46vh;
+            }
+
+            .target-popup-table {
+                min-width: 650px;
+            }
+
+            .issue-target-modal-body {
+                overflow-x: auto;
+            }
+
+            .issue-target-modal-footer {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .target-popup-footer-actions {
+                width: 100%;
+            }
+
+            .target-popup-footer-actions button {
                 flex: 1;
             }
 
-            .filter-result-hint {
-                flex: 0 0 auto;
+            .asset-filter-content:not(.filters-hidden) .asset-filter-actions {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+                padding: 9px 12px !important;
             }
 
-            .asset-filter-content {
-                margin-top: 12px;
+            .page-content {
+                padding: 0 12px 22px !important;
             }
 
-            .asset-filter-actions {
-                display: grid;
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 10px;
+            }
+
+            .table-header {
+                align-items: flex-start !important;
+                gap: 10px;
+                flex-direction: column;
+            }
+
+            .table-header-actions {
+                width: 100% !important;
+                justify-content: flex-end !important;
+            }
+
+            .asset-filter-content:not(.filters-hidden) {
+                top: 16px !important;
+                left: 16px !important;
+                width: calc(100vw - 32px) !important;
+                max-height: calc(100vh - 32px) !important;
+            }
+
+            .asset-filter-content:not(.filters-hidden)
+            .asset-filter-grid {
+                grid-template-columns: 1fr !important;
+                max-height: calc(100vh - 160px) !important;
+            }
+
+            .issue-target-group,
+            .issue-target-control,
+            .issue-target-input-wrap,
+            .issue-target-input-wrap input,
+            .issue-toolbar-actions {
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
+
+            .issue-toolbar-actions {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+            }
+
+            .detail-info-grid {
+                grid-template-columns: repeat(2,minmax(0,1fr));
+            }
+
+            .detail-panel-header {
+                flex-direction: column;
+            }
+
+            .detail-merged-summary {
                 grid-template-columns: 1fr 1fr;
             }
 
-            .modern-filter-button,
-            .modern-reload-button {
-                width: 100%;
-            }
-        }
-
-        /* =====================================================
-           SHOW CART COUNT
-        ====================================================== */
-
-        .show-cart-button {
-            position: relative;
-        }
-
-        .cart-count-badge {
-            min-width: 22px;
-            height: 22px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 6px;
-            border-radius: 999px;
-            background: #ffffff;
-            color: #2563eb;
-            border: 1px solid rgba(37, 99, 235, .18);
-            font-size: 11px;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .show-cart-button:hover .cart-count-badge {
-            background: #eff6ff;
-        }
-
-        /* =====================================================
-           MODERN ISSUE TARGET TOOLBAR
-        ====================================================== */
-        .issue-toolbar-modern {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-        .issue-target-group, .issue-target-control {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-        }
-        .issue-target-group label, .issue-target-control label {
-            color: #0f172a;
-            font-size: 13px;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-        .issue-target-group select, .issue-target-input-wrap input, .issue-target-control select {
-            height: 40px;
-            border: 1px solid #cbd5e1;
-            border-radius: 9px;
-            background: #fff;
-            color: #334155;
-            font-size: 13px;
-            outline: none;
-        }
-        .issue-target-group select { padding: 0 34px 0 11px; min-width: 175px; }
-        .issue-target-input-wrap { position: relative; display: flex; align-items: center; }
-        .issue-target-input-wrap input { width: 300px; padding: 0 45px 0 12px; }
-        .issue-help-button {
-            position: absolute; right: 5px; width: 30px; height: 30px;
-            border: 0; border-radius: 8px; background: #22c55e; color: #fff;
-            font-weight: 800; cursor: pointer;
-        }
-        .issue-toolbar-actions {
-            display: flex; align-items: center; gap: 12px; margin-left: auto;
-        }
-        .issue-target-modal {
-            position: fixed; inset: 0; z-index: 9999; display: none;
-            align-items: center; justify-content: center; padding: 20px;
-            background: rgba(15, 23, 42, .55); backdrop-filter: blur(2px);
-        }
-        .issue-target-modal.open { display: flex; }
-        .issue-target-modal-card {
-            width: min(680px, 100%); max-height: 85vh; overflow: hidden;
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
-            box-shadow: 0 24px 70px rgba(15,23,42,.28);
-        }
-        .issue-target-modal-header, .issue-target-modal-footer {
-            display: flex; align-items: center; justify-content: space-between; gap: 12px;
-            padding: 18px 20px; border-bottom: 1px solid #e5e7eb;
-        }
-        .issue-target-modal-footer { border-top: 1px solid #e5e7eb; border-bottom: 0; justify-content: flex-end; }
-        .modal-eyebrow { color: #2563eb; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-        .issue-target-modal-header h3 { margin: 3px 0 0; color: #0f172a; font-size: 19px; }
-        .modal-close-button { border: 0; background: transparent; color: #64748b; font-size: 25px; cursor: pointer; }
-        .issue-target-modal-body { padding: 20px; }
-        .issue-target-modal-body label { display:block; margin-bottom:8px; color:#334155; font-size:13px; font-weight:700; }
-        .issue-target-modal-body select { width:100%; border:1px solid #cbd5e1; border-radius:10px; padding:8px; color:#334155; font-size:14px; }
-        .modal-primary-button, .modal-secondary-button { min-width:90px; height:40px; border-radius:9px; font-weight:700; cursor:pointer; }
-        .modal-primary-button { border:1px solid #2563eb; background:#2563eb; color:#fff; }
-        .modal-secondary-button { border:1px solid #cbd5e1; background:#fff; color:#475569; }
-        @media (max-width: 900px) {
-            .issue-toolbar-modern { align-items: stretch; }
-            .issue-target-group, .issue-target-control, .issue-toolbar-actions { width:100%; margin-left:0; }
-            .issue-target-group select, .issue-target-input-wrap, .issue-target-input-wrap input { width:100%; }
-            .issue-toolbar-actions { display:grid; grid-template-columns:repeat(3,1fr); }
-        }
-        @media (max-width: 600px) {
-            .issue-toolbar-actions { grid-template-columns:1fr; }
-        }
-
-        /* =====================================================
-           CART ACTION BUTTONS
-        ====================================================== */
-
-        .empty-cart-button,
-        .issue-cart-button {
-            min-height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            padding: 0 14px;
-            border-radius: 9px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .empty-cart-button {
-            border: 1px solid #fecaca;
-            background: #ffffff;
-            color: #dc2626;
-        }
-
-        .empty-cart-button:hover {
-            background: #fef2f2;
-            border-color: #fca5a5;
-            color: #b91c1c;
-            transform: translateY(-1px);
-        }
-
-        .issue-cart-button {
-            border: 1px solid #16a34a;
-            background: #16a34a;
-            color: #ffffff;
-            box-shadow: 0 5px 12px rgba(22, 163, 74, .16);
-        }
-
-        .issue-cart-button:hover {
-            background: #15803d;
-            border-color: #15803d;
-            transform: translateY(-1px);
-        }
-
-        .empty-cart-button:disabled,
-        .issue-cart-button:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        @media (max-width: 900px) {
-            .create-toolbar {
-                flex-wrap: wrap;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .create-toolbar {
-                display: grid;
+            .merged-info-grid {
                 grid-template-columns: 1fr;
             }
 
-            .create-toolbar > * {
-                width: 100%;
+            .merged-info-item,
+            .merged-info-item.full {
+                grid-template-columns: 140px minmax(0,1fr);
+                border-right: 0;
             }
         }
-
-        .asset-filter-toggle-button {
-            min-width: 102px;
-            height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            padding: 0 13px;
-            border: 1px solid #d8e1ec;
-            border-radius: 9px;
-            background: #ffffff;
-            color: #475569;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .asset-filter-toggle-button:hover {
-            border-color: #b8c7db;
-            background: #f8fafc;
-            color: #0f172a;
-        }
-
-        .asset-filter-toggle-icon {
-            font-size: 16px;
-            font-weight: 700;
-            line-height: 1;
-        }
-
-        .asset-filter-grid.filters-hidden {
-            display: none;
-        }
-
-        @media (max-width: 700px) {
-            .asset-filter-toggle-button {
-                width: 100%;
-            }
-        }
-
     </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================================================
-     GENERIC SIDEBAR
-========================================================== -->
-
 <div id="sidebar"></div>
-
-
-<!-- =========================================================
-     MAIN APPLICATION
-========================================================== -->
 
 <div class="main-content">
 
-
-    <!-- =====================================================
-         GENERIC HEADER
-    ====================================================== -->
-
     <div id="header"></div>
-
-
-    <!-- =====================================================
-         PAGE CONTENT
-    ====================================================== -->
 
     <main class="page-content">
 
-
-        <!-- =================================================
-             BREADCRUMB
-        ================================================== -->
-
         <div class="page-breadcrumb">
-
             <span>EAM</span>
-
             <span>›</span>
-
             <span>Issue</span>
-
             <span>›</span>
-
             <strong>Create New</strong>
-
         </div>
-
-
-        <!-- =================================================
-             PAGE HEADER
-        ================================================== -->
 
         <div class="page-header">
-
             <div>
-
-                <h1>
-                    Issue Asset
-                </h1>
-
-                <p>
-                    Select assets and add them to the issue cart.
-                </p>
-
+                <h1>Issue Asset</h1>
+                <p>Select assets and add them to the issue cart.</p>
             </div>
-
         </div>
 
-
-        <!-- =================================================
-             TOP TOOLBAR
-        ================================================== -->
-
+        <!-- TOP TOOLBAR -->
         <section class="create-toolbar issue-toolbar-modern">
 
             <div class="issue-target-group">
                 <label for="assetStatus">Assets</label>
-                <select id="assetStatus" onchange="changeIssueTarget(this.value)">
+
+                <select id="assetStatus"
+                        onchange="changeIssueTarget(this.value)">
                     <option value="issuedToAsset">Issued To Asset</option>
                     <option value="issuedToCustodian">Issued To Custodian</option>
                     <option value="issuedToLocation">Issued To Location</option>
@@ -883,478 +1793,549 @@
             </div>
 
             <div id="issueTargetControl" class="issue-target-control">
-                <label id="issueTargetLabel" for="issueTargetSearch">Asset:</label>
+
+                <label id="issueTargetLabel"
+                       for="issueTargetSearch">
+                    Asset:
+                </label>
+
                 <div class="issue-target-input-wrap">
-                    <input id="issueTargetSearch" type="text" placeholder="Type min 2 characters to search" autocomplete="off">
-                    <button type="button" id="issueTargetHelp" class="issue-help-button" onclick="openIssueTargetPopup()" aria-label="Select asset">?</button>
+
+                    <input
+                        id="issueTargetSearch"
+                        type="text"
+                        placeholder="Type min 2 characters to search"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        type="button"
+                        id="issueTargetHelp"
+                        class="issue-help-button"
+                        onclick="openIssueTargetPopup()"
+                        aria-label="Select asset"
+                    >
+                        ?
+                    </button>
+
                 </div>
             </div>
 
             <div class="issue-toolbar-actions">
-                <button type="button" class="create-action-button blue show-cart-button" onclick="showCart()">
-                    🛒 <span>Show Cart</span>
-                    <span id="cartCountBadge" class="cart-count-badge">0</span>
+
+                <button
+                    type="button"
+                    class="create-action-button show-cart-button"
+                    onclick="showCart()"
+                >
+                    🛒
+                    <span>Show Cart</span>
+                    <span id="cartCountBadge"
+                          class="cart-count-badge">
+                        0
+                    </span>
                 </button>
 
-                <button type="button" class="create-action-button empty-cart-button" onclick="emptyCart()">
-                    🗑 <span>Empty Cart</span>
+                <button
+                    type="button"
+                    class="create-action-button empty-cart-button"
+                    onclick="emptyCart()"
+                >
+                    🗑
+                    <span>Empty Cart</span>
                 </button>
 
-                <button type="button" class="create-action-button issue-cart-button" onclick="issueAssetFromCart()">
-                    ✓ <span>Issue Assets From Cart</span>
+                <button
+                    type="button"
+                    class="create-action-button issue-cart-button"
+                    onclick="issueAssetFromCart()"
+                >
+                    ✓
+                    <span>Issue Assets From Cart</span>
                 </button>
+
             </div>
-
         </section>
 
-
-        <!-- =================================================
-             DIVIDER
-        ================================================== -->
-
-        <div id="issueTargetModal" class="issue-target-modal" aria-hidden="true">
+        <!-- TARGET MODAL -->
+        <div
+            id="issueTargetModal"
+            class="issue-target-modal"
+            aria-hidden="true"
+        >
             <div class="issue-target-modal-card">
+
                 <div class="issue-target-modal-header">
+
                     <div>
-                        <span class="modal-eyebrow">Asset Selection</span>
-                        <h3 id="issueTargetModalTitle">Select Asset</h3>
+                        <h3 id="issueTargetModalTitle">
+                            Select Asset
+                        </h3>
+
+                        <p id="issueTargetModalSubtitle">
+                            Select an asset and add it to the issue form.
+                        </p>
                     </div>
-                    <button type="button" class="modal-close-button" onclick="closeIssueTargetPopup()">×</button>
+
+                    <button
+                        type="button"
+                        class="modal-close-button"
+                        onclick="closeIssueTargetPopup()"
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+
                 </div>
+
                 <div class="issue-target-modal-body">
-                    <label id="issuePopupLabel" for="issuePopupSelect">Asset</label>
-                    <select id="issuePopupSelect" size="8"></select>
+
+                    <div class="target-popup-filter-row">
+
+                        <div class="target-popup-filter-field target-popup-select-field">
+                            <label for="issuePopupFilterSelect">
+                                Select
+                            </label>
+
+                            <select id="issuePopupFilterSelect">
+                                <option value="name">Asset Name</option>
+                                <option value="code">Asset Code</option>
+                                <option value="manufacturer">Manufacturer</option>
+                            </select>
+                        </div>
+
+                        <div class="target-popup-filter-field target-popup-value-field">
+                            <label for="issuePopupSearch">
+                                Value
+                            </label>
+
+                            <input
+                                id="issuePopupSearch"
+                                type="text"
+                                placeholder="Enter search value..."
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <button
+                            type="button"
+                            class="target-popup-filter-button"
+                            onclick="filterIssueTargetPopup()"
+                        >
+                            <span>⌕</span>
+                            Filter
+                        </button>
+
+                        <button
+                            type="button"
+                            class="target-popup-clear-button"
+                            onclick="clearIssueTargetPopupFilter()"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+                    <div class="target-popup-table-wrap">
+
+                        <table class="target-popup-table">
+                            <thead>
+                                <tr>
+                                    <th class="target-radio-column"></th>
+                                    <th id="targetPopupColumnOne">
+                                        ASSET NAME
+                                    </th>
+                                    <th id="targetPopupColumnTwo">
+                                        ASSET CODE
+                                    </th>
+                                    <th id="targetPopupColumnThree">
+                                        MANUFACTURER
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="issueTargetTableBody"></tbody>
+                        </table>
+
+                        <div
+                            id="issueTargetEmptyState"
+                            class="target-popup-empty"
+                            hidden
+                        >
+                            No records found.
+                        </div>
+
+                    </div>
+
                 </div>
+
                 <div class="issue-target-modal-footer">
-                    <button type="button" class="modal-secondary-button" onclick="closeIssueTargetPopup()">Close</button>
-                    <button type="button" class="modal-primary-button" onclick="addIssueTargetSelection()">Add</button>
+
+                    <div
+                        id="issueTargetRecordSummary"
+                        class="target-popup-record-summary"
+                    >
+                        0 records found. Select one to continue.
+                    </div>
+
+                    <div class="target-popup-footer-actions">
+
+                        <button
+                            type="button"
+                            class="modal-secondary-button"
+                            onclick="closeIssueTargetPopup()"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="button"
+                            id="issueTargetAddButton"
+                            class="modal-primary-button"
+                            onclick="addIssueTargetSelection()"
+                            disabled
+                        >
+                            ✓ Add Selection
+                        </button>
+
+                    </div>
+
                 </div>
+
+                <select
+                    id="issuePopupSelect"
+                    class="issue-popup-hidden-select"
+                    aria-hidden="true"
+                    tabindex="-1"
+                ></select>
+
             </div>
         </div>
 
-        <div class="create-divider"></div>
-
-
-        <!-- =================================================
-             FILTER SECTION
-        ================================================== -->
-
+        <!-- FILTER SECTION -->
         <section class="asset-filter-card" aria-label="Asset filters">
 
             <div class="asset-filter-header">
                 <div class="asset-filter-title">
-                    <span class="asset-filter-eyebrow">Asset Search</span>
+                    <span class="asset-filter-eyebrow">
+                        Asset Search
+                    </span>
                     <h2>Find Assets</h2>
                     <p>Use filters to narrow down the available assets.</p>
                 </div>
 
-                <div class="asset-filter-header-actions">
-                    <div class="filter-result-hint" id="filterResultHint">
-                        All assets
-                    </div>
+                <div class="asset-filter-header-actions"></div>
+            </div>
+
+            <div
+                class="asset-filter-content filters-hidden"
+                id="assetFilterContent"
+            >
+
+                <div class="filter-popup-header">
+                    <strong>Filter records</strong>
 
                     <button
                         type="button"
-                        id="assetFilterToggleButton"
-                        class="asset-filter-toggle-button"
-                        onclick="toggleAssetFilters()"
-                        aria-expanded="false"
-                        aria-controls="assetFilterContent"
-                        title="Show filters"
+                        class="filter-clear-button"
+                        onclick="reloadAssets()"
                     >
-                        <span id="assetFilterToggleIcon" class="asset-filter-toggle-icon">+</span>
-                        <span id="assetFilterToggleText">More Filters</span>
+                        Clear all
                     </button>
                 </div>
+
+                <div
+                    class="asset-filter-grid"
+                    id="assetFilterGrid"
+                >
+
+                    <div class="asset-filter-field">
+                        <label for="assetNameFilter">
+                            Asset Name
+                        </label>
+
+                        <div class="asset-select-wrap">
+                            <select id="assetNameFilter">
+                                <option value="">
+                                    All Asset Names
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="asset-filter-field">
+                        <label for="manufacturerFilter">
+                            Manufacturer
+                        </label>
+
+                        <div class="asset-select-wrap">
+                            <select id="manufacturerFilter">
+                                <option value="">
+                                    All Manufacturers
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="asset-filter-field">
+                        <label for="locationFilter">
+                            Location
+                        </label>
+
+                        <div class="asset-select-wrap">
+                            <select id="locationFilter">
+                                <option value="">
+                                    All Locations
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="asset-filter-field asset-common-search-field">
+
+                        <label for="assetCommonSearch">
+                            Search Assets
+                        </label>
+
+                        <div class="asset-common-search-wrap">
+
+                            <span
+                                class="asset-search-icon"
+                                aria-hidden="true"
+                            >
+                                ⌕
+                            </span>
+
+                            <input
+                                type="text"
+                                id="assetCommonSearch"
+                                placeholder="Serial No, Model, ERP No or Plate No"
+                                autocomplete="off"
+                            >
+
+                            <button
+                                type="button"
+                                class="search-help-button"
+                                aria-label="Search help"
+                                title="Search by Serial No, Model, ERP No or Plate No"
+                            >
+                                ?
+                                <span class="search-help-tooltip">
+                                    <strong>Search by</strong>
+                                    <span>Serial No</span>
+                                    <span>Model</span>
+                                    <span>ERP No</span>
+                                    <span>Plate No</span>
+                                </span>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <div class="asset-filter-field">
+
+                        <label for="registrationDateFilter">
+                            Registration Date
+                        </label>
+
+                        <div class="asset-date-wrap">
+
+                            <span
+                                class="asset-date-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <input
+                                type="date"
+                                id="registrationDateFilter"
+                                title="Filter by registration date"
+                            >
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="asset-filter-actions">
+
+                    <button
+                        type="button"
+                        class="filter-button modern-filter-button filter-popup-apply"
+                        onclick="filterAssets()"
+                    >
+                        <span id="filterApplyText">
+                            Show results
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="reload-button modern-reload-button filter-popup-reset"
+                        onclick="reloadAssets()"
+                    >
+                        Reset
+                    </button>
+
+                </div>
             </div>
+        </section>
 
-            <div class="asset-filter-content filters-hidden" id="assetFilterContent">
-                <div class="asset-filter-grid" id="assetFilterGrid">
+        <!-- ASSET LIST + DETAIL -->
+        <div class="issue-workspace">
 
-                <div class="asset-filter-field">
-                    <label for="assetNameFilter">Asset Name</label>
-                    <div class="asset-select-wrap">
-                        <select id="assetNameFilter">
-                            <option value="">All Asset Names</option>
-                        </select>
+            <section class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+                        <h2>Available Assets</h2>
+
+                        <span id="assetCount">
+                            0 Assets
+                        </span>
                     </div>
-                </div>
 
-                <div class="asset-filter-field">
-                    <label for="manufacturerFilter">Manufacturer</label>
-                    <div class="asset-select-wrap">
-                        <select id="manufacturerFilter">
-                            <option value="">All Manufacturers</option>
-                        </select>
-                    </div>
-                </div>
+                    <div class="table-header-actions">
 
-                <div class="asset-filter-field">
-                    <label for="locationFilter">Location</label>
-                    <div class="asset-select-wrap">
-                        <select id="locationFilter">
-                            <option value="">All Locations</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="asset-filter-field asset-common-search-field">
-                    <label for="assetCommonSearch">Search Assets</label>
-                    <div class="asset-common-search-wrap">
-                        <span class="asset-search-icon" aria-hidden="true">⌕</span>
-                        <input
-                            type="text"
-                            id="assetCommonSearch"
-                            placeholder="Serial No, Model, ERP No or Plate No"
-                            autocomplete="off"
-                        >
                         <button
                             type="button"
-                            class="search-help-button"
-                            aria-label="Search help"
-                            title="Search by Serial No, Model, ERP No or Plate No"
+                            id="assetFilterToggleButton"
+                            class="asset-filter-toggle-button table-filter-button"
+                            onclick="toggleAssetFilters()"
+                            aria-expanded="false"
+                            aria-controls="assetFilterContent"
+                            title="Show filters"
                         >
-                            ?
-                            <span class="search-help-tooltip">
-                                <strong>Search by</strong>
-                                <span>Serial No</span>
-                                <span>Model</span>
-                                <span>ERP No</span>
-                                <span>Plate No</span>
+                            <span
+                                id="assetFilterToggleIcon"
+                                class="asset-filter-toggle-icon"
+                            >
+                                +
+                            </span>
+
+                            <span id="assetFilterToggleText">
+                                Filters
                             </span>
                         </button>
-                    </div>
-                </div>
 
-                <div class="asset-filter-field">
-                    <label for="registrationDateFilter">Registration Date</label>
-                    <div class="asset-date-wrap">
-                        <span class="asset-date-icon" aria-hidden="true">▣</span>
-                        <input
-                            type="date"
-                            id="registrationDateFilter"
-                            title="Filter by registration date"
+                        <button
+                            type="button"
+                            class="small-action-button"
+                            onclick="addSelectedToCart()"
                         >
+                            🛒
+                            Add To Cart
+                        </button>
+
                     </div>
                 </div>
 
-            </div>
+                <div class="table-wrapper">
 
-            </div>
+                    <table class="asset-table">
 
-            <div class="asset-filter-actions">
-                <button
-                    type="button"
-                    class="filter-button modern-filter-button"
-                    onclick="filterAssets()"
-                >
-                    <span>⌕</span>
-                    Filter
-                </button>
+                        <thead>
+                            <tr>
+                                <th class="checkbox-column">
+                                    <input
+                                        type="checkbox"
+                                        id="selectAllAssets"
+                                        onchange="selectAllAssets(this)"
+                                    >
+                                </th>
 
-                <button
-                    type="button"
-                    class="reload-button modern-reload-button"
-                    onclick="reloadAssets()"
-                >
-                    <span>↻</span>
-                    Reset
-                </button></div>
+                                <th>Asset Name</th>
+                                <th>Asset Tag</th>
+                                <th>Serial No</th>
+                                <th>Model</th>
+                                <th>Manufacturer</th>
+                                <th>Location</th>
+                                <th>Stock Status</th>
+                                <th>ERP No</th>
+                                <th>Plate No</th>
+                                <th>Registration Date</th>
+                                <th>User</th>
+                                <th>Department</th>
+                                <th>Custodian</th>
+                                <th>Asset Type</th>
+                                <th class="action-column">Action</th>
+                            </tr>
+                        </thead>
 
-        </section>
+                        <tbody id="assetTableBody"></tbody>
 
+                    </table>
+                </div>
 
-        <!-- =================================================
-             ASSET TABLE
-        ================================================== -->
+                <div class="pagination">
 
-        <section class="table-card">
+                    <div class="pagination-buttons">
+                        <button type="button">«</button>
+                        <button type="button">‹</button>
+                        <button type="button" class="active-page">1</button>
+                        <button type="button">2</button>
+                        <button type="button">3</button>
+                        <button type="button">›</button>
+                        <button type="button">»</button>
+                    </div>
 
+                    <div class="pagination-info">
+                        Showing
+                        <strong id="showingCount">0</strong>
+                        of
+                        <strong id="totalCount">0</strong>
+                    </div>
 
-            <!-- =================================================
-                 TABLE HEADER
-            ================================================== -->
+                </div>
 
-            <div class="table-header">
+            </section>
 
-
-                <div>
-
-                    <h2>
-                        Available Assets
-                    </h2>
-
-                    <span id="assetCount">
-                        0 Assets
+            <aside
+                id="assetDetailPanel"
+                class="detail-panel"
+                aria-live="polite"
+            >
+                <div class="detail-panel-empty">
+                    <div class="empty-icon">🗂️</div>
+                    <strong>No asset selected</strong>
+                    <span>
+                        Select an asset from the list to view its details.
                     </span>
-
                 </div>
+            </aside>
 
-
-                <div class="table-header-actions">
-
-                    <button
-                        type="button"
-                        class="small-action-button"
-                        onclick="addSelectedToCart()"
-                    >
-
-                        🛒
-                        Add To Cart
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- =================================================
-                 TABLE WRAPPER
-            ================================================== -->
-
-            <div class="table-wrapper">
-
-                <table class="asset-table">
-
-
-                    <!-- =================================================
-                         TABLE HEADER
-                    ================================================== -->
-
-                    <thead>
-
-                        <tr>
-
-
-                            <!-- Select All -->
-
-                            <th class="checkbox-column">
-
-                                <input
-                                    type="checkbox"
-                                    id="selectAllAssets"
-                                    onchange="selectAllAssets(this)"
-                                >
-
-                            </th>
-
-
-                            <th>
-                                Asset Name
-                            </th>
-
-
-                            <th>
-                                Asset Tag
-                            </th>
-
-
-                            <th>
-                                Serial No
-                            </th>
-
-
-                            <th>
-                                Model
-                            </th>
-
-
-                            <th>
-                                Manufacturer
-                            </th>
-
-
-                            <th>
-                                Location
-                            </th>
-
-
-                            <th>
-                                Stock Status
-                            </th>
-
-
-                            <th>
-                                ERP No
-                            </th>
-
-
-                            <th>
-                                Plate No
-                            </th>
-
-
-                            <th>
-                                Registration Date
-                            </th>
-
-
-                            <th>
-                                User
-                            </th>
-
-
-                            <th>
-                                Department
-                            </th>
-
-
-                            <th>
-                                Custodian
-                            </th>
-
-
-                            <th>
-                                Asset Type
-                            </th>
-
-                            <th class="action-column">
-                                Action
-                            </th>
-
-
-                        </tr>
-
-                    </thead>
-
-
-                    <!-- =================================================
-                         TABLE BODY
-
-                         IMPORTANT:
-                         JavaScript will populate this section.
-                    ================================================== -->
-
-                    <tbody id="assetTableBody">
-
-                    </tbody>
-
-
-                </table>
-
-            </div>
-
-
-            <!-- =================================================
-                 PAGINATION
-            ================================================== -->
-
-            <div class="pagination">
-
-
-                <div class="pagination-buttons">
-
-                    <button type="button">
-                        «
-                    </button>
-
-                    <button type="button">
-                        ‹
-                    </button>
-
-                    <button
-                        type="button"
-                        class="active-page"
-                    >
-                        1
-                    </button>
-
-                    <button type="button">
-                        2
-                    </button>
-
-                    <button type="button">
-                        3
-                    </button>
-
-                    <button type="button">
-                        ›
-                    </button>
-
-                    <button type="button">
-                        »
-                    </button>
-
-                </div>
-
-
-                <div class="pagination-info">
-
-                    Showing
-
-                    <strong id="showingCount">
-                        0
-                    </strong>
-
-                    of
-
-                    <strong id="totalCount">
-                        0
-                    </strong>
-
-                </div>
-
-
-            </div>
-
-
-        </section>
-
-
+        </div>
     </main>
 
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
     <div id="footer"></div>
-
-
 </div>
-
-
-<!-- =========================================================
-     GENERIC LAYOUT JS
-========================================================== -->
 
 <script src="./js/layout.js"></script>
 
-
-<!-- =========================================================
-     ASSET DATA + APPLICATION LOGIC
-========================================================== -->
-
 <script>
-
-
-// =========================================================
-// AVAILABLE ASSET DATA
-// =========================================================
+/* =========================================================
+   AVAILABLE ASSET DATA
+   ========================================================= */
 
 const availableAssets = [
-
     {
         assetName: "Desktop",
         assetTag: "ITE-0001276",
         serialNo: "",
         model: "",
         manufacturer: "",
-        location:
-            "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+        location: "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
         stockStatus: "In Stock",
         erpNo: "",
         plateNo: "",
         registrationDate: "",
         user: "",
         department: "",
-        custodian:
-            "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+        custodian: "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
         assetType: "Capitalized"
     },
-
-
     {
         assetName: "Dell",
         assetTag: "FUN-0001616",
@@ -1368,20 +2349,16 @@ const availableAssets = [
         registrationDate: "",
         user: "",
         department: "",
-        custodian:
-            "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+        custodian: "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
         assetType: "Capitalized"
     },
-
-
     {
         assetName: "Desktop",
         assetTag: "ITE-0001272",
         serialNo: "",
         model: "",
         manufacturer: "",
-        location:
-            "Ad Dakhliyah-Adam TS-Admin building-Female Toilet",
+        location: "Ad Dakhliyah-Adam TS-Admin building-Female Toilet",
         stockStatus: "In Stock",
         erpNo: "",
         plateNo: "",
@@ -1391,8 +2368,6 @@ const availableAssets = [
         custodian: "",
         assetType: "Capitalized"
     },
-
-
     {
         assetName: "AC",
         assetTag: "OFE-0000409",
@@ -1409,16 +2384,13 @@ const availableAssets = [
         custodian: "",
         assetType: "Capitalized"
     },
-
-
     {
         assetName: "KEYBOARD",
         assetTag: "ITE-0001263",
         serialNo: "",
         model: "sam-098",
         manufacturer: "ASUS",
-        location:
-            "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+        location: "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
         stockStatus: "In Stock",
         erpNo: "01",
         plateNo: "5665",
@@ -1427,21 +2399,80 @@ const availableAssets = [
         department: "",
         custodian: "",
         assetType: "Capitalized"
-    }
+    },
+        {
+            id: 6,
+            assetName: "Laptop",
+            location: "Ad Dakhliah",
+            manufacturer: "Dell",
+            model: "Latitude 5420",
+            serialNo: "DL-5420-0006",
+            registrationDate: "15-02-2024",
+            assetClass: "Capitalized",
+            status: "In Stock",
+            assetNumber: "OFF-000006"
+        },
+        {
+            id: 7,
+            assetName: "Printer",
+            location: "Ad Dakhliah",
+            manufacturer: "HP",
+            model: "LaserJet Pro",
+            serialNo: "HP-LJ-0007",
+            registrationDate: "22-03-2024",
+            assetClass: "Capitalized",
+            status: "In Stock",
+            assetNumber: "OFF-000007"
+        },
+        {
+            id: 8,
+            assetName: "Desktop",
+            location: "Ad Dakhliah",
+            manufacturer: "Lenovo",
+            model: "ThinkCentre M70",
+            serialNo: "LN-M70-0008",
+            registrationDate: "10-04-2024",
+            assetClass: "Capitalized",
+            status: "In Stock",
+            assetNumber: "OFF-000008"
+        },
+        {
+            id: 9,
+            assetName: "Monitor",
+            location: "Ad Dakhliah",
+            manufacturer: "Samsung",
+            model: "Business Monitor",
+            serialNo: "SM-MN-0009",
+            registrationDate: "18-05-2024",
+            assetClass: "Capitalized",
+            status: "In Stock",
+            assetNumber: "OFF-000009"
+        },
+        {
+            id: 10,
+            assetName: "Laptop",
+            location: "Ad Dakhliah",
+            manufacturer: "HP",
+            model: "ProBook 450",
+            serialNo: "HP-PB-0010",
+            registrationDate: "26-06-2024",
+            assetClass: "Capitalized",
+            status: "In Stock",
+            assetNumber: "OFF-000010"
+        }];
 
-];
-
-
-// =========================================================
-// CART
-// =========================================================
+/* =========================================================
+   CART
+   ========================================================= */
 
 let cart = [];
+let selectedDetailAssetTag = null;
 
 function loadCart() {
     try {
         const savedCart = sessionStorage.getItem("issueCart");
         cart = savedCart ? JSON.parse(savedCart) : [];
+
         if (!Array.isArray(cart)) {
             cart = [];
         }
@@ -1452,354 +2483,944 @@ function loadCart() {
 }
 
 function saveCart() {
-    sessionStorage.setItem("issueCart", JSON.stringify(cart));
+    sessionStorage.setItem(
+        "issueCart",
+        JSON.stringify(cart)
+    );
 }
 
 function updateCartCount() {
-    const badge = document.getElementById("cartCountBadge");
+    const badge =
+        document.getElementById("cartCountBadge");
 
     if (badge) {
         badge.textContent = String(cart.length);
     }
 
-    const emptyButton = document.querySelector(".empty-cart-button");
-    const issueButton = document.querySelector(".issue-cart-button");
+    const emptyButton =
+        document.querySelector(".empty-cart-button");
+
+    const issueButton =
+        document.querySelector(".issue-cart-button");
 
     if (emptyButton) {
         emptyButton.disabled = cart.length === 0;
-        emptyButton.title = cart.length === 0
-            ? "Cart is empty"
-            : "Remove all assets from the cart";
+        emptyButton.title =
+            cart.length === 0
+                ? "Cart is empty"
+                : "Remove all assets from the cart";
     }
 
     if (issueButton) {
         issueButton.disabled = cart.length === 0;
-        issueButton.title = cart.length === 0
-            ? "Add assets to the cart first"
-            : "Issue assets from the cart";
+        issueButton.title =
+            cart.length === 0
+                ? "Add assets to the cart first"
+                : "Issue assets from the cart";
     }
 }
 
-
-
-// =========================================================
-// MORE / LESS ASSET FILTERS
-// =========================================================
+/* =========================================================
+   FILTER POPUP
+   ========================================================= */
 
 function toggleAssetFilters() {
 
-    const filterContent = document.getElementById("assetFilterContent");
-    const toggleButton = document.getElementById("assetFilterToggleButton");
-    const toggleText = document.getElementById("assetFilterToggleText");
-    const toggleIcon = document.getElementById("assetFilterToggleIcon");
+    const filterContent =
+        document.getElementById("assetFilterContent");
+
+    const toggleButton =
+        document.getElementById("assetFilterToggleButton");
+
+    const toggleText =
+        document.getElementById("assetFilterToggleText");
+
+    const toggleIcon =
+        document.getElementById("assetFilterToggleIcon");
 
     if (!filterContent || !toggleButton) {
         return;
     }
 
-    const isHidden = filterContent.classList.contains("filters-hidden");
+    const isHidden =
+        filterContent.classList.contains("filters-hidden");
 
     if (isHidden) {
-        filterContent.classList.remove("filters-hidden");
+
+        const buttonRect =
+            toggleButton.getBoundingClientRect();
+
+        const popupWidth =
+            Math.min(
+                525,
+                window.innerWidth - 30
+            );
+
+        let popupLeft =
+            buttonRect.left;
+
+        if (
+            popupLeft + popupWidth >
+            window.innerWidth - 15
+        ) {
+            popupLeft =
+                window.innerWidth -
+                popupWidth -
+                15;
+        }
+
+        if (popupLeft < 15) {
+            popupLeft = 15;
+        }
+
+        const popupTop =
+            buttonRect.bottom + 8;
+
+        document.documentElement.style.setProperty(
+            "--asset-filter-popup-top",
+            `${popupTop}px`
+        );
+
+        document.documentElement.style.setProperty(
+            "--asset-filter-popup-left",
+            `${popupLeft}px`
+        );
+
+        filterContent.classList.remove(
+            "filters-hidden"
+        );
+
         toggleButton.classList.add("active");
 
         if (toggleText) {
-            toggleText.textContent = "Less Filters";
+            toggleText.textContent = "Filters";
         }
 
         if (toggleIcon) {
             toggleIcon.textContent = "−";
         }
 
-        toggleButton.setAttribute("aria-expanded", "true");
-        toggleButton.setAttribute("title", "Hide filters");
+        toggleButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        toggleButton.setAttribute(
+            "title",
+            "Hide filters"
+        );
 
     } else {
-        filterContent.classList.add("filters-hidden");
-        toggleButton.classList.remove("active");
+
+        filterContent.classList.add(
+            "filters-hidden"
+        );
+
+        toggleButton.classList.remove(
+            "active"
+        );
 
         if (toggleText) {
-            toggleText.textContent = "More Filters";
+            toggleText.textContent = "Filters";
         }
 
         if (toggleIcon) {
             toggleIcon.textContent = "+";
         }
 
-        toggleButton.setAttribute("aria-expanded", "false");
-        toggleButton.setAttribute("title", "Show filters");
+        toggleButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        toggleButton.setAttribute(
+            "title",
+            "Show filters"
+        );
     }
 }
 
-// =========================================================
-// DISPLAY ASSETS
-// =========================================================
+/* Recalculate popup position if browser is resized. */
+function repositionFilterPopup() {
+
+    const filterContent =
+        document.getElementById("assetFilterContent");
+
+    const toggleButton =
+        document.getElementById("assetFilterToggleButton");
+
+    if (
+        !filterContent ||
+        !toggleButton ||
+        filterContent.classList.contains("filters-hidden")
+    ) {
+        return;
+    }
+
+    const buttonRect =
+        toggleButton.getBoundingClientRect();
+
+    const popupWidth =
+        Math.min(
+            525,
+            window.innerWidth - 30
+        );
+
+    let popupLeft =
+        buttonRect.left;
+
+    if (
+        popupLeft + popupWidth >
+        window.innerWidth - 15
+    ) {
+        popupLeft =
+            window.innerWidth -
+            popupWidth -
+            15;
+    }
+
+    if (popupLeft < 15) {
+        popupLeft = 15;
+    }
+
+    document.documentElement.style.setProperty(
+        "--asset-filter-popup-top",
+        `${buttonRect.bottom + 8}px`
+    );
+
+    document.documentElement.style.setProperty(
+        "--asset-filter-popup-left",
+        `${popupLeft}px`
+    );
+}
+
+window.addEventListener(
+    "resize",
+    repositionFilterPopup
+);
+
+window.addEventListener(
+    "scroll",
+    repositionFilterPopup,
+    true
+);
+
+/* =========================================================
+   ASSET DETAIL
+   ========================================================= */
+
+function selectAssetDetail(assetTag) {
+
+    const asset =
+        availableAssets.find(function(item) {
+            return item.assetTag === assetTag;
+        });
+
+    if (!asset) {
+        return;
+    }
+
+    selectedDetailAssetTag = assetTag;
+
+    document
+        .querySelectorAll(".asset-row")
+        .forEach(function(row) {
+            row.classList.toggle(
+                "active-row",
+                row.dataset.assetTag === assetTag
+            );
+        });
+
+    renderAssetDetail(asset);
+}
+
+function renderAssetDetail(asset) {
+
+    const panel =
+        document.getElementById("assetDetailPanel");
+
+    if (!panel) {
+        return;
+    }
+
+    if (!asset) {
+        panel.innerHTML = `
+            <div class="detail-panel-empty">
+                <div class="empty-icon">🗂️</div>
+                <strong>No asset selected</strong>
+                <span>
+                    Select an asset from the list to view its details.
+                </span>
+            </div>
+        `;
+        return;
+    }
+
+    const value = function(v, fallback = "-") {
+        return (
+            v === null ||
+            v === undefined ||
+            String(v).trim() === ""
+        )
+            ? fallback
+            : String(v);
+    };
+
+    const info = function(label, val, full = false) {
+        return `
+            <div class="merged-info-item${full ? " full" : ""}">
+                <div class="merged-info-label">
+                    ${escapeHtml(label)}
+                </div>
+                <div class="merged-info-value${value(val) === "-" ? " empty" : ""}">
+                    ${escapeHtml(value(val))}
+                </div>
+            </div>
+        `;
+    };
+
+    const isInStock =
+        normalizeFilterValue(asset.stockStatus) === "in stock";
+
+    panel.innerHTML = `
+        <div class="detail-panel-header">
+
+            <div>
+
+                <div class="detail-panel-title-row">
+
+                    <h2>
+                        ${escapeHtml(
+                            value(asset.assetName, "Asset")
+                        )}
+                    </h2>
+
+                    <span class="stock-badge">
+                        ${escapeHtml(
+                            value(asset.stockStatus)
+                        )}
+                    </span>
+
+                </div>
+
+                <div class="detail-panel-subline">
+
+                    <span class="asset-tag-text">
+                        ${escapeHtml(
+                            value(asset.assetTag)
+                        )}
+                    </span>
+
+                    ${
+                        asset.serialNo
+                            ? `<span>
+                                SN ${escapeHtml(asset.serialNo)}
+                              </span>`
+                            : ""
+                    }
+
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="detail-view-button"
+                onclick="openAssetDetailsPage('${escapeJs(asset.assetTag)}')"
+            >
+                <span>◉</span>
+                View Full Details
+            </button>
+
+        </div>
+
+        <div class="detail-panel-body">
+
+            <div class="detail-merged-summary">
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Asset Class
+                    </span>
+                    <span class="summary-value">
+                        ${escapeHtml(
+                            value(
+                                asset.assetClass,
+                                asset.assetType || "IT Equipment"
+                            )
+                        )}
+                    </span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Item Catalogue
+                    </span>
+                    <span class="summary-value">
+                        ${escapeHtml(
+                            value(
+                                asset.itemCatalogue,
+                                "CAT-TEE-0001"
+                            )
+                        )}
+                    </span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Manufacturer & Model
+                    </span>
+                    <span class="summary-value">
+                        ${escapeHtml(
+                            value(asset.manufacturer, "-")
+                        )}
+                        ${
+                            asset.model
+                                ? ` · ${escapeHtml(asset.model)}`
+                                : ""
+                        }
+                    </span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Owner & Custodian
+                    </span>
+                    <span class="summary-value">
+                        ${escapeHtml(
+                            value(
+                                asset.owner,
+                                asset.user || "-"
+                            )
+                        )}
+                        ${
+                            asset.custodian
+                                ? ` · ${escapeHtml(asset.custodian)}`
+                                : ""
+                        }
+                    </span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Department & Location
+                    </span>
+                    <span class="summary-value">
+                        ${escapeHtml(
+                            value(asset.department, "-")
+                        )}
+                        ${
+                            asset.location
+                                ? ` · ${escapeHtml(asset.location)}`
+                                : ""
+                        }
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="detail-info-grid">
+
+                <div class="detail-info-box">
+                    <span class="detail-label">Condition</span>
+                    <span class="detail-value">
+                        ${escapeHtml(
+                            value(asset.condition, "Good")
+                        )}
+                    </span>
+                </div>
+
+                <div class="detail-info-box">
+                    <span class="detail-label">Maintainable</span>
+                    <span class="detail-value">
+                        ${escapeHtml(
+                            value(asset.maintainable, "Yes")
+                        )}
+                    </span>
+                </div>
+
+                <div class="detail-info-box">
+                    <span class="detail-label">Criticality</span>
+                    <span class="detail-value">
+                        ${escapeHtml(
+                            value(asset.criticality, "Medium")
+                        )}
+                    </span>
+                </div>
+
+                <div class="detail-info-box">
+                    <span class="detail-label">Description</span>
+                    <span class="detail-value">
+                        ${escapeHtml(
+                            value(
+                                asset.description,
+                                asset.assetName
+                            )
+                        )}
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="merged-detail-tabs">
+
+                <div class="merged-detail-tab-nav">
+
+                    <button
+                        class="merged-detail-tab active"
+                        onclick="showMergedAssetTab('merged-basic', this)"
+                    >
+                        Asset Details
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-stakeholder', this)"
+                    >
+                        Stakeholder
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-finance', this)"
+                    >
+                        Finance Info
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-warranty', this)"
+                    >
+                        Warranty Details
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-custom', this)"
+                    >
+                        Custom Cost
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-maintenance', this)"
+                    >
+                        Maintenance
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-workorder', this)"
+                    >
+                        WorkOrder
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-contract', this)"
+                    >
+                        Contract
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-spares', this)"
+                    >
+                        Spares
+                    </button>
+
+                    <button
+                        class="merged-detail-tab"
+                        onclick="showMergedAssetTab('merged-attachments', this)"
+                    >
+                        Attachments
+                    </button>
+
+                </div>
+
+                <div
+                    id="merged-basic"
+                    class="merged-detail-panel active"
+                >
+                    <div class="merged-info-grid">
+                        ${info("Branch", asset.branch || "BEAH")}
+                        ${info("Account Head", asset.accountHead || "FURNITURE")}
+                        ${info("Asset Class", asset.assetClass || asset.assetType)}
+                        ${info("Type", asset.type || "General")}
+                        ${info("Asset Name", asset.assetName)}
+                        ${info("Serial No", asset.serialNo)}
+                        ${info("Asset Tag", asset.assetTag)}
+                        ${info("Asset Badge", asset.assetBadge || asset.assetTag)}
+                        ${info("Manufacturer", asset.manufacturer)}
+                        ${info("Manufacturer Year", asset.manufacturerYear)}
+                        ${info("Model", asset.model)}
+                        ${info("Registration Date", asset.registrationDate)}
+                        ${info("ERP No", asset.erpNo)}
+                        ${info("Plate No", asset.plateNo)}
+                        ${info("Stock Status", asset.stockStatus)}
+                        ${info("Asset Type", asset.assetType || "Capitalized")}
+                        ${info("Location Path", asset.location, true)}
+                        ${info("Location Description", asset.locationDescription, true)}
+                        ${info("Picture", asset.picture || "No picture available", true)}
+                    </div>
+                </div>
+
+                <div
+                    id="merged-stakeholder"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-info-grid">
+                        ${info("User", asset.user)}
+                        ${info("Department", asset.department)}
+                        ${info("Custodian", asset.custodian, true)}
+                    </div>
+                </div>
+
+                <div
+                    id="merged-finance"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-info-grid">
+                        ${info("Acquisition Method", asset.acquisitionMethod || "Purchased / Owned")}
+                        ${info("PO Number", asset.poNumber || "PO200428")}
+                        ${info("PO Date", asset.poDate || "22/Sep/2020")}
+                        ${info("Invoice No", asset.invoiceNo || "2020/02")}
+                        ${info("Invoice Date", asset.invoiceDate || "13/Sep/2020")}
+                        ${info("Currency", asset.currency || "OMR")}
+                        ${info("Exchange Rate", asset.exchangeRate || "1.000")}
+                        ${info("Asset Cost", asset.assetCost || "0.000")}
+                        ${info("Capitalization Date", asset.capitalizationDate)}
+                        ${info("Asset with revised Cost", asset.revisedCost || "0.000")}
+                        ${info("Useful Life (Years)", asset.usefulLife || "5.00")}
+                        ${info("Capital work in progress", asset.capitalWorkInProgress || "Yes")}
+                        ${info("Asset Type", asset.assetType || "Capitalized")}
+                        ${info("GRN No", asset.grnNo || "GRN/2023/70")}
+                        ${info("GRN Date", asset.grnDate || "20/Nov/2023")}
+                        ${info("Supplier", asset.supplier || "JAWWHARAT AL SHARQ AL SHAMELA LLC [V-000426]", true)}
+                        ${info("Installation Date", asset.installationDate)}
+                        ${info("Salvage Value", asset.salvageValue)}
+                        ${info("Remarks", asset.remarks || "Air Regulator", true)}
+                    </div>
+                </div>
+
+                <div
+                    id="merged-warranty"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-info-grid">
+                        ${info("Warranty Start", asset.warrantyStart)}
+                        ${info("Warranty End", asset.warrantyEnd)}
+                        ${info("Warranty Scope", asset.warrantyScope)}
+                        ${info("ROP Registration Date", asset.ropRegistrationDate)}
+                        ${info("Insurance Date", asset.insuranceDate)}
+                    </div>
+                </div>
+
+                <div
+                    id="merged-custom"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-info-grid">
+                        ${info("Field Name", asset.customCostFieldName || "OTHERS CHARGES")}
+                        ${info("OP Type", asset.customCostOpType || "Addition")}
+                        ${info("Currency", asset.customCostCurrency)}
+                        ${info("Exchange Rate", asset.customCostExchangeRate || "0.000")}
+                        ${info("Amount", asset.customCostAmount || "0.000")}
+                        ${info("Net Cost", asset.customCostNetCost || "0.000")}
+                    </div>
+                </div>
+
+                <div
+                    id="merged-maintenance"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-table-wrap">
+                        <table class="merged-table">
+                            <thead>
+                                <tr>
+                                    <th>Maintenance No</th>
+                                    <th>Maintenance Type</th>
+                                    <th>Estimated Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="merged-empty">
+                                            * Asset is not defined under Maintenance
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div
+                    id="merged-workorder"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-table-wrap">
+                        <table class="merged-table">
+                            <thead>
+                                <tr>
+                                    <th>WorkOrder No</th>
+                                    <th>WorkOrder Date</th>
+                                    <th>WorkRequest No</th>
+                                    <th>Maintenance No</th>
+                                    <th>Maintenance Type</th>
+                                    <th>Status</th>
+                                    <th>Spent Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="merged-empty">
+                                            * Maintenance Not done
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div
+                    id="merged-contract"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-table-wrap">
+                        <table class="merged-table">
+                            <thead>
+                                <tr>
+                                    <th>Contract No</th>
+                                    <th>Contract Name</th>
+                                    <th>Contract Type</th>
+                                    <th>From Date</th>
+                                    <th>To Date</th>
+                                    <th>Contractor</th>
+                                    <th>Contract Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="merged-empty">
+                                            * There is no contract for this Asset
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div
+                    id="merged-spares"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-table-wrap">
+                        <table class="merged-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Item Type</th>
+                                    <th>Min Required Qty</th>
+                                    <th>Max Required Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="merged-empty">
+                                            * Spares not Added for the Asset
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div
+                    id="merged-attachments"
+                    class="merged-detail-panel"
+                >
+                    <div class="merged-info-grid">
+                        ${info("Asset Picture", asset.picture || "No picture available")}
+                        ${info("Attachment", asset.attachment || "No attachments available")}
+                        ${info("GRN Attachment", asset.grnAttachment || "No GRN attachments available")}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    `;
+}
+
+function showMergedAssetTab(tabId, button) {
+
+    document
+        .querySelectorAll(".merged-detail-tab")
+        .forEach(function(tab) {
+            tab.classList.remove("active");
+        });
+
+    document
+        .querySelectorAll(".merged-detail-panel")
+        .forEach(function(panel) {
+            panel.classList.remove("active");
+        });
+
+    const panel =
+        document.getElementById(tabId);
+
+    if (panel) {
+        panel.classList.add("active");
+    }
+
+    if (button) {
+        button.classList.add("active");
+    }
+}
+
+/* =========================================================
+   DISPLAY ASSETS
+   ========================================================= */
 
 function displayAssets(data) {
 
-
     const tbody =
-        document.getElementById(
-            "assetTableBody"
-        );
-
+        document.getElementById("assetTableBody");
 
     if (!tbody) {
-
-        console.error(
-            "assetTableBody element not found."
-        );
-
         return;
-
     }
 
-
-    // Clear existing rows
-
     tbody.innerHTML = "";
-
-
-    // =====================================================
-    // NO DATA
-    // =====================================================
 
     if (!data || data.length === 0) {
 
         tbody.innerHTML = `
-
             <tr>
-
-                <td
-                    colspan="16"
-                    class="no-assets-cell"
-                >
-
-                    <div class="no-assets-icon">
-                        📦
-                    </div>
-
-                    <strong>
-                        No assets found
-                    </strong>
-
+                <td colspan="16" class="no-assets-cell">
+                    <div class="no-assets-icon">📦</div>
+                    <strong>No assets found</strong>
                     <span>
                         Try changing your search criteria.
                     </span>
-
                 </td>
-
             </tr>
-
         `;
 
-
         updateAssetCount(0);
-
+        renderAssetDetail(null);
         return;
-
     }
 
-
-    // =====================================================
-    // CREATE ROWS
-    // =====================================================
-
-    data.forEach(function (asset) {
-
+    data.forEach(function(asset) {
 
         const row =
             document.createElement("tr");
 
+        row.dataset.assetTag =
+            asset.assetTag;
+
+        row.classList.add("asset-row");
+
+        row.addEventListener(
+            "click",
+            function() {
+                selectAssetDetail(
+                    asset.assetTag
+                );
+            }
+        );
 
         row.innerHTML = `
-
-
-            <!-- CHECKBOX -->
-
             <td class="checkbox-column">
-
                 <input
                     type="checkbox"
                     class="asset-checkbox"
                     data-asset-tag="${escapeHtml(asset.assetTag)}"
+                    onclick="event.stopPropagation()"
                 >
-
             </td>
 
-
-            <!-- ASSET NAME -->
-
             <td>
-
                 <strong>
                     ${escapeHtml(asset.assetName)}
                 </strong>
 
-            </td>
-
-
-            <!-- ASSET TAG -->
-
-            <td>
-
-                <span class="asset-tag-text">
-
-                    ${escapeHtml(asset.assetTag)}
-
+                <span class="list-row-meta">
+                    ${
+                        asset.location
+                            ? escapeHtml(asset.location)
+                            : "-"
+                    }
                 </span>
-
             </td>
-
-
-            <!-- SERIAL NO -->
 
             <td>
-
-                ${displayValue(asset.serialNo)}
-
+                <span class="asset-tag-text">
+                    ${escapeHtml(asset.assetTag)}
+                </span>
             </td>
 
-
-            <!-- MODEL -->
-
-            <td>
-
-                ${displayValue(asset.model)}
-
-            </td>
-
-
-            <!-- MANUFACTURER -->
-
-            <td>
-
-                ${displayValue(asset.manufacturer)}
-
-            </td>
-
-
-            <!-- LOCATION -->
+            <td>${displayValue(asset.serialNo)}</td>
+            <td>${displayValue(asset.model)}</td>
+            <td>${displayValue(asset.manufacturer)}</td>
 
             <td class="location-cell">
-
                 ${displayValue(asset.location)}
-
             </td>
 
-
-            <!-- STOCK STATUS -->
-
             <td>
-
                 <span class="stock-badge">
-
                     ${escapeHtml(asset.stockStatus)}
-
                 </span>
-
             </td>
 
-
-            <!-- ERP NO -->
-
-            <td>
-
-                ${displayValue(asset.erpNo)}
-
-            </td>
-
-
-            <!-- PLATE NO -->
-
-            <td>
-
-                ${displayValue(asset.plateNo)}
-
-            </td>
-
-
-            <!-- REGISTRATION DATE -->
-
-            <td>
-
-                ${displayValue(asset.registrationDate)}
-
-            </td>
-
-
-            <!-- USER -->
-
-            <td>
-
-                ${displayValue(asset.user)}
-
-            </td>
-
-
-            <!-- DEPARTMENT -->
-
-            <td>
-
-                ${displayValue(asset.department)}
-
-            </td>
-
-
-            <!-- CUSTODIAN -->
+            <td>${displayValue(asset.erpNo)}</td>
+            <td>${displayValue(asset.plateNo)}</td>
+            <td>${displayValue(asset.registrationDate)}</td>
+            <td>${displayValue(asset.user)}</td>
+            <td>${displayValue(asset.department)}</td>
 
             <td class="custodian-cell">
-
                 ${displayValue(asset.custodian)}
-
             </td>
 
-
-            <!-- ASSET TYPE -->
-
-            <td>
-
-                ${displayValue(asset.assetType)}
-
-            </td>
-
-            <!-- VIEW -->
+            <td>${displayValue(asset.assetType)}</td>
 
             <td class="action-column">
-
                 <button
                     type="button"
                     class="asset-view-button"
-                    onclick="openAssetDetailsPage('${escapeJs(asset.assetTag)}')"
-                    title="View asset details"
-                    aria-label="View asset details"
+                    onclick="event.stopPropagation(); openAssetDetailsPage('${escapeJs(asset.assetTag)}')"
                 >
-                    <span class="view-icon">◉</span>
+                    <span>◉</span>
                     View
                 </button>
-
             </td>
-
         `;
 
-
         tbody.appendChild(row);
-
     });
-
-
-    // =====================================================
-    // UPDATE COUNTS
-    // =====================================================
 
     updateAssetCount(data.length);
 
+    const stillVisible =
+        data.some(function(asset) {
+            return asset.assetTag === selectedDetailAssetTag;
+        });
+
+    selectAssetDetail(
+        stillVisible
+            ? selectedDetailAssetTag
+            : data[0].assetTag
+    );
 }
-
-
-// =========================================================
-// DISPLAY VALUE HELPER
-// =========================================================
 
 function displayValue(value) {
 
@@ -1808,24 +3429,13 @@ function displayValue(value) {
         value === undefined ||
         String(value).trim() === ""
     ) {
-
         return `
-            <span class="empty-value">
-                -
-            </span>
+            <span class="empty-value">-</span>
         `;
-
     }
 
-
     return escapeHtml(String(value));
-
 }
-
-
-// =========================================================
-// HTML ESCAPE
-// =========================================================
 
 function escapeHtml(value) {
 
@@ -1833,11 +3443,8 @@ function escapeHtml(value) {
         value === null ||
         value === undefined
     ) {
-
         return "";
-
     }
-
 
     return String(value)
         .replace(/&/g, "&amp;")
@@ -1845,422 +3452,237 @@ function escapeHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }
 
+function escapeJs(value) {
 
-// =========================================================
-// UPDATE ASSET COUNT
-// =========================================================
+    return String(value ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
+}
 
 function updateAssetCount(count) {
 
-
     const assetCount =
-        document.getElementById(
-            "assetCount"
-        );
-
+        document.getElementById("assetCount");
 
     const showingCount =
-        document.getElementById(
-            "showingCount"
-        );
-
+        document.getElementById("showingCount");
 
     const totalCount =
-        document.getElementById(
-            "totalCount"
-        );
-
+        document.getElementById("totalCount");
 
     if (assetCount) {
-
         assetCount.textContent =
             `${count} Assets`;
-
     }
-
 
     if (showingCount) {
-
-        if (count === 0) {
-
-            showingCount.textContent = "0";
-
-        } else {
-
-            showingCount.textContent =
-                `1-${count}`;
-
-        }
-
+        showingCount.textContent =
+            count === 0
+                ? "0"
+                : `1-${count}`;
     }
-
 
     if (totalCount) {
-
         totalCount.textContent =
             availableAssets.length;
-
     }
-
 }
 
-
-// =========================================================
-// SELECT ALL ASSETS
-// =========================================================
+/* =========================================================
+   SELECT ALL / CART
+   ========================================================= */
 
 function selectAllAssets(source) {
 
-
-    const checkboxes =
-        document.querySelectorAll(
-            ".asset-checkbox"
-        );
-
-
-    checkboxes.forEach(
-        function (checkbox) {
-
+    document
+        .querySelectorAll(".asset-checkbox")
+        .forEach(function(checkbox) {
             checkbox.checked =
                 source.checked;
-
-        }
-    );
-
+        });
 }
 
-
-// =========================================================
-// ADD SELECTED ASSETS TO CART
-// =========================================================
-
 async function addSelectedToCart() {
-
 
     const selected =
         document.querySelectorAll(
             ".asset-checkbox:checked"
         );
 
-
-    // =====================================================
-    // NOTHING SELECTED
-    // =====================================================
-
     if (selected.length === 0) {
 
-
         await Swal.fire({
-
             icon: "warning",
-
             title: "No Asset Selected",
-
-            text:
-                "Please select at least one asset to add to the cart.",
-
+            text: "Please select at least one asset to add to the cart.",
             confirmButtonText: "OK",
-
-            confirmButtonColor: "#2563eb",
-
-            customClass: {
-
-                popup:
-                    "eam-swal-popup",
-
-                confirmButton:
-                    "eam-swal-confirm"
-
-            }
-
+            confirmButtonColor: "#4f46e5"
         });
 
-
         return;
-
     }
-
-
-    // =====================================================
-    // FIND SELECTED ASSETS
-    // =====================================================
 
     const selectedAssets = [];
 
+    selected.forEach(function(checkbox) {
 
-    selected.forEach(
-        function (checkbox) {
+        const assetTag =
+            checkbox.dataset.assetTag;
 
+        const asset =
+            availableAssets.find(function(item) {
+                return item.assetTag === assetTag;
+            });
 
-            const assetTag =
-                checkbox.dataset.assetTag;
-
-
-            const asset =
-                availableAssets.find(
-                    function (item) {
-
-                        return (
-                            item.assetTag ===
-                            assetTag
-                        );
-
-                    }
-                );
-
-
-            if (asset) {
-
-                selectedAssets.push(asset);
-
-            }
-
+        if (asset) {
+            selectedAssets.push(asset);
         }
-    );
-
-
-    // =====================================================
-    // CONFIRMATION
-    // =====================================================
+    });
 
     const result =
         await Swal.fire({
-
             icon: "question",
-
             title: "Add Assets to Cart?",
-
             html: `
-
                 <div class="swal-message">
-
                     Are you sure you want to
-                    <strong>
-                        Add to Cart
-                    </strong>
+                    <strong>Add to Cart</strong>
                     selected Assets?
-
                 </div>
 
                 <div class="swal-selected-count">
-
                     ${selectedAssets.length}
-
                     asset${selectedAssets.length !== 1 ? "s" : ""}
-
                     selected
-
                 </div>
-
             `,
-
             showCancelButton: true,
-
-            confirmButtonText:
-                "Yes, Add to Cart",
-
-            cancelButtonText:
-                "Cancel",
-
-            confirmButtonColor:
-                "#2563eb",
-
-            cancelButtonColor:
-                "#64748b",
-
-            reverseButtons: true,
-
-            customClass: {
-
-                popup:
-                    "eam-swal-popup",
-
-                confirmButton:
-                    "eam-swal-confirm",
-
-                cancelButton:
-                    "eam-swal-cancel"
-
-            }
-
+            confirmButtonText: "Yes, Add to Cart",
+            cancelButtonText: "Cancel",
+            confirmButtonColor: "#4f46e5",
+            cancelButtonColor: "#64748b",
+            reverseButtons: true
         });
 
-
-    // =====================================================
-    // CANCEL
-    // =====================================================
-
     if (!result.isConfirmed) {
-
         return;
-
     }
 
-
-    // =====================================================
-    // ADD TO CART
-    // =====================================================
-
     let addedCount = 0;
-
     let alreadyInCartCount = 0;
 
+    selectedAssets.forEach(function(asset) {
 
-    selectedAssets.forEach(
-        function (asset) {
+        const alreadyExists =
+            cart.some(function(item) {
+                return item.assetTag === asset.assetTag;
+            });
 
-
-            const alreadyExists =
-                cart.some(
-                    function (item) {
-
-                        return (
-                            item.assetTag ===
-                            asset.assetTag
-                        );
-
-                    }
-                );
-
-
-            if (!alreadyExists) {
-
-                cart.push(asset);
-
-                addedCount++;
-
-            } else {
-
-                alreadyInCartCount++;
-
-            }
-
+        if (!alreadyExists) {
+            cart.push(asset);
+            addedCount++;
+        } else {
+            alreadyInCartCount++;
         }
-    );
-
+    });
 
     saveCart();
     updateCartCount();
 
-    // =====================================================
-    // RESET CHECKBOXES
-    // =====================================================
-
     const selectAll =
-        document.getElementById(
-            "selectAllAssets"
-        );
-
+        document.getElementById("selectAllAssets");
 
     if (selectAll) {
-
         selectAll.checked = false;
-
     }
 
-
     document
-        .querySelectorAll(
-            ".asset-checkbox"
-        )
-        .forEach(
-            function (checkbox) {
-
-                checkbox.checked =
-                    false;
-
-            }
-        );
-
-
-    // =====================================================
-    // SUCCESS MESSAGE
-    // =====================================================
+        .querySelectorAll(".asset-checkbox")
+        .forEach(function(checkbox) {
+            checkbox.checked = false;
+        });
 
     let successMessage = `
-
         <strong>
             ${addedCount}
             asset${addedCount !== 1 ? "s" : ""}
         </strong>
-
         successfully added to your cart.
-
     `;
 
-
     if (alreadyInCartCount > 0) {
-
         successMessage += `
-
             <div class="swal-warning-text">
-
                 ${alreadyInCartCount}
-
                 asset${alreadyInCartCount !== 1 ? "s" : ""}
-
                 already existed in the cart.
-
             </div>
-
         `;
-
     }
-
 
     await Swal.fire({
-
         icon: "success",
-
         title: "Added to Cart",
-
         html: successMessage,
-
         confirmButtonText: "OK",
-
-        confirmButtonColor: "#16a34a",
-
-        customClass: {
-
-            popup:
-                "eam-swal-popup",
-
-            confirmButton:
-                "eam-swal-success"
-
-        }
-
+        confirmButtonColor: "#16a34a"
     });
-
 }
 
-
-// =========================================================
-// ISSUE TARGET / ISSUED TO FILTER
-// =========================================================
+/* =========================================================
+   ISSUE TARGET
+   ========================================================= */
 
 function getTargetOptions(mode) {
+
     if (mode === "issuedToCustodian") {
-        return [...new Set(availableAssets.map(a => String(a.custodian || "").trim()).filter(Boolean))].sort();
+        return [
+            ...new Set(
+                availableAssets
+                    .map(a => String(a.custodian || "").trim())
+                    .filter(Boolean)
+            )
+        ].sort();
     }
+
     if (mode === "issuedToLocation") {
-        return [...new Set(availableAssets.map(a => String(a.location || "").trim()).filter(Boolean))].sort();
+        return [
+            ...new Set(
+                availableAssets
+                    .map(a => String(a.location || "").trim())
+                    .filter(Boolean)
+            )
+        ].sort();
     }
+
     if (mode === "issuedToAsset") {
-        return availableAssets.map(a => `${a.assetName} — ${a.assetTag}`);
+        return availableAssets.map(
+            a => `${a.assetName} — ${a.assetTag}`
+        );
     }
+
     return [];
 }
 
 function changeIssueTarget(mode) {
-    const control = document.getElementById("issueTargetControl");
-    const label = document.getElementById("issueTargetLabel");
-    const input = document.getElementById("issueTargetSearch");
-    const help = document.getElementById("issueTargetHelp");
-    if (!control || !label || !input || !help) return;
+
+    const control =
+        document.getElementById("issueTargetControl");
+
+    const label =
+        document.getElementById("issueTargetLabel");
+
+    const input =
+        document.getElementById("issueTargetSearch");
+
+    const help =
+        document.getElementById("issueTargetHelp");
+
+    if (!control || !label || !input || !help) {
+        return;
+    }
 
     input.value = "";
     input.removeAttribute("readonly");
@@ -2274,123 +3696,505 @@ function changeIssueTarget(mode) {
     }
 
     control.style.display = "flex";
+
     if (mode === "issuedToCustodian") {
         label.textContent = "Employee:";
-        input.placeholder = "Type min 2 characters to search";
+        input.placeholder =
+            "Type min 2 characters to search";
         help.title = "Select employee";
     } else if (mode === "issuedToLocation") {
         label.textContent = "Location:";
-        input.placeholder = "Select location...";
+        input.placeholder =
+            "Select location...";
         help.title = "Select location";
     } else {
         label.textContent = "Asset:";
-        input.placeholder = "Type min 2 characters to search";
+        input.placeholder =
+            "Type min 2 characters to search";
         help.title = "Select asset";
     }
+
     filterAssets();
 }
 
+function getIssueTargetPopupRecords(mode) {
+
+    if (mode === "issuedToAsset") {
+        return availableAssets.map((asset, index) => ({
+            value: `${asset.assetName} — ${asset.assetTag}`,
+            name: asset.assetName || "—",
+            code: asset.assetTag || "—",
+            type: asset.manufacturer || "—",
+            index
+        }));
+    }
+
+    if (mode === "issuedToLocation") {
+        return [
+            ...new Set(
+                availableAssets
+                    .map(a => String(a.location || "").trim())
+                    .filter(Boolean)
+            )
+        ].sort().map((value, index) => ({
+            value,
+            name: value,
+            code: "—",
+            type: "Location",
+            index
+        }));
+    }
+
+    if (mode === "issuedToCustodian") {
+        return [
+            ...new Set(
+                availableAssets
+                    .map(a => String(a.custodian || "").trim())
+                    .filter(Boolean)
+            )
+        ].sort().map((value, index) => ({
+            value,
+            name: value,
+            code: "—",
+            type: "Employee",
+            index
+        }));
+    }
+
+    return [];
+}
+
+let issueTargetPopupRecords = [];
+let issueTargetPopupSelectedValue = "";
+
+function renderIssueTargetPopupRows(records) {
+
+    const tbody =
+        document.getElementById("issueTargetTableBody");
+
+    const emptyState =
+        document.getElementById("issueTargetEmptyState");
+
+    const summary =
+        document.getElementById("issueTargetRecordSummary");
+
+    const addButton =
+        document.getElementById("issueTargetAddButton");
+
+    if (!tbody || !emptyState || !summary || !addButton) {
+        return;
+    }
+
+    tbody.innerHTML = records.map(record => `
+        <tr
+            class="${record.value === issueTargetPopupSelectedValue ? "selected" : ""}"
+            onclick="selectIssueTargetRow(this, ${JSON.stringify(record.value)})"
+        >
+            <td class="target-radio-column">
+                <input
+                    class="target-popup-radio"
+                    type="radio"
+                    name="issueTargetRadio"
+                    value="${escapeHtml(record.value)}"
+                    ${record.value === issueTargetPopupSelectedValue ? "checked" : ""}
+                    onclick="event.stopPropagation(); selectIssueTargetRow(this.closest('tr'), ${JSON.stringify(record.value)})"
+                >
+            </td>
+            <td title="${escapeHtml(record.name)}">
+                ${escapeHtml(record.name)}
+            </td>
+            <td title="${escapeHtml(record.code)}">
+                ${escapeHtml(record.code)}
+            </td>
+            <td title="${escapeHtml(record.type)}">
+                ${escapeHtml(record.type)}
+            </td>
+        </tr>
+    `).join("");
+
+    emptyState.hidden = records.length !== 0;
+
+    summary.textContent =
+        `${records.length} ${records.length === 1 ? "record" : "records"} found. Select one to continue.`;
+
+    addButton.disabled = !issueTargetPopupSelectedValue;
+}
+
+function selectIssueTargetRow(row, value) {
+
+    issueTargetPopupSelectedValue = value || "";
+
+    const select =
+        document.getElementById("issuePopupSelect");
+
+    if (select) {
+        const option =
+            [...select.options].find(
+                item => item.value === issueTargetPopupSelectedValue
+            );
+
+        select.value = option ? option.value : "";
+    }
+
+    document
+        .querySelectorAll("#issueTargetTableBody tr")
+        .forEach(tr => tr.classList.remove("selected"));
+
+    if (row) {
+        row.classList.add("selected");
+
+        const radio =
+            row.querySelector(".target-popup-radio");
+
+        if (radio) {
+            radio.checked = true;
+        }
+    }
+
+    const addButton =
+        document.getElementById("issueTargetAddButton");
+
+    if (addButton) {
+        addButton.disabled = !issueTargetPopupSelectedValue;
+    }
+}
+
+function filterIssueTargetPopup() {
+
+    const search =
+        document.getElementById("issuePopupSearch");
+
+    const filterSelect =
+        document.getElementById("issuePopupFilterSelect");
+
+    const query =
+        String(search?.value || "").trim().toLowerCase();
+
+    const field =
+        filterSelect?.value || "name";
+
+    if (!query) {
+        renderIssueTargetPopupRows(issueTargetPopupRecords);
+        return;
+    }
+
+    const filtered =
+        issueTargetPopupRecords.filter(record => {
+            const value =
+                field === "code"
+                    ? record.code
+                    : field === "manufacturer"
+                        ? record.type
+                        : record.name;
+
+            return String(value || "")
+                .toLowerCase()
+                .includes(query);
+        });
+
+    renderIssueTargetPopupRows(filtered);
+}
+
+function clearIssueTargetPopupFilter() {
+
+    const search =
+        document.getElementById("issuePopupSearch");
+
+    if (search) {
+        search.value = "";
+    }
+
+    const filterSelect =
+        document.getElementById("issuePopupFilterSelect");
+
+    if (filterSelect) {
+        filterSelect.value = "name";
+    }
+
+    issueTargetPopupSelectedValue = "";
+
+    const select =
+        document.getElementById("issuePopupSelect");
+
+    if (select) {
+        select.value = "";
+    }
+
+    renderIssueTargetPopupRows(issueTargetPopupRecords);
+}
+
 function openIssueTargetPopup() {
-    const mode = document.getElementById("assetStatus")?.value || "issuedToAsset";
-    if (mode === "stock") return;
-    const modal = document.getElementById("issueTargetModal");
-    const select = document.getElementById("issuePopupSelect");
-    const title = document.getElementById("issueTargetModalTitle");
-    const label = document.getElementById("issuePopupLabel");
-    if (!modal || !select) return;
 
-    const options = getTargetOptions(mode);
-    select.innerHTML = options.length
-        ? options.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("")
-        : `<option value="">No records available</option>`;
+    const mode =
+        document.getElementById("assetStatus")?.value ||
+        "issuedToAsset";
 
-    title.textContent = mode === "issuedToCustodian" ? "Select Employee" : mode === "issuedToLocation" ? "Select Location" : "Select Asset";
-    label.textContent = mode === "issuedToCustodian" ? "Employee" : mode === "issuedToLocation" ? "Location" : "Asset";
+    if (mode === "stock") {
+        return;
+    }
+
+    const modal =
+        document.getElementById("issueTargetModal");
+
+    const select =
+        document.getElementById("issuePopupSelect");
+
+    const title =
+        document.getElementById("issueTargetModalTitle");
+
+    const subtitle =
+        document.getElementById("issueTargetModalSubtitle");
+
+    const filterSelect =
+        document.getElementById("issuePopupFilterSelect");
+
+    const search =
+        document.getElementById("issuePopupSearch");
+
+    const columnOne =
+        document.getElementById("targetPopupColumnOne");
+
+    const columnTwo =
+        document.getElementById("targetPopupColumnTwo");
+
+    const columnThree =
+        document.getElementById("targetPopupColumnThree");
+
+    if (!modal || !select) {
+        return;
+    }
+
+    issueTargetPopupRecords =
+        getIssueTargetPopupRecords(mode);
+
+    issueTargetPopupSelectedValue = "";
+
+    select.innerHTML =
+        issueTargetPopupRecords
+            .map(record => `
+                <option value="${escapeHtml(record.value)}">
+                    ${escapeHtml(record.value)}
+                </option>
+            `)
+            .join("");
+
+    select.value = "";
+
+    if (search) {
+        search.value = "";
+    }
+
+    if (filterSelect) {
+        filterSelect.value = "name";
+    }
+
+    if (mode === "issuedToCustodian") {
+
+        title.textContent = "Select Employee";
+        subtitle.textContent =
+            "Select an employee and add it to the issue form.";
+
+        if (filterSelect) {
+            filterSelect.innerHTML = `
+                <option value="name">Employee Name</option>
+            `;
+        }
+
+        if (columnOne) {
+            columnOne.textContent = "EMPLOYEE NAME";
+        }
+
+        if (columnTwo) {
+            columnTwo.textContent = "EMPLOYEE CODE";
+        }
+
+        if (columnThree) {
+            columnThree.textContent = "EMPLOYEE TYPE";
+        }
+
+    } else if (mode === "issuedToLocation") {
+
+        title.textContent = "Select Location";
+        subtitle.textContent =
+            "Select a location and add it to the issue form.";
+
+        if (filterSelect) {
+            filterSelect.innerHTML = `
+                <option value="name">Location Name</option>
+            `;
+        }
+
+        if (columnOne) {
+            columnOne.textContent = "LOCATION NAME";
+        }
+
+        if (columnTwo) {
+            columnTwo.textContent = "LOCATION CODE";
+        }
+
+        if (columnThree) {
+            columnThree.textContent = "LOCATION TYPE";
+        }
+
+    } else {
+
+        title.textContent = "Select Asset";
+        subtitle.textContent =
+            "Select an asset and add it to the issue form.";
+
+        if (filterSelect) {
+            filterSelect.innerHTML = `
+                <option value="name">Asset Name</option>
+                <option value="code">Asset Code</option>
+                <option value="manufacturer">Manufacturer</option>
+            `;
+        }
+
+        if (columnOne) {
+            columnOne.textContent = "ASSET NAME";
+        }
+
+        if (columnTwo) {
+            columnTwo.textContent = "ASSET CODE";
+        }
+
+        if (columnThree) {
+            columnThree.textContent = "MANUFACTURER";
+        }
+    }
+
+    renderIssueTargetPopupRows(issueTargetPopupRecords);
+
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
 }
 
-function closeIssueTargetPopup() {
-    const modal = document.getElementById("issueTargetModal");
-    if (!modal) return;
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
-}
-
 function addIssueTargetSelection() {
-    const mode = document.getElementById("assetStatus")?.value || "issuedToAsset";
-    const selected = document.getElementById("issuePopupSelect")?.value || "";
-    const input = document.getElementById("issueTargetSearch");
-    if (!selected || !input) return;
+
+    const mode =
+        document.getElementById("assetStatus")?.value ||
+        "issuedToAsset";
+
+    const selected =
+        issueTargetPopupSelectedValue ||
+        document.getElementById("issuePopupSelect")?.value ||
+        "";
+
+    const input =
+        document.getElementById("issueTargetSearch");
+
+    if (!selected || !input) {
+        return;
+    }
+
     if (mode === "issuedToAsset") {
-        input.value = selected.replace(/\s+—\s+[^—]+$/, "");
+        input.value =
+            selected.replace(/\s+—\s+[^—]+$/, "");
     } else {
         input.value = selected;
     }
+
     closeIssueTargetPopup();
     filterAssets();
 }
 
-// =========================================================
-// SHOW CART
-// =========================================================
+function closeIssueTargetPopup() {
+
+    const modal =
+        document.getElementById("issueTargetModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+}
+
+
+
+function addIssueTargetSelection() {
+
+    const mode =
+        document.getElementById("assetStatus")?.value ||
+        "issuedToAsset";
+
+    const selected =
+        document.getElementById("issuePopupSelect")?.value ||
+        "";
+
+    const input =
+        document.getElementById("issueTargetSearch");
+
+    if (!selected || !input) {
+        return;
+    }
+
+    if (mode === "issuedToAsset") {
+        input.value =
+            selected.replace(/\s+—\s+[^—]+$/, "");
+    } else {
+        input.value = selected;
+    }
+
+    closeIssueTargetPopup();
+    filterAssets();
+}
+
+/* =========================================================
+   CART NAVIGATION
+   ========================================================= */
 
 function showCart() {
     saveCart();
     window.location.href = "issue-cart.html";
 }
 
-
-// =========================================================
-// EMPTY CART
-// =========================================================
-
 async function emptyCart() {
+
     loadCart();
 
     if (cart.length === 0) {
+
         await Swal.fire({
             icon: "info",
             title: "Cart is Empty",
             text: "There are no assets in the issue cart.",
             confirmButtonText: "OK",
-            confirmButtonColor: "#2563eb",
-            customClass: {
-                popup: "eam-swal-popup",
-                confirmButton: "eam-swal-confirm"
-            }
+            confirmButtonColor: "#4f46e5"
         });
+
         return;
     }
 
-    const result = await Swal.fire({
-        icon: "warning",
-        title: "Empty Cart?",
-        html: `
-            <div class="swal-message">
-                Are you sure you want to remove
-                <strong>all ${cart.length} asset${cart.length !== 1 ? "s" : ""}</strong>
-                from the issue cart?
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: "Yes, Empty Cart",
-        cancelButtonText: "Cancel",
-        confirmButtonColor: "#dc2626",
-        cancelButtonColor: "#64748b",
-        reverseButtons: true,
-        customClass: {
-            popup: "eam-swal-popup",
-            confirmButton: "eam-swal-confirm",
-            cancelButton: "eam-swal-cancel"
-        }
-    });
+    const result =
+        await Swal.fire({
+            icon: "warning",
+            title: "Empty Cart?",
+            html: `
+                <div class="swal-message">
+                    Are you sure you want to remove
+                    <strong>
+                        all ${cart.length}
+                        asset${cart.length !== 1 ? "s" : ""}
+                    </strong>
+                    from the issue cart?
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: "Yes, Empty Cart",
+            cancelButtonText: "Cancel",
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#64748b",
+            reverseButtons: true
+        });
 
     if (!result.isConfirmed) {
         return;
     }
 
     cart = [];
+
     saveCart();
     updateCartCount();
 
@@ -2399,214 +4203,389 @@ async function emptyCart() {
         title: "Cart Emptied",
         text: "All assets have been removed from the issue cart.",
         confirmButtonText: "OK",
-        confirmButtonColor: "#16a34a",
-        customClass: {
-            popup: "eam-swal-popup",
-            confirmButton: "eam-swal-success"
-        }
+        confirmButtonColor: "#16a34a"
     });
 }
 
 function issueAssetFromCart() {
+
     loadCart();
 
     if (cart.length === 0) {
+
         Swal.fire({
             icon: "warning",
             title: "Cart is Empty",
             text: "Please add at least one asset to the cart before issuing.",
             confirmButtonText: "OK",
-            confirmButtonColor: "#2563eb",
-            customClass: {
-                popup: "eam-swal-popup",
-                confirmButton: "eam-swal-confirm"
-            }
+            confirmButtonColor: "#4f46e5"
         });
+
         return;
     }
 
     saveCart();
-    window.location.href = "issue-form.html";
+
+    window.location.href =
+        "issue-form.html";
 }
 
+/* =========================================================
+   FILTER LOGIC
+   ========================================================= */
+
 function normalizeFilterValue(value) {
-    return String(value ?? "").trim().toLowerCase();
+    return String(value ?? "")
+        .trim()
+        .toLowerCase();
 }
 
 function parseAssetDate(value) {
-    const text = String(value ?? "").trim();
+
+    const text =
+        String(value ?? "").trim();
 
     if (!text) {
         return "";
     }
 
-    // Supports the current UI format: DD-MMM-YYYY
-    const match = text.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
+    const match =
+        text.match(
+            /^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/
+        );
 
     if (!match) {
         return "";
     }
 
     const months = {
-        Jan: "01", Feb: "02", Mar: "03", Apr: "04",
-        May: "05", Jun: "06", Jul: "07", Aug: "08",
-        Sep: "09", Oct: "10", Nov: "11", Dec: "12"
+        Jan: "01",
+        Feb: "02",
+        Mar: "03",
+        Apr: "04",
+        May: "05",
+        Jun: "06",
+        Jul: "07",
+        Aug: "08",
+        Sep: "09",
+        Oct: "10",
+        Nov: "11",
+        Dec: "12"
     };
 
-    const month = months[match[2].charAt(0).toUpperCase() + match[2].slice(1).toLowerCase()];
+    const month =
+        months[
+            match[2].charAt(0).toUpperCase() +
+            match[2].slice(1).toLowerCase()
+        ];
 
     if (!month) {
         return "";
     }
 
-    return `${match[3]}-${month}-${String(match[1]).padStart(2, "0")}`;
+    return `${match[3]}-${month}-${String(match[1]).padStart(2,"0")}`;
 }
 
 function getUniqueAssetValues(field) {
-    return [...new Set(
-        availableAssets
-            .map(function (asset) {
-                return String(asset[field] ?? "").trim();
-            })
-            .filter(Boolean)
-    )].sort(function (a, b) {
-        return a.localeCompare(b, undefined, { sensitivity: "base" });
+
+    return [
+        ...new Set(
+            availableAssets
+                .map(function(asset) {
+                    return String(
+                        asset[field] ?? ""
+                    ).trim();
+                })
+                .filter(Boolean)
+        )
+    ].sort(function(a,b) {
+        return a.localeCompare(
+            b,
+            undefined,
+            { sensitivity: "base" }
+        );
     });
 }
 
 function populateAssetFilterDropdowns() {
+
     const dropdowns = [
-        { id: "assetNameFilter", field: "assetName", allText: "All Asset Names" },
-        { id: "manufacturerFilter", field: "manufacturer", allText: "All Manufacturers" },
-        { id: "locationFilter", field: "location", allText: "All Locations" }
+        {
+            id: "assetNameFilter",
+            field: "assetName",
+            allText: "All Asset Names"
+        },
+        {
+            id: "manufacturerFilter",
+            field: "manufacturer",
+            allText: "All Manufacturers"
+        },
+        {
+            id: "locationFilter",
+            field: "location",
+            allText: "All Locations"
+        }
     ];
 
-    dropdowns.forEach(function (config) {
-        const select = document.getElementById(config.id);
+    dropdowns.forEach(function(config) {
+
+        const select =
+            document.getElementById(config.id);
 
         if (!select) {
             return;
         }
 
-        select.innerHTML = `<option value="">${config.allText}</option>`;
+        select.innerHTML =
+            `<option value="">${config.allText}</option>`;
 
-        getUniqueAssetValues(config.field).forEach(function (value) {
-            const option = document.createElement("option");
+        getUniqueAssetValues(
+            config.field
+        ).forEach(function(value) {
+
+            const option =
+                document.createElement("option");
+
             option.value = value;
             option.textContent = value;
+
             select.appendChild(option);
         });
     });
 }
 
 function updateFilterResultHint(count) {
-    const hint = document.getElementById("filterResultHint");
 
-    if (!hint) {
+    const applyText =
+        document.getElementById("filterApplyText");
+
+    if (!applyText) {
         return;
     }
 
-    if (count === availableAssets.length) {
-        hint.textContent = `All ${count} assets`;
-        return;
-    }
-
-    hint.textContent = `${count} asset${count !== 1 ? "s" : ""} found`;
+    applyText.textContent =
+        count === availableAssets.length
+            ? "Show results"
+            : `Show ${count} result${count !== 1 ? "s" : ""}`;
 }
 
 function filterAssets() {
-    const issueMode = document.getElementById("assetStatus")?.value || "issuedToAsset";
-    const issueTarget = normalizeFilterValue(document.getElementById("issueTargetSearch")?.value);
 
-    const assetName = normalizeFilterValue(
-        document.getElementById("assetNameFilter")?.value
-    );
+    const issueMode =
+        document.getElementById("assetStatus")?.value ||
+        "issuedToAsset";
 
-    const manufacturer = normalizeFilterValue(
-        document.getElementById("manufacturerFilter")?.value
-    );
+    const issueTarget =
+        normalizeFilterValue(
+            document.getElementById(
+                "issueTargetSearch"
+            )?.value
+        );
 
-    const location = normalizeFilterValue(
-        document.getElementById("locationFilter")?.value
-    );
+    const assetName =
+        normalizeFilterValue(
+            document.getElementById(
+                "assetNameFilter"
+            )?.value
+        );
 
-    const commonSearch = normalizeFilterValue(
-        document.getElementById("assetCommonSearch")?.value
-    );
+    const manufacturer =
+        normalizeFilterValue(
+            document.getElementById(
+                "manufacturerFilter"
+            )?.value
+        );
+
+    const location =
+        normalizeFilterValue(
+            document.getElementById(
+                "locationFilter"
+            )?.value
+        );
+
+    const commonSearch =
+        normalizeFilterValue(
+            document.getElementById(
+                "assetCommonSearch"
+            )?.value
+        );
 
     const registrationDate =
-        document.getElementById("registrationDateFilter")?.value || "";
+        document.getElementById(
+            "registrationDateFilter"
+        )?.value || "";
 
-    const filtered = availableAssets.filter(function (asset) {
+    const filtered =
+        availableAssets.filter(function(asset) {
 
-        const matchesAssetName =
-            !assetName ||
-            normalizeFilterValue(asset.assetName) === assetName;
+            const matchesAssetName =
+                !assetName ||
+                normalizeFilterValue(
+                    asset.assetName
+                ) === assetName;
 
-        const matchesManufacturer =
-            !manufacturer ||
-            normalizeFilterValue(asset.manufacturer) === manufacturer;
+            const matchesManufacturer =
+                !manufacturer ||
+                normalizeFilterValue(
+                    asset.manufacturer
+                ) === manufacturer;
 
-        const matchesLocation =
-            !location ||
-            normalizeFilterValue(asset.location) === location;
+            const matchesLocation =
+                !location ||
+                normalizeFilterValue(
+                    asset.location
+                ) === location;
 
-        const matchesCommonSearch =
-            !commonSearch ||
-            [
-                asset.serialNo,
-                asset.model,
-                asset.erpNo,
-                asset.plateNo
-            ].some(function (value) {
-                return normalizeFilterValue(value).includes(commonSearch);
-            });
+            const matchesCommonSearch =
+                !commonSearch ||
+                [
+                    asset.serialNo,
+                    asset.model,
+                    asset.erpNo,
+                    asset.plateNo
+                ].some(function(value) {
+                    return normalizeFilterValue(
+                        value
+                    ).includes(commonSearch);
+                });
 
-        const matchesRegistrationDate =
-            !registrationDate ||
-            parseAssetDate(asset.registrationDate) === registrationDate;
+            const matchesRegistrationDate =
+                !registrationDate ||
+                parseAssetDate(
+                    asset.registrationDate
+                ) === registrationDate;
 
-        let matchesIssueTarget = true;
-        if (issueMode === "stock") {
-            matchesIssueTarget = normalizeFilterValue(asset.stockStatus) === "in stock";
-        } else if (issueTarget) {
-            if (issueMode === "issuedToCustodian") {
-                matchesIssueTarget = normalizeFilterValue(asset.custodian).includes(issueTarget);
-            } else if (issueMode === "issuedToLocation") {
-                matchesIssueTarget = normalizeFilterValue(asset.location).includes(issueTarget);
-            } else {
+            let matchesIssueTarget = true;
+
+            if (issueMode === "stock") {
+
                 matchesIssueTarget =
-                    normalizeFilterValue(asset.assetName).includes(issueTarget) ||
-                    normalizeFilterValue(asset.assetTag).includes(issueTarget);
-            }
-        }
+                    normalizeFilterValue(
+                        asset.stockStatus
+                    ) === "in stock";
 
-        return (
-            matchesIssueTarget &&
-            matchesAssetName &&
-            matchesManufacturer &&
-            matchesLocation &&
-            matchesCommonSearch &&
-            matchesRegistrationDate
-        );
-    });
+            } else if (issueTarget) {
+
+                if (issueMode === "issuedToCustodian") {
+
+                    matchesIssueTarget =
+                        normalizeFilterValue(
+                            asset.custodian
+                        ).includes(issueTarget);
+
+                } else if (issueMode === "issuedToLocation") {
+
+                    matchesIssueTarget =
+                        normalizeFilterValue(
+                            asset.location
+                        ).includes(issueTarget);
+
+                } else {
+
+                    matchesIssueTarget =
+                        normalizeFilterValue(
+                            asset.assetName
+                        ).includes(issueTarget) ||
+                        normalizeFilterValue(
+                            asset.assetTag
+                        ).includes(issueTarget);
+                }
+            }
+
+            return (
+                matchesIssueTarget &&
+                matchesAssetName &&
+                matchesManufacturer &&
+                matchesLocation &&
+                matchesCommonSearch &&
+                matchesRegistrationDate
+            );
+        });
 
     displayAssets(filtered);
     updateFilterResultHint(filtered.length);
 
-    const selectAll = document.getElementById("selectAllAssets");
+    const selectAll =
+        document.getElementById(
+            "selectAllAssets"
+        );
 
     if (selectAll) {
         selectAll.checked = false;
     }
+
+    /* Close popup after Show results, like the reference flow. */
+    closeAssetFilterPopup();
+}
+
+function closeAssetFilterPopup() {
+
+    const filterContent =
+        document.getElementById(
+            "assetFilterContent"
+        );
+
+    const toggleButton =
+        document.getElementById(
+            "assetFilterToggleButton"
+        );
+
+    const toggleIcon =
+        document.getElementById(
+            "assetFilterToggleIcon"
+        );
+
+    if (!filterContent) {
+        return;
+    }
+
+    filterContent.classList.add(
+        "filters-hidden"
+    );
+
+    if (toggleButton) {
+        toggleButton.classList.remove("active");
+        toggleButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+        toggleButton.setAttribute(
+            "title",
+            "Show filters"
+        );
+    }
+
+    if (toggleIcon) {
+        toggleIcon.textContent = "+";
+    }
 }
 
 function reloadAssets() {
-    const assetNameFilter = document.getElementById("assetNameFilter");
-    const manufacturerFilter = document.getElementById("manufacturerFilter");
-    const locationFilter = document.getElementById("locationFilter");
-    const commonSearch = document.getElementById("assetCommonSearch");
-    const registrationDate = document.getElementById("registrationDateFilter");
+
+    const assetNameFilter =
+        document.getElementById(
+            "assetNameFilter"
+        );
+
+    const manufacturerFilter =
+        document.getElementById(
+            "manufacturerFilter"
+        );
+
+    const locationFilter =
+        document.getElementById(
+            "locationFilter"
+        );
+
+    const commonSearch =
+        document.getElementById(
+            "assetCommonSearch"
+        );
+
+    const registrationDate =
+        document.getElementById(
+            "registrationDateFilter"
+        );
 
     if (assetNameFilter) {
         assetNameFilter.value = "";
@@ -2628,20 +4607,30 @@ function reloadAssets() {
         registrationDate.value = "";
     }
 
-    displayAssets(availableAssets);
-    updateFilterResultHint(availableAssets.length);
+    displayAssets(
+        availableAssets
+    );
 
-    const selectAll = document.getElementById("selectAllAssets");
+    updateFilterResultHint(
+        availableAssets.length
+    );
+
+    const selectAll =
+        document.getElementById(
+            "selectAllAssets"
+        );
 
     if (selectAll) {
         selectAll.checked = false;
     }
+
+    closeAssetFilterPopup();
 }
 
+/* Enter in common search */
 document.addEventListener(
     "keydown",
-    function (event) {
-
+    function(event) {
 
         if (
             event.key === "Enter" &&
@@ -2649,47 +4638,55 @@ document.addEventListener(
             document.activeElement.id ===
             "assetCommonSearch"
         ) {
-
             filterAssets();
-
         }
 
+        if (
+            event.key === "Escape"
+        ) {
+            closeAssetFilterPopup();
+        }
     }
 );
 
-
-document.addEventListener("DOMContentLoaded", function () {
-    populateAssetFilterDropdowns();
-    displayAssets(availableAssets);
-    updateFilterResultHint(availableAssets.length);
-});
-
-function escapeJs(value) {
-    return String(value ?? "")
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'");
-}
-
+/* =========================================================
+   PAGE INITIALIZATION
+   ========================================================= */
 
 function openAssetDetailsPage(assetTag) {
-    const encodedTag = encodeURIComponent(assetTag || "");
+
+    const encodedTag =
+        encodeURIComponent(
+            assetTag || ""
+        );
+
     window.location.href =
         `issue-asset-details.html?assetTag=${encodedTag}`;
 }
 
-
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function() {
+
+        populateAssetFilterDropdowns();
 
         loadCart();
         updateCartCount();
-        changeIssueTarget(document.getElementById("assetStatus")?.value || "issuedToAsset");
+
+        changeIssueTarget(
+            document.getElementById(
+                "assetStatus"
+            )?.value ||
+            "issuedToAsset"
+        );
 
         displayAssets(
             availableAssets
         );
 
+        updateFilterResultHint(
+            availableAssets.length
+        );
     }
 );
 </script>

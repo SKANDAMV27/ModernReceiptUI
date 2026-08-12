@@ -19,80 +19,544 @@
 
     <style>
         /* =====================================================
-           MODERN ISSUE LIST FILTERS + KPI
+           ISSUE LIST - SPLIT VIEW DESIGN
+           Existing data, filters and JavaScript flow are preserved.
         ====================================================== */
 
-        .modern-filter-card {
-            margin-bottom: 20px;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
-            overflow: hidden;
+        .issue-page-shell {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 110px);
         }
 
-        .modern-filter-header {
+        .issue-topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            padding: 18px 20px;
+            gap: 14px;
+            margin-bottom: 14px;
         }
 
-        .filter-eyebrow {
-            display: block;
-            margin-bottom: 4px;
-            color: #2563eb;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .08em;
+        .issue-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .modern-filter-header h2 {
+        .issue-title-group h1 {
             margin: 0;
-            color: #0f172a;
-            font-size: 17px;
+            font-size: 20px;
+            color: #111827;
         }
 
-        .modern-filter-header p {
-            margin: 4px 0 0;
+        .generic-view-button {
+            height: 32px;
+            padding: 0 12px;
+            border: 1px solid #4f46e5;
+            border-radius: 8px;
+            background: #fff;
+            color: #4f46e5;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .generic-view-button:hover {
+            background: #f5f3ff;
+        }
+
+        .issue-workspace {
+            display: grid;
+            grid-template-columns: 360px minmax(0, 1fr);
+            min-height: 680px;
+            border: 1px solid #dfe4ec;
+            border-radius: 10px;
+            background: #fff;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .04);
+        }
+
+        .issue-list-pane {
+            position: relative;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #dfe4ec;
+            background: #fff;
+        }
+
+        .issue-list-pane-header {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #fff;
+        }
+
+        .issue-search-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .issue-search-box {
+            position: relative;
+            flex: 1;
+        }
+
+        .issue-search-box span {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
             color: #64748b;
+            pointer-events: none;
+        }
+
+        .issue-search-box input {
+            width: 100%;
+            height: 36px;
+            padding: 0 10px 0 31px;
+            border: 1px solid #cfd8e6;
+            border-radius: 7px;
+            outline: none;
+            box-sizing: border-box;
             font-size: 12px;
         }
 
-        .filter-toggle-button {
+        .issue-search-box input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,.10);
+        }
+
+        .issue-filter-button {
+            height: 36px;
+            min-width: 78px;
+            padding: 0 12px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            min-height: 40px;
-            padding: 0 14px;
-            border: 1px solid #dbe4ef;
-            border-radius: 9px;
-            background: #ffffff;
-            color: #334155;
-            font-size: 13px;
+            gap: 6px;
+            border: 1px solid #4f46e5;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: #ffffff;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
-            transition: .2s ease;
+            white-space: nowrap;
+            box-sizing: border-box;
+            transition: background .15s ease, border-color .15s ease;
+        }
+
+        .issue-filter-button:hover {
+            background: #4338ca;
+            border-color: #4338ca;
+        }
+
+        /* The filter control beside the search box is the primary filter trigger. */
+        .modern-filter-card > .modern-filter-header {
+            display: none;
+        }
+
+        .issue-list-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 9px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .issue-list-records {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .issue-list-row {
+            position: relative;
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background .15s ease;
+        }
+
+        .issue-list-row:hover {
+            background: #f8fafc;
+        }
+
+        .issue-list-row.active {
+            background: #eeedff;
+        }
+
+        .issue-list-row.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #4f46e5;
+        }
+
+        .issue-list-row-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .issue-list-transaction {
+            color: #111827;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .issue-list-date {
+            margin-top: 4px;
+            color: #475569;
+            font-size: 11px;
+        }
+
+        .issue-list-created {
+            margin-top: 4px;
+            color: #64748b;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .issue-type-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .issue-type-pill.custodian {
+            background: #ecfdf5;
+            color: #15803d;
+        }
+
+        .issue-type-pill.location {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .issue-type-pill.employee {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .issue-list-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 11px;
+            border-top: 1px solid #e5e7eb;
+            background: #fff;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .issue-detail-pane {
+            min-width: 0;
+            background: #f8fafc;
+            overflow-y: auto;
+        }
+
+        .issue-detail-empty {
+            height: 100%;
+            min-height: 600px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        .issue-detail-empty-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 12px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 22px;
+        }
+
+        .issue-detail-content {
+            padding: 18px 20px 28px;
+        }
+
+        .issue-detail-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #fff;
+            margin: -18px -20px 18px;
+            padding: 18px 20px 15px;
+        }
+
+        .issue-detail-title {
+            margin: 0;
+            color: #111827;
+            font-size: 19px;
+        }
+
+        .issue-detail-subtitle {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .issue-detail-actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .issue-detail-action {
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: #fff;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .issue-detail-action.primary {
+            border-color: #4f46e5;
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .issue-detail-action.create {
+            border-color: #4f46e5;
+            background: #fff;
+            color: #4f46e5;
+        }
+
+        .issue-detail-action.create:hover {
+            background: #f5f3ff;
+        }
+
+        .issue-detail-action:hover {
+            background: #f1f5f9;
+        }
+
+        .issue-detail-action.primary:hover {
+            background: #4338ca;
+        }
+
+        .issue-status-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 18px;
+        }
+
+        .detail-label-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 5px;
+            background: #0f7891;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .detail-value-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 9px;
+            border: 1px solid #dbe3ee;
+            border-radius: 5px;
+            background: #fff;
+            color: #334155;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .issue-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            border: 1px solid #dfe4ec;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            margin-bottom: 18px;
+        }
+
+        .issue-detail-cell {
+            min-height: 74px;
+            padding: 13px 14px;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .issue-detail-cell:last-child {
+            border-right: 0;
+        }
+
+        .issue-detail-cell span {
+            display: block;
+            margin-bottom: 7px;
+            color: #64748b;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .issue-detail-cell strong {
+            display: block;
+            color: #111827;
+            font-size: 12px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .issue-section {
+            border: 1px solid #dfe4ec;
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .issue-section-title {
+            padding: 11px 13px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #111827;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .issue-detail-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .issue-detail-table th,
+        .issue-detail-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #edf0f4;
+            text-align: left;
+            font-size: 11px;
+        }
+
+        .issue-detail-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+        }
+
+        .issue-detail-table td {
+            color: #111827;
+        }
+
+        .issue-detail-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        /* Filter popup */
+        .filter-toggle-button {
+            height: 36px;
+            min-width: 78px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: 1px solid #4f46e5;
+            border-radius: 8px;
+            background: #fff;
+            color: #4f46e5;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            box-sizing: border-box;
+            transition: background .15s ease, border-color .15s ease;
         }
 
         .filter-toggle-button:hover {
-            border-color: #2563eb;
-            color: #2563eb;
-            background: #eff6ff;
+            background: #f5f3ff;
         }
 
         .modern-filter-body {
+            position: absolute;
+            top: 54px;
+            left: 8px;
+            right: 8px;
+            width: min(525px, calc(100vw - 28px));
+            max-height: 620px;
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
-            gap: 14px;
-            padding: 0 20px 20px;
-            border-top: 1px solid #eef2f7;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 14px;
+            padding: 0 14px 54px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 12px 35px rgba(15,23,42,.16);
+            overflow-y: auto;
         }
 
         .modern-filter-body.hidden {
-            display: none;
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modern-filter-body:not(.hidden) {
+            display: grid;
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modern-filter-body::before {
+            content: "Filter records";
+            grid-column: 1 / -1;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+            margin: 0 -14px 2px;
+            padding: 0 14px;
+            border-bottom: 1px solid #eef2f7;
+            background: #fff;
+            color: #111827;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .modern-filter-body::after {
+            content: "Clear all";
+            position: absolute;
+            top: 0;
+            right: 14px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+            pointer-events: none;
         }
 
         .modern-filter-field {
@@ -101,30 +565,30 @@
 
         .modern-filter-field label {
             display: block;
-            margin: 16px 0 7px;
-            color: #334155;
-            font-size: 12px;
+            margin: 14px 0 6px;
+            color: #111827;
+            font-size: 11px;
             font-weight: 700;
         }
 
         .modern-filter-field input,
         .modern-filter-field select {
             width: 100%;
-            height: 42px;
-            padding: 0 12px;
-            border: 1px solid #d8e1ec;
-            border-radius: 9px;
-            background: #f8fafc;
-            color: #0f172a;
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #cfd8e6;
+            border-radius: 7px;
+            background: #fff;
+            color: #374151;
+            font-size: 11px;
             outline: none;
-            transition: .2s ease;
+            box-sizing: border-box;
         }
 
         .modern-filter-field input:focus,
         .modern-filter-field select:focus {
-            background: #ffffff;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,.10);
         }
 
         .input-icon {
@@ -133,209 +597,395 @@
 
         .input-icon span {
             position: absolute;
-            left: 12px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: #64748b;
             pointer-events: none;
+            font-size: 12px;
         }
 
         .input-icon input {
-            padding-left: 36px;
+            padding-left: 30px;
         }
 
         .modern-filter-actions {
-            display: flex;
-            align-items: end;
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            bottom: 9px;
+            z-index: 4;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
-            padding-bottom: 0;
         }
 
         .modern-primary-button,
         .modern-secondary-button {
-            height: 42px;
-            padding: 0 15px;
-            border-radius: 9px;
-            font-size: 12px;
+            height: 34px;
+            border-radius: 7px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            transition: .2s ease;
-            white-space: nowrap;
         }
 
         .modern-primary-button {
-            border: 1px solid #2563eb;
-            background: #2563eb;
-            color: #ffffff;
-        }
-
-        .modern-primary-button:hover {
-            background: #1d4ed8;
-            transform: translateY(-1px);
+            border: 1px solid #4f46e5;
+            background: #4f46e5;
+            color: #fff;
         }
 
         .modern-secondary-button {
             border: 1px solid #d8e1ec;
-            background: #ffffff;
+            background: #fff;
             color: #475569;
         }
 
-        .modern-secondary-button:hover {
-            background: #f8fafc;
-            transform: translateY(-1px);
-        }
 
         /* =====================================================
-           KPI CARDS
+           RICH ISSUED ASSET CARD
+           Used inside the selected-issue detail panel.
         ====================================================== */
 
-        .issue-kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        .issue-kpi-card {
+        .issued-assets-header {
             display: flex;
             align-items: center;
-            gap: 13px;
-            min-height: 88px;
-            padding: 16px;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            box-shadow: 0 3px 12px rgba(15, 23, 42, .04);
-            transition: .2s ease;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 11px 13px;
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .issue-kpi-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 7px 20px rgba(15, 23, 42, .07);
+        .issued-assets-title {
+            color: #111827;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .issue-kpi-icon {
-            width: 44px;
-            height: 44px;
-            flex: 0 0 44px;
+        .issued-assets-count {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border: 1px solid #bfdbfe;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .issued-asset-list {
+            display: grid;
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .issued-asset-card {
+            overflow: hidden;
+            border: 1px solid #dbe4ef;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .issued-asset-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px;
+            background: linear-gradient(180deg, #f8fbff 0%, #fff 100%);
+            border-bottom: 1px solid #e8eef5;
+        }
+
+        .issued-asset-title-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            min-width: 0;
+        }
+
+        .issued-asset-icon {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
             display: grid;
             place-items: center;
-            border-radius: 11px;
-            font-size: 19px;
+            border-radius: 8px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 16px;
+            font-weight: 800;
         }
 
-        .issue-kpi-icon.blue {
+        .issued-asset-title-group h3 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .issued-asset-title-group p {
+            margin: 3px 0 0;
+            color: #64748b;
+            font-size: 10px;
+        }
+
+        .issued-asset-tag {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 5px;
+            padding: 3px 7px;
+            border: 1px solid #bfdbfe;
+            border-radius: 5px;
             background: #eff6ff;
-            color: #2563eb;
+            color: #1d4ed8;
+            font-size: 9px;
+            font-weight: 800;
         }
 
-        .issue-kpi-icon.green {
-            background: #ecfdf5;
-            color: #16a34a;
+        .issued-asset-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 8px;
+            border-radius: 999px;
+            font-size: 9px;
+            font-weight: 800;
+            white-space: nowrap;
         }
 
-        .issue-kpi-icon.orange {
+        .issued-asset-status.returned {
+            border: 1px solid #bbf7d0;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .issued-asset-status.not-returned {
+            border: 1px solid #fed7aa;
             background: #fff7ed;
-            color: #ea580c;
+            color: #c2410c;
         }
 
-        .issue-kpi-icon.purple {
-            background: #f5f3ff;
-            color: #7c3aed;
+        .issued-asset-key-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            padding: 10px 12px;
         }
 
-        .issue-kpi-card span {
+        .issued-asset-key-item {
+            min-height: 52px;
+            padding: 9px;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
+            background: #f8fafc;
+        }
+
+        .issued-asset-key-item.highlight {
+            border-color: #bfdbfe;
+            background: #eff6ff;
+        }
+
+        .issued-asset-key-item .label,
+        .issued-asset-extra-item .label {
             display: block;
             margin-bottom: 4px;
             color: #64748b;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .issue-kpi-card strong {
-            color: #0f172a;
-            font-size: 22px;
-            line-height: 1;
-        }
-
-
-        .table-card tbody tr.selected-row {
-            background: #eff6ff;
-        }
-
-        .table-card tbody tr.selected-row td {
-            border-top-color: #dbeafe;
-        }
-
-        .transaction-link {
-            color: #2563eb;
-            font-weight: 700;
-            cursor: pointer;
-            transition: color .15s ease;
-        }
-
-        .transaction-link:hover {
-            color: #1d4ed8;
-            text-decoration: underline;
-        }
-
-
-        .asset-count-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 34px;
-            height: 26px;
-            padding: 0 9px;
-            border-radius: 999px;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            color: #1d4ed8;
-            font-size: 12px;
+            font-size: 9px;
             font-weight: 800;
+            text-transform: uppercase;
         }
-@media (max-width: 1200px) {
+
+        .issued-asset-key-item .value {
+            color: #0f172a;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .issued-asset-key-item.highlight .value {
+            color: #1d4ed8;
+        }
+
+        .issued-asset-more {
+            border-top: 1px solid #e8eef5;
+        }
+
+        .issued-asset-more summary {
+            padding: 9px 12px;
+            color: #475569;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .issued-asset-more summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .issued-asset-more summary::before {
+            content: "+";
+            display: inline-grid;
+            width: 17px;
+            height: 17px;
+            margin-right: 6px;
+            place-items: center;
+            border-radius: 4px;
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .issued-asset-more[open] summary::before {
+            content: "−";
+        }
+
+        .issued-asset-more-content {
+            padding: 0 12px 10px;
+        }
+
+        .issued-asset-extra-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .issued-asset-extra-item {
+            padding: 8px 9px;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
+            background: #fff;
+        }
+
+        .issued-asset-extra-item .value {
+            color: #334155;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .issued-asset-location {
+            margin: 0 12px 12px;
+            padding: 9px 10px;
+            border: 1px solid #dbeafe;
+            border-radius: 7px;
+            background: #eff6ff;
+        }
+
+        .issued-asset-location .label {
+            display: block;
+            margin-bottom: 3px;
+            color: #1d4ed8;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .issued-asset-location strong {
+            color: #1e40af;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .issued-assets-empty {
+            padding: 28px 15px;
+            text-align: center;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        @media (max-width: 1000px) {
+            .issue-workspace {
+                grid-template-columns: 320px minmax(0, 1fr);
+            }
+
+            .issue-detail-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .issue-detail-cell:nth-child(2) {
+                border-right: 0;
+            }
+
+            .issue-detail-cell:nth-child(-n+2) {
+                border-bottom: 1px solid #e5e7eb;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .issue-workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .issue-list-pane {
+                max-height: 430px;
+                border-right: 0;
+                border-bottom: 1px solid #dfe4ec;
+            }
+
+            .issue-detail-pane {
+                min-height: 600px;
+            }
+
+            .issue-detail-header {
+                flex-direction: column;
+            }
+
+            .issue-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .issued-asset-key-grid,
+            .issued-asset-extra-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .issued-asset-card-top {
+                flex-direction: column;
+            }
+
+            .issued-asset-status {
+                align-self: flex-start;
+            }
+
+
+            .issue-detail-cell {
+                border-right: 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .issue-detail-cell:last-child {
+                border-bottom: 0;
+            }
+
             .modern-filter-body {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .modern-filter-actions {
-                grid-column: 1 / -1;
-                justify-content: flex-start;
-            }
-
-            .issue-kpi-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                width: min(390px, calc(100vw - 28px));
+                grid-template-columns: 1fr;
             }
         }
 
-        @media (max-width: 700px) {
-            .modern-filter-header {
+        @media (max-width: 500px) {
+            .issue-topbar {
                 align-items: flex-start;
                 flex-direction: column;
             }
 
-            .filter-toggle-button {
+            .issue-search-row {
+                flex-direction: column;
+            }
+
+            .issue-filter-button {
                 width: 100%;
             }
 
-            .modern-filter-body {
-                grid-template-columns: 1fr;
-            }
-
-            .modern-filter-actions {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+            .issue-detail-actions {
                 width: 100%;
             }
 
-            .modern-primary-button,
-            .modern-secondary-button {
-                width: 100%;
-            }
-
-            .issue-kpi-grid {
-                grid-template-columns: 1fr;
+            .issue-detail-action {
+                flex: 1;
             }
         }
 
@@ -377,557 +1027,132 @@
         <main class="page-content">
 
 
-            <!-- =================================================
-                 BREADCRUMB
-            ================================================== -->
+            <div class="issue-page-shell">
 
-            <div class="page-breadcrumb">
-
-                <span>
-                    EAM
-                </span>
-
-                <span>
-                    ›
-                </span>
-
-                <span>
-                    Issue
-                </span>
-
-                <span>
-                    ›
-                </span>
-
-                <strong>
-                    List
-                </strong>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 PAGE HEADER
-            ================================================== -->
-
-            <div class="page-header">
-
-                <div>
-
-                    <h1>
-                        Issue Assets
-                    </h1>
-
-                    <p>
-                        View and manage asset issue transactions.
-                    </p>
-
+                <div class="issue-topbar">
+                    <div class="issue-title-group">
+                        <h1>Issue Assets</h1>
+                        <button type="button" class="generic-view-button">Generic View⌄</button>
+                    </div>
                 </div>
 
-            </div>
+                <div class="issue-workspace">
 
+                    <aside class="issue-list-pane">
 
-
-            <!-- =================================================
-                 FILTER CARD
-            ================================================== -->
-
-            <!-- =================================================
-                 MODERN FILTER CARD
-            ================================================== -->
-
-            <section class="modern-filter-card">
-
-                <div class="modern-filter-header">
-
-                    <div>
-                        <span class="filter-eyebrow">FILTERS</span>
-
-                        <h2>Find Issue Transactions</h2>
-
-                        <p>
-                            Search and filter asset issue transactions
-                        </p>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="filter-toggle-button"
-                        onclick="toggleIssueFilters()"
-                        title="Show or hide filters"
-                    >
-                        <span>☷</span>
-                        Filters
-                        <span id="filterChevron">⌄</span>
-                    </button>
-
-                </div>
-
-
-                <div
-                    id="issueFilters"
-                    class="modern-filter-body"
-                >
-
-                    <div class="modern-filter-field">
-
-                        <label for="transactionDateFilter">
-                            Transaction Date
-                        </label>
-
-                        <div class="input-icon">
-                            <span>◷</span>
-
-                            <input
-                                type="date"
-                                id="transactionDateFilter"
-                                aria-label="Filter by transaction date"
-                            >
-                        </div>
-
-                    </div>
-
-
-                    <div class="modern-filter-field">
-
-                        <label for="issueTypeFilter">
-                            Issue Type
-                        </label>
-
-                        <select
-                            id="issueTypeFilter"
-                            aria-label="Filter by issue type"
-                        >
-                            <option value="">
-                                All Issue Types
-                            </option>
-                        </select>
-
-                    </div>
-
-
-                    <div class="modern-filter-field">
-
-                        <label for="transactionNoFilter">
-                            Transaction No
-                        </label>
-
-                        <div class="input-icon">
-
-                            <span>⌕</span>
-
-                            <input
-                                type="text"
-                                id="transactionNoFilter"
-                                placeholder="Search transaction..."
-                                autocomplete="off"
-                                aria-label="Search transaction number"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="modern-filter-field">
-
-                        <label for="createdByFilter">
-                            Created By
-                        </label>
-
-                        <select
-                            id="createdByFilter"
-                            aria-label="Filter by created by"
-                        >
-                            <option value="">
-                                All Users
-                            </option>
-                        </select>
-
-                    </div>
-
-
-                    <div class="modern-filter-actions">
-
-                        <button
-                            type="button"
-                            class="modern-primary-button"
-                            onclick="filterIssues()"
-                            title="Apply filters"
-                        >
-                            🔍 Search
-                        </button>
-
-                        <button
-                            type="button"
-                            class="modern-secondary-button"
-                            onclick="resetIssueFilters()"
-                            title="Clear all filters"
-                        >
-                            ↻ Reset
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 ISSUE SUMMARY
-            ================================================== -->
-
-            <div class="issue-kpi-grid">
-
-                <div class="issue-kpi-card">
-
-                    <div class="issue-kpi-icon blue">
-                        ▣
-                    </div>
-
-                    <div>
-                        <span>Total Issues</span>
-                        <strong id="totalIssueCount">0</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="issue-kpi-card">
-
-                    <div class="issue-kpi-icon green">
-                        ✓
-                    </div>
-
-                    <div>
-                        <span>Custodian Issues</span>
-                        <strong id="custodianIssueCount">0</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="issue-kpi-card">
-
-                    <div class="issue-kpi-icon orange">
-                        ◇
-                    </div>
-
-                    <div>
-                        <span>Location Issues</span>
-                        <strong id="locationIssueCount">0</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="issue-kpi-card">
-
-                    <div class="issue-kpi-icon purple">
-                        👤
-                    </div>
-
-                    <div>
-                        <span>Employee Issues</span>
-                        <strong id="employeeIssueCount">0</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="issue-kpi-card">
-
-                    <div class="issue-kpi-icon purple">
-                        ◷
-                    </div>
-
-                    <div>
-                        <span>Today's Issues</span>
-                        <strong id="todayIssueCount">0</strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =================================================
-                 ISSUE TABLE
-            ================================================== -->
-
-            <section class="table-card">
-
-
-                <!-- =================================================
-                     TABLE HEADER
-                ================================================== -->
-
-                <div class="table-header">
-
-
-                    <!-- Title -->
-
-                    <div>
-
-                        <h2>
-                            Issue Asset
-                        </h2>
-
-                        <span id="recordCount">
-                            10 Records
-                        </span>
-
-                    </div>
-
-
-
-                    <!-- =================================================
-                         ACTION BUTTONS
-                    ================================================== -->
-
-                    <div class="table-header-actions">
-
-
-                        <!-- Reload -->
-
-                        <button
-                            type="button"
-                            class="table-action-button reload-action"
-                            onclick="reloadIssues()"
-                            title="Reload Issue List"
-                        >
-
-                            <span class="action-icon">
-                                ↻
-                            </span>
-
-                            Reload
-
-                        </button>
-
-
-
-                        <!-- Issue Asset -->
-
-                        <button
-                            type="button"
-                            class="table-action-button issue-action"
-                            onclick="openIssueAsset()"
-                            title="Issue Asset"
-                        >
-
-                            <span class="action-icon">
-                                ＋
-                            </span>
-
-                            Issue Asset
-
-                        </button>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- =================================================
-                     TABLE
-                ================================================== -->
-
-                <div class="table-wrapper">
-
-
-                    <table>
-
-
-                        <!-- TABLE HEAD -->
-
-                        <thead>
-
-                            <tr>
-
-
-                                <!-- Select -->
-
-                                <th class="checkbox-column">
-
+                        <div class="issue-list-pane-header">
+                            <div class="issue-search-row">
+                                <div class="issue-search-box">
+                                    <span>⌕</span>
                                     <input
-                                        type="checkbox"
-                                        id="selectAll"
-                                        onchange="selectAllIssues(this)"
-                                        title="Select All"
+                                        type="text"
+                                        id="issueQuickSearch"
+                                        placeholder="Search issues"
+                                        autocomplete="off"
+                                        aria-label="Search issues"
                                     >
+                                </div>
 
-                                </th>
+                                <button
+                                    type="button"
+                                    class="issue-filter-button"
+                                    onclick="toggleIssueFilters()"
+                                    title="Show filters"
+                                >
+                                    <span style="font-size:12px;">▽</span>
+                                    <span>Filters</span>
+                                    <span style="font-size:11px;">›</span>
+                                </button>
+                            </div>
 
+                    <div id="issueFilters" class="modern-filter-body hidden">
 
+                        <div class="modern-filter-field">
+                            <label for="transactionDateFilter">Transaction Date</label>
+                            <div class="input-icon">
+                                <span>◷</span>
+                                <input type="date" id="transactionDateFilter" aria-label="Filter by transaction date">
+                            </div>
+                        </div>
 
-                                <!-- Transaction -->
+                        <div class="modern-filter-field">
+                            <label for="issueTypeFilter">Issue Type</label>
+                            <select id="issueTypeFilter" aria-label="Filter by issue type">
+                                <option value="">All Issue Types</option>
+                            </select>
+                        </div>
 
-                                <th>
-                                    Transaction No
-                                </th>
+                        <div class="modern-filter-field">
+                            <label for="transactionNoFilter">Transaction No</label>
+                            <div class="input-icon">
+                                <span>⌕</span>
+                                <input
+                                    type="text"
+                                    id="transactionNoFilter"
+                                    placeholder="Search transaction..."
+                                    autocomplete="off"
+                                    aria-label="Search transaction number"
+                                >
+                            </div>
+                        </div>
 
+                        <div class="modern-filter-field">
+                            <label for="createdByFilter">Created By</label>
+                            <select id="createdByFilter" aria-label="Filter by created by">
+                                <option value="">All Users</option>
+                            </select>
+                        </div>
 
+                        <div class="modern-filter-field">
+                            <label for="issuedToFilter">Issued To</label>
+                            <div class="input-icon">
+                                <span>⌕</span>
+                                <input
+                                    type="text"
+                                    id="issuedToFilter"
+                                    placeholder="Search issued to..."
+                                    autocomplete="off"
+                                    aria-label="Search issued to"
+                                >
+                            </div>
+                        </div>
 
-                                <!-- Date -->
+                        <div class="modern-filter-actions">
+                            <button type="button" class="modern-primary-button" onclick="filterIssues()">🔍 Search</button>
+                            <button type="button" class="modern-secondary-button" onclick="resetIssueFilters()">↻ Reset</button>
+                        </div>
+                    </div>
 
-                                <th>
-                                    Transaction Date
-                                </th>
+                            <div class="issue-list-meta">
+                                <span id="recordCount">0 Records</span>
+                                <span>Issue Transactions</span>
+                            </div>
+                        </div>
 
+                        <div id="issueListRecords" class="issue-list-records"></div>
 
+                        <div class="issue-list-footer">
+                            <span id="issueShowingText">1-0</span>
+                            <span id="issueTotalText">of 0</span>
+                        </div>
 
-                                <!-- Issue Type -->
+                    </aside>
 
-                                <th>
-                                    Issue Type
-                                </th>
-
-
-
-                                <!-- Created By -->
-
-                                <th>
-                                    Created By
-                                </th>
-
-
-
-                                
-                                <!-- Asset Count -->
-
-                                <th>
-                                    Asset Count
-                                </th>
-<!-- Action -->
-
-                                <th class="action-column">
-                                    Action
-                                </th>
-
-
-                            </tr>
-
-                        </thead>
-
-
-
-                        <!-- TABLE BODY -->
-
-                        <tbody id="issueTableBody">
-
-                        </tbody>
-
-
-                    </table>
+                    <section class="issue-detail-pane" id="issueDetailPane">
+                        <div class="issue-detail-empty">
+                            <div>
+                                <div class="issue-detail-empty-icon">▣</div>
+                                <strong>Select an issue transaction</strong>
+                                <div style="margin-top:5px;font-size:11px;">
+                                    Select a transaction from the list to view its details.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
                 </div>
 
-
-
-                <!-- =================================================
-                     PAGINATION
-                ================================================== -->
-
-                <div class="pagination">
-
-
-                    <!-- Pagination Buttons -->
-
-                    <div class="pagination-buttons">
-
-
-                        <button
-                            type="button"
-                            title="First Page"
-                        >
-                            «
-                        </button>
-
-
-                        <button
-                            type="button"
-                            title="Previous Page"
-                        >
-                            ‹
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="active-page"
-                        >
-                            1
-                        </button>
-
-
-                        <button
-                            type="button"
-                        >
-                            2
-                        </button>
-
-
-                        <button
-                            type="button"
-                        >
-                            3
-                        </button>
-
-
-                        <button
-                            type="button"
-                            title="Next Page"
-                        >
-                            ›
-                        </button>
-
-
-                        <button
-                            type="button"
-                            title="Last Page"
-                        >
-                            »
-                        </button>
-
-
-                    </div>
-
-
-
-                    <!-- Pagination Information -->
-
-                    <div class="pagination-info">
-
-                        Showing
-
-                        <strong>
-                            1-10
-                        </strong>
-
-                        of
-
-                        <strong>
-                            13375
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-
-            </section>
-
-
-        </main>
-
-
+            </div>
 
         <!-- =================================================
              GENERIC FOOTER
@@ -981,7 +1206,22 @@
                     "Custodian",
 
                 createdBy:
-                    "ASADMIN [SYS-ADMIN]"
+                    "ASADMIN [SYS-ADMIN]",
+
+                assetCount: 1,
+
+                assets: [
+                    {
+                        assetName: "Dell Latitude 5440",
+                        assetTag: "IT-LAP-0142",
+                        serialNo: "DL5440-88213",
+                        model: "Latitude 5440",
+                        manufacturer: "Dell Inc.",
+                        description: "Standard issue laptop for engineering.",
+                        returned: "No",
+                        location: "Engineering · HQ · Floor 3"
+                    }
+                ]
             },
 
 
@@ -1231,202 +1471,538 @@
 
         function displayIssues(data) {
 
+            const list = document.getElementById("issueListRecords");
 
-            const tbody =
-                document.getElementById(
-                    "issueTableBody"
-                );
+            if (!list) {
+                return;
+            }
 
+            list.innerHTML = "";
 
-            tbody.innerHTML = "";
+            const recordCount = document.getElementById("recordCount");
+            const showingText = document.getElementById("issueShowingText");
+            const totalText = document.getElementById("issueTotalText");
 
-
-
-            if (data.length === 0) {
-
-                tbody.innerHTML = `
-
-                    <tr>
-
-                        <td
-                            colspan="7"
-                            class="empty-table-cell"
-                        >
-
-                            <div class="empty-table-state">
-
-                                <div class="empty-table-icon">
-                                    🔍
-                                </div>
-
-                                <strong>
-                                    No issues found
-                                </strong>
-
-                                <span>
-                                    Try changing your search criteria.
-                                </span>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
+            if (!data || data.length === 0) {
+                list.innerHTML = `
+                    <div style="padding:40px 15px;text-align:center;color:#64748b;font-size:12px;">
+                        <div style="font-size:22px;margin-bottom:8px;">🔍</div>
+                        <strong style="display:block;color:#334155;">No issues found</strong>
+                        <span>Try changing your search criteria.</span>
+                    </div>
                 `;
 
+                if (recordCount) recordCount.textContent = "0 Records";
+                if (showingText) showingText.textContent = "1-0";
+                if (totalText) totalText.textContent = "of 0";
 
-                document.getElementById(
-                    "recordCount"
-                ).textContent =
-                    "0 Records";
-
-                updateIssueKPIs(data);
-
+                updateIssueKPIs(data || []);
                 return;
+            }
+
+            data.forEach(function(issue, index) {
+
+                const row = document.createElement("div");
+                const badgeClass = String(issue.issueType || "").toLowerCase();
+
+                row.className = "issue-list-row";
+                row.dataset.transaction = issue.transactionNo || "";
+
+                row.innerHTML = `
+                    <div class="issue-list-row-top">
+                        <span class="issue-list-transaction">
+                            ${issue.transactionNo || "-"}
+                        </span>
+
+                        <span class="issue-type-pill ${badgeClass}">
+                            ● ${issue.issueType || "-"}
+                        </span>
+                    </div>
+
+                    <div class="issue-list-date">
+                        ${issue.transactionDate || "-"}
+                    </div>
+
+                    <div class="issue-list-created">
+                        ${issue.createdBy || "-"}
+                    </div>
+                `;
+
+                row.addEventListener("click", function() {
+                    document.querySelectorAll(".issue-list-row.active")
+                        .forEach(function(activeRow) {
+                            activeRow.classList.remove("active");
+                        });
+
+                    row.classList.add("active");
+                    showIssueDetails(issue);
+                });
+
+                list.appendChild(row);
+
+                if (index === 0) {
+                    row.classList.add("active");
+                    showIssueDetails(issue);
+                }
+            });
+
+            if (recordCount) {
+                recordCount.textContent = `${data.length} Records`;
+            }
+
+            if (showingText) {
+                showingText.textContent = `1-${data.length}`;
+            }
+
+            if (totalText) {
+                totalText.textContent = `of ${data.length}`;
+            }
+
+            updateIssueKPIs(data);
+        }
+
+        function escapeIssueHtml(value) {
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function issueValue(value, fallback = "Not available") {
+            if (
+                value === null ||
+                value === undefined ||
+                String(value).trim() === ""
+            ) {
+                return fallback;
+            }
+
+            return String(value);
+        }
+
+        function getIssueAssets(issue) {
+            if (Array.isArray(issue.assets) && issue.assets.length) {
+                return issue.assets;
+            }
+
+            if (issue.asset) {
+                return [issue.asset];
+            }
+
+            return [];
+        }
+
+        function showIssueDetails(issue) {
+
+            const pane = document.getElementById("issueDetailPane");
+
+            if (!pane || !issue) {
+                return;
+            }
+
+            const assets = getIssueAssets(issue);
+
+            const assetCount = Number(
+                issue.assetCount ??
+                assets.length
+            );
+
+            const issueType = issue.issueType || "-";
+            const badgeClass = issueType.toLowerCase();
+
+            let assetContent = "";
+
+            if (assets.length > 0) {
+
+                assetContent = `
+                    <div class="issued-asset-list">
+
+                        ${assets.map(function(asset, index) {
+
+                            const returned =
+                                String(asset.returned || "")
+                                    .toLowerCase() === "yes";
+
+                            const assetName =
+                                asset.assetName ??
+                                asset.name ??
+                                asset.assetTag ??
+                                asset.serialNo ??
+                                `Asset ${index + 1}`;
+
+                            const assetTag =
+                                asset.assetTag ??
+                                asset.assetCode ??
+                                "-";
+
+                            return `
+                                <article class="issued-asset-card">
+
+                                    <div class="issued-asset-card-top">
+
+                                        <div class="issued-asset-title-group">
+
+                                            <div class="issued-asset-icon">
+                                                ◇
+                                            </div>
+
+                                            <div>
+
+                                                <h3>
+                                                    ${escapeIssueHtml(
+                                                        issueValue(assetName)
+                                                    )}
+                                                </h3>
+
+                                                <p>
+                                                    Asset ${index + 1}
+                                                    of ${assets.length}
+                                                </p>
+
+                                                <span class="issued-asset-tag">
+                                                    ${escapeIssueHtml(
+                                                        issueValue(assetTag)
+                                                    )}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                        <span class="issued-asset-status ${
+                                            returned
+                                                ? "returned"
+                                                : "not-returned"
+                                        }">
+                                            ${
+                                                returned
+                                                    ? "● Returned"
+                                                    : "● Not Returned"
+                                            }
+                                        </span>
+
+                                    </div>
+
+                                    <div class="issued-asset-key-grid">
+
+                                        <div class="issued-asset-key-item">
+
+                                            <span class="label">
+                                                Asset Name
+                                            </span>
+
+                                            <span class="value">
+                                                ${escapeIssueHtml(
+                                                    issueValue(assetName)
+                                                )}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="issued-asset-key-item highlight">
+
+                                            <span class="label">
+                                                Asset Tag
+                                            </span>
+
+                                            <span class="value">
+                                                ${escapeIssueHtml(
+                                                    issueValue(assetTag)
+                                                )}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="issued-asset-key-item">
+
+                                            <span class="label">
+                                                Serial No
+                                            </span>
+
+                                            <span class="value">
+                                                ${escapeIssueHtml(
+                                                    issueValue(
+                                                        asset.serialNo
+                                                    )
+                                                )}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="issued-asset-key-item">
+
+                                            <span class="label">
+                                                Model
+                                            </span>
+
+                                            <span class="value">
+                                                ${escapeIssueHtml(
+                                                    issueValue(
+                                                        asset.model
+                                                    )
+                                                )}
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                    <details class="issued-asset-more">
+
+                                        <summary>
+                                            View more asset information
+                                        </summary>
+
+                                        <div class="issued-asset-more-content">
+
+                                            <div class="issued-asset-extra-grid">
+
+                                                <div class="issued-asset-extra-item">
+
+                                                    <span class="label">
+                                                        Manufacturer
+                                                    </span>
+
+                                                    <span class="value">
+                                                        ${escapeIssueHtml(
+                                                            issueValue(
+                                                                asset.manufacturer
+                                                            )
+                                                        )}
+                                                    </span>
+
+                                                </div>
+
+                                                <div class="issued-asset-extra-item">
+
+                                                    <span class="label">
+                                                        Description
+                                                    </span>
+
+                                                    <span class="value">
+                                                        ${escapeIssueHtml(
+                                                            issueValue(
+                                                                asset.description
+                                                            )
+                                                        )}
+                                                    </span>
+
+                                                </div>
+
+                                                <div class="issued-asset-extra-item">
+
+                                                    <span class="label">
+                                                        Return Status
+                                                    </span>
+
+                                                    <span class="value">
+                                                        ${escapeIssueHtml(
+                                                            issueValue(
+                                                                asset.returned
+                                                            )
+                                                        )}
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </details>
+
+                                    <div class="issued-asset-location">
+
+                                        <span class="label">
+                                            Asset Location
+                                        </span>
+
+                                        <strong>
+                                            ${escapeIssueHtml(
+                                                issueValue(
+                                                    asset.location
+                                                )
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </article>
+                            `;
+
+                        }).join("")}
+
+                    </div>
+                `;
+
+            } else {
+
+                assetContent = `
+                    <div class="issued-assets-empty">
+                        Asset-level details are not available for this transaction.
+                    </div>
+                `;
 
             }
 
+            pane.innerHTML = `
+                <div class="issue-detail-content">
 
+                    <div class="issue-detail-header">
 
-            data.forEach(
-                function(issue, index) {
+                        <div>
 
-
-                    const row =
-                        document.createElement(
-                            "tr"
-                        );
-
-
-                    const badgeClass =
-                        issue.issueType
-                            .toLowerCase();
-
-
-
-                    row.innerHTML = `
-
-
-                        <!-- CHECKBOX -->
-
-                        <td class="checkbox-column">
-
-                            <input
-                                type="checkbox"
-                                class="issue-checkbox"
-                                data-transaction="${issue.transactionNo}"
-                            >
-
-                        </td>
-
-
-
-                        <!-- TRANSACTION -->
-
-                        <td>
-
-                            <span
-                                class="transaction-link"
-                                onclick="viewIssue('${issue.transactionNo}')"
-                            >
-
-                                ${issue.transactionNo}
-
-                            </span>
-
-                        </td>
-
-
-
-                        <!-- DATE -->
-
-                        <td>
-
-                            ${issue.transactionDate}
-
-                        </td>
-
-
-
-                        <!-- ISSUE TYPE -->
-
-                        <td>
-
-                            <span
-                                class="issue-badge ${badgeClass}"
-                            >
-
-                                ${issue.issueType}
-
-                            </span>
-
-                        </td>
-
-
-
-                        <!-- CREATED BY -->
-
-                        <td>
-
-                            ${issue.createdBy}
-
-                        </td>
-
-
-
-                        
-                        <!-- ASSET COUNT -->
-
-                        <td>
-                            <span class="asset-count-badge">
-                                ${Number(
-                                    issue.assetCount ??
-                                    (Array.isArray(issue.assets)
-                                        ? issue.assets.length
-                                        : 0)
+                            <h2 class="issue-detail-title">
+                                ${escapeIssueHtml(
+                                    issue.transactionNo ||
+                                    "Issue Transaction"
                                 )}
-                            </span>
-                        </td>
-<!-- VIEW -->
+                            </h2>
 
-                        <td class="action-column">
+                            <div class="issue-detail-subtitle">
+                                Issue transaction details
+                            </div>
+
+                        </div>
+
+                        <div class="issue-detail-actions">
 
                             <button
                                 type="button"
-                                class="view-button"
-                                onclick="viewIssue('${issue.transactionNo}')"
-                                title="View Issue"
+                                class="issue-detail-action"
+                                onclick="reloadIssues()"
                             >
-
-                                👁
-
+                                ↻ Reload
                             </button>
 
-                        </td>
+                            <button
+                                type="button"
+                                class="issue-detail-action create"
+                                onclick="openIssueAsset()"
+                            >
+                                ＋ Create
+                            </button>
 
+                            <button
+                                type="button"
+                                class="issue-detail-action primary"
+                                onclick="viewIssue('${String(
+                                    issue.transactionNo || ""
+                                ).replace(/'/g, "\\'") }')"
+                            >
+                                👁 View
+                            </button>
 
-                    `;
+                        </div>
 
+                    </div>
 
-                    tbody.appendChild(row);
+                    <div class="issue-status-line">
 
+                        <span class="detail-label-badge">
+                            ISSUE TYPE
+                        </span>
 
-                }
-            );
+                        <span class="detail-value-badge ${badgeClass}">
+                            ${escapeIssueHtml(issueType)}
+                        </span>
 
+                        <span class="detail-label-badge">
+                            ASSET COUNT
+                        </span>
 
+                        <span class="detail-value-badge">
+                            ${assetCount}
+                        </span>
 
-            document.getElementById(
-                "recordCount"
-            ).textContent =
-                `${data.length} Records`;
+                    </div>
 
-            updateIssueKPIs(data);
+                    <div class="issue-detail-grid">
 
+                        <div class="issue-detail-cell">
 
+                            <span>
+                                Transaction No
+                            </span>
+
+                            <strong>
+                                ${escapeIssueHtml(
+                                    issue.transactionNo || "-"
+                                )}
+                            </strong>
+
+                        </div>
+
+                        <div class="issue-detail-cell">
+
+                            <span>
+                                Transaction Date
+                            </span>
+
+                            <strong>
+                                ${escapeIssueHtml(
+                                    issue.transactionDate || "-"
+                                )}
+                            </strong>
+
+                        </div>
+
+                        <div class="issue-detail-cell">
+
+                            <span>
+                                Issue Type
+                            </span>
+
+                            <strong>
+                                ${escapeIssueHtml(issueType)}
+                            </strong>
+
+                        </div>
+
+                        <div class="issue-detail-cell">
+
+                            <span>
+                                Created By
+                            </span>
+
+                            <strong>
+                                ${escapeIssueHtml(
+                                    issue.createdBy || "-"
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <section class="issue-section">
+
+                        <div class="issued-assets-header">
+
+                            <span class="issued-assets-title">
+                                Issued Assets
+                            </span>
+
+                            <span class="issued-assets-count">
+                                ${assetCount}
+                                ${assetCount === 1 ? "Asset" : "Assets"}
+                            </span>
+
+                        </div>
+
+                        ${assetContent}
+
+                    </section>
+
+                </div>
+            `;
         }
-
 
 
         /* =====================================================
@@ -1467,24 +2043,56 @@
 
         function toggleIssueFilters() {
 
-            const filters =
-                document.getElementById("issueFilters");
+            const filters = document.getElementById("issueFilters");
+            const chevron = document.getElementById("filterChevron");
 
-            const chevron =
-                document.getElementById("filterChevron");
-
-            if (!filters || !chevron) {
+            if (!filters) {
+                console.error("Issue filter panel not found.");
                 return;
             }
 
-            filters.classList.toggle("hidden");
+            const isHidden = filters.classList.contains("hidden");
 
-            if (filters.classList.contains("hidden")) {
-                chevron.textContent = "›";
+            if (isHidden) {
+                filters.classList.remove("hidden");
+
+                if (chevron) {
+                    chevron.textContent = "⌃";
+                }
+
+                // Keep the popup above the issue list.
+                filters.style.zIndex = "9999";
             } else {
-                chevron.textContent = "⌄";
+                filters.classList.add("hidden");
+
+                if (chevron) {
+                    chevron.textContent = "›";
+                }
             }
         }
+
+
+        document.addEventListener("click", function(event) {
+
+            const filters = document.getElementById("issueFilters");
+            const filterButton = document.querySelector(".issue-filter-button");
+
+            if (!filters || filters.classList.contains("hidden")) {
+                return;
+            }
+
+            if (
+                !filters.contains(event.target) &&
+                !filterButton?.contains(event.target)
+            ) {
+                filters.classList.add("hidden");
+
+                const chevron = document.getElementById("filterChevron");
+                if (chevron) {
+                    chevron.textContent = "›";
+                }
+            }
+        });
 
 
         /* =====================================================
@@ -1570,6 +2178,11 @@
             const createdBy =
                 document.getElementById("createdByFilter").value.trim();
 
+            const issuedTo =
+                document.getElementById("issuedToFilter").value
+                    .toLowerCase()
+                    .trim();
+
             const filtered = allIssueRows.filter(function(issue) {
 
                 const matchesDate =
@@ -1590,11 +2203,25 @@
                     !createdBy ||
                     issue.createdBy === createdBy;
 
+                const matchesIssuedTo =
+                    !issuedTo ||
+                    String(
+                        issue.issuedTo ??
+                        issue.issuedToName ??
+                        issue.employee ??
+                        issue.custodian ??
+                        issue.supplier ??
+                        ""
+                    )
+                        .toLowerCase()
+                        .includes(issuedTo);
+
                 return (
                     matchesDate &&
                     matchesIssueType &&
                     matchesTransactionNo &&
-                    matchesCreatedBy
+                    matchesCreatedBy &&
+                    matchesIssuedTo
                 );
             });
 
@@ -1608,6 +2235,7 @@
             document.getElementById("issueTypeFilter").value = "";
             document.getElementById("transactionNoFilter").value = "";
             document.getElementById("createdByFilter").value = "";
+            document.getElementById("issuedToFilter").value = "";
 
             displayIssues(allIssueRows);
         }
@@ -1665,6 +2293,35 @@
                 }
             );
         
+
+        const issueQuickSearch = document.getElementById("issueQuickSearch");
+
+        if (issueQuickSearch) {
+            issueQuickSearch.addEventListener("input", function() {
+
+                const query = this.value.toLowerCase().trim();
+
+                const filtered = allIssueRows.filter(function(issue) {
+
+                    const searchable = [
+                        issue.transactionNo,
+                        issue.transactionDate,
+                        issue.issueType,
+                        issue.createdBy,
+                        issue.issuedTo,
+                        issue.issuedToName,
+                        issue.employee,
+                        issue.custodian,
+                        issue.supplier
+                    ].filter(Boolean).join(" ").toLowerCase();
+
+                    return searchable.includes(query);
+                });
+
+                displayIssues(filtered);
+            });
+        }
+
         // =====================================================
         // SAVED ISSUE TRANSACTIONS
         // =====================================================
@@ -1699,26 +2356,15 @@
                 return [];
             }
         }
-
-
         const savedIssueTransactions =
             getSavedIssueTransactions();
-
         const allIssueRows = [
             ...savedIssueTransactions,
             ...issueRows
         ];
-
-
         populateIssueFilters();
-
         displayIssues(allIssueRows);
-
-
-
     </script>
-
-
 </body>
 
 </html>
