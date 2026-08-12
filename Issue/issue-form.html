@@ -1,3 +1,4 @@
+```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -160,12 +161,12 @@
         }
 
         .issue-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 16px 24px 24px;
-}
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 16px 24px 24px;
+        }
 
         .form-button {
             min-width: 105px;
@@ -511,6 +512,458 @@
                 justify-content: flex-end;
             }
         }
+
+        /* =========================================================
+           SUPPLIER POPUP - MATCH REFERENCE DESIGN
+        ========================================================= */
+
+        .supplier-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, .60);
+            backdrop-filter: blur(4px);
+        }
+
+        .supplier-modal.open {
+            display: flex;
+        }
+
+        .supplier-dialog {
+            width: min(900px, 96vw);
+            height: min(522px, 90vh);
+            max-height: 90vh;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .28);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .supplier-header {
+            min-height: 78px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            background: #fff;
+        }
+
+        .supplier-header h3 {
+            margin: 0;
+            color: #172554;
+            font-size: 20px;
+            line-height: 1.2;
+            font-weight: 750;
+        }
+
+        .supplier-header-subtitle {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .supplier-close {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 10px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .supplier-close:hover {
+            background: #e2e8f0;
+        }
+
+        .supplier-body {
+            padding: 0;
+            overflow: hidden;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Horizontal filter area */
+        .supplier-filter-area {
+            display: none;
+        }
+
+        .supplier-filter-field {
+            margin: 0;
+        }
+
+        .supplier-filter-field label {
+            display: block;
+            margin: 0 0 6px;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .supplier-select,
+        .supplier-value {
+            width: 100%;
+            height: 38px;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: #fff;
+            color: #1e293b;
+            font-size: 13px;
+            padding: 0 10px;
+            outline: none;
+        }
+
+        .supplier-select:focus,
+        .supplier-value:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .supplier-value::placeholder {
+            color: #94a3b8;
+        }
+
+        .supplier-filter-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0;
+        }
+
+        .supplier-blue-button {
+            min-width: 82px;
+            height: 38px;
+            padding: 0 13px;
+            border: 0;
+            border-radius: 7px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: none;
+        }
+
+        .supplier-blue-button:hover {
+            background: #1d4ed8;
+        }
+
+        .supplier-filter-actions .supplier-blue-button:nth-child(2) {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .supplier-filter-actions .supplier-blue-button:nth-child(2):hover {
+            background: #cbd5e1;
+        }
+
+        /* The existing filter controls are siblings in .supplier-body.
+           Convert the first two fields + buttons into one horizontal row. */
+        .supplier-body > .supplier-filter-field:nth-child(1),
+        .supplier-body > .supplier-filter-field:nth-child(2),
+        .supplier-body > .supplier-filter-actions {
+            flex-shrink: 0;
+        }
+
+        /* Horizontal filter row */
+        .supplier-body > .supplier-filter-field:nth-child(1),
+        .supplier-body > .supplier-filter-field:nth-child(2),
+        .supplier-body > .supplier-filter-actions {
+            position: static;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .supplier-body > .supplier-filter-field:nth-child(1) {
+            grid-area: select;
+            width: auto;
+        }
+
+        .supplier-body > .supplier-filter-field:nth-child(2) {
+            grid-area: value;
+            width: auto;
+        }
+
+        .supplier-body > .supplier-filter-actions {
+            grid-area: actions;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+            gap: 9px;
+        }
+
+        /* Keep filters in their own row and prevent overlap with the table. */
+        .supplier-body {
+            padding: 0;
+        }
+
+        .supplier-body > .supplier-filter-field:nth-child(1),
+        .supplier-body > .supplier-filter-field:nth-child(2),
+        .supplier-body > .supplier-filter-actions {
+            flex-shrink: 0;
+        }
+
+        .supplier-body > .supplier-filter-field:nth-child(1) {
+            margin-left: 20px;
+        }
+
+        .supplier-body > .supplier-filter-field:nth-child(2) {
+            margin-left: 0;
+        }
+
+        .supplier-body > .supplier-filter-actions {
+            margin-right: 20px;
+        }
+
+        /* The three filter elements form one fixed-height row. */
+        .supplier-body {
+            display: grid;
+            grid-template-columns: 190px minmax(260px, 1fr) auto;
+            grid-template-areas:
+                "select value actions"
+                "table table table";
+            align-content: start;
+            overflow: hidden;
+        }
+
+        .supplier-body > .supplier-filter-field:nth-child(1),
+        .supplier-body > .supplier-filter-field:nth-child(2),
+        .supplier-body > .supplier-filter-actions {
+            align-self: end;
+            margin-top: 18px;
+            margin-bottom: 17px;
+        }
+
+        .supplier-table-wrap {
+            grid-area: table;
+            width: 100%;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        /* Supplier list heading is not used in the reference design. */
+        .supplier-list-header {
+            display: none;
+        }
+
+        .supplier-table-wrap {
+            grid-area: table;
+            width: 100%;
+            min-width: 0;
+            min-height: 0;
+            overflow: auto;
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .supplier-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 12px;
+        }
+
+        .supplier-table th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            height: 51px;
+            padding: 0 14px;
+            background: #f1f5f9;
+            color: #172554;
+            border-bottom: 1px solid #cbd5e1;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .supplier-table th:first-child {
+            width: 42px;
+            text-align: center;
+        }
+
+        .supplier-table th:nth-child(2) {
+            width: 52%;
+        }
+
+        .supplier-table th:nth-child(3) {
+            width: auto;
+        }
+
+        .supplier-table td {
+            height: 57px;
+            padding: 0 14px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #64748b;
+            vertical-align: middle;
+            word-break: break-word;
+            background: #fff;
+        }
+
+        .supplier-table tbody tr:hover td {
+            background: #f8fafc;
+        }
+
+        .supplier-table input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: #2563eb;
+            vertical-align: middle;
+        }
+
+        .supplier-sort {
+            display: none;
+        }
+
+        .supplier-pagination {
+            display: none;
+        }
+
+        .supplier-footer {
+            min-height: 67px;
+            margin-top: 0;
+            padding: 0 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 9px;
+            border-top: 1px solid #e2e8f0;
+            background: #fff;
+            flex-shrink: 0;
+        }
+
+        .supplier-footer-info {
+            margin-right: auto;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .supplier-footer-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .supplier-cancel-button,
+        .supplier-add-selection-button {
+            min-width: 72px;
+            height: 38px;
+            padding: 0 13px;
+            border: 0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .supplier-cancel-button {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .supplier-cancel-button:hover {
+            background: #cbd5e1;
+        }
+
+        .supplier-add-selection-button {
+            min-width: 139px;
+            background: #cbd5e1;
+            color: #94a3b8;
+        }
+
+        .supplier-add-selection-button:not(:disabled) {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .supplier-add-selection-button:not(:disabled):hover {
+            background: #1d4ed8;
+        }
+
+        .supplier-add-selection-button:disabled {
+            cursor: not-allowed;
+        }
+
+        .supplier-empty {
+            padding: 35px 25px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        @media (max-width: 700px) {
+            .supplier-modal {
+                padding: 10px;
+            }
+
+            .supplier-dialog {
+                width: 100%;
+                height: 94vh;
+                max-height: 94vh;
+            }
+
+            .supplier-header {
+                min-height: 72px;
+                padding: 0 15px;
+            }
+
+            .supplier-header h3 {
+                font-size: 18px;
+            }
+
+            .supplier-body {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "select"
+                    "value"
+                    "actions"
+                    "table";
+                overflow: hidden;
+            }
+
+            .supplier-body > .supplier-filter-field:nth-child(1),
+            .supplier-body > .supplier-filter-field:nth-child(2),
+            .supplier-body > .supplier-filter-actions {
+                width: auto;
+                margin: 12px 15px 0;
+            }
+
+            .supplier-body > .supplier-filter-actions {
+                margin-bottom: 14px;
+                justify-content: flex-start;
+            }
+
+            .supplier-table {
+                min-width: 650px;
+            }
+
+            .supplier-footer {
+                padding: 9px 15px;
+            }
+
+            .supplier-footer-info {
+                font-size: 11px;
+            }
+        }
+
     </style>
 </head>
 
@@ -611,15 +1064,15 @@
                             <div class="date-row">
 
                                 <input
-                                    type="date"
-                                    id="fromDate"
-                                    class="form-control"
+                                        type="date"
+                                        id="fromDate"
+                                        class="form-control"
                                 >
 
                                 <button
-                                    type="button"
-                                    class="clear-button"
-                                    onclick="clearField('fromDate')"
+                                        type="button"
+                                        class="clear-button"
+                                        onclick="clearField('fromDate')"
                                 >
                                     Clear
                                 </button>
@@ -638,15 +1091,15 @@
                             <div class="date-row">
 
                                 <input
-                                    type="date"
-                                    id="toDate"
-                                    class="form-control"
+                                        type="date"
+                                        id="toDate"
+                                        class="form-control"
                                 >
 
                                 <button
-                                    type="button"
-                                    class="clear-button"
-                                    onclick="clearField('toDate')"
+                                        type="button"
+                                        class="clear-button"
+                                        onclick="clearField('toDate')"
                                 >
                                     Clear
                                 </button>
@@ -663,8 +1116,8 @@
                             </label>
 
                             <select
-                                id="assetStatus"
-                                class="form-select"
+                                    id="assetStatus"
+                                    class="form-select"
                             >
 
                                 <option value="Working">
@@ -691,9 +1144,9 @@
                             </label>
 
                             <textarea
-                                id="remarks"
-                                class="form-control"
-                                placeholder="Enter remarks..."
+                                    id="remarks"
+                                    class="form-control"
+                                    placeholder="Enter remarks..."
                             ></textarea>
 
                         </div>
@@ -715,17 +1168,17 @@
                             <div class="search-row">
 
                                 <input
-                                    type="text"
-                                    id="department"
-                                    class="form-control"
-                                    placeholder="Type department..."
+                                        type="text"
+                                        id="department"
+                                        class="form-control"
+                                        placeholder="Type department..."
                                 >
 
                                 <button
-                                    type="button"
-                                    class="help-button"
-                                    title="Search Department"
-                                    onclick="showDepartmentInfo()"
+                                        type="button"
+                                        class="help-button"
+                                        title="Search Department"
+                                        onclick="showDepartmentInfo()"
                                 >
                                     ?
                                 </button>
@@ -742,10 +1195,10 @@
                             </label>
 
                             <input
-                                type="text"
-                                id="departmentIncharge"
-                                class="form-control"
-                                readonly
+                                    type="text"
+                                    id="departmentIncharge"
+                                    class="form-control"
+                                    readonly
                             >
 
                         </div>
@@ -760,17 +1213,17 @@
                             <div class="search-row">
 
                                 <input
-                                    type="text"
-                                    id="employee"
-                                    class="form-control"
-                                    placeholder="Type employee name..."
+                                        type="text"
+                                        id="employee"
+                                        class="form-control"
+                                        placeholder="Type employee name..."
                                 >
 
                                 <button
-                                    type="button"
-                                    class="help-button"
-                                    title="Search Employee"
-                                    onclick="showEmployeeInfo()"
+                                        type="button"
+                                        class="help-button"
+                                        title="Search Employee"
+                                        onclick="showEmployeeInfo()"
                                 >
                                     ?
                                 </button>
@@ -789,18 +1242,18 @@
                             <div class="search-row">
 
                                 <input
-                                    type="text"
-                                    id="location"
-                                    class="form-control selected-field"
-                                    placeholder="Select location..."
-                                    readonly
+                                        type="text"
+                                        id="location"
+                                        class="form-control selected-field"
+                                        placeholder="Select location..."
+                                        readonly
                                 >
 
                                 <button
-                                    type="button"
-                                    class="help-button"
-                                    title="Search Location"
-                                    onclick="openLookup('location')"
+                                        type="button"
+                                        class="help-button"
+                                        title="Search Location"
+                                        onclick="openLookup('location')"
                                 >
                                     ?
                                 </button>
@@ -820,18 +1273,18 @@
                             <div class="search-row">
 
                                 <input
-                                    type="text"
-                                    id="custodian"
-                                    class="form-control selected-field"
-                                    placeholder="Select custodian..."
-                                    readonly
+                                        type="text"
+                                        id="custodian"
+                                        class="form-control selected-field"
+                                        placeholder="Select custodian..."
+                                        readonly
                                 >
 
                                 <button
-                                    type="button"
-                                    class="help-button"
-                                    title="Search Custodian"
-                                    onclick="openLookup('custodian')"
+                                        type="button"
+                                        class="help-button"
+                                        title="Search Custodian"
+                                        onclick="openLookup('custodian')"
                                 >
                                     ?
                                 </button>
@@ -848,8 +1301,8 @@
                             </label>
 
                             <select
-                                id="custodianDepartment"
-                                class="form-select"
+                                    id="custodianDepartment"
+                                    class="form-select"
                             >
 
                                 <option value="">
@@ -891,17 +1344,17 @@
                             <div class="search-row">
 
                                 <input
-                                    type="text"
-                                    id="supplier"
-                                    class="form-control"
-                                    placeholder="Type supplier name..."
+                                        type="text"
+                                        id="supplier"
+                                        class="form-control"
+                                        placeholder="Type supplier name..."
                                 >
 
                                 <button
-                                    type="button"
-                                    class="help-button"
-                                    title="Search Supplier"
-                                    onclick="showSupplierInfo()"
+                                        type="button"
+                                        class="help-button"
+                                        title="Search Supplier"
+                                        onclick="showSupplierInfo()"
                                 >
                                     ?
                                 </button>
@@ -917,7 +1370,7 @@
 
                 <!-- FORM ACTIONS -->
 
-                
+
 
             </section>
             <section class="cart-section">
@@ -944,42 +1397,42 @@
 
 
                 <div
-                    id="cartTableContainer"
-                    class="cart-table-wrapper"
+                        id="cartTableContainer"
+                        class="cart-table-wrapper"
                 ></div>
 
             </section>
 
             <section class="issue-card cart-actions-card">
                 <div class="issue-actions">
-                    
+
                     <button
-                        type="button"
-                        class="form-button outline"
-                        onclick="goBackToCreate()"
+                            type="button"
+                            class="form-button outline"
+                            onclick="goBackToCreate()"
                     >
                         Go Back
                     </button>
-                    
+
                     <button
-                        type="button"
-                        class="form-button secondary"
-                        onclick="cancelIssue()"
+                            type="button"
+                            class="form-button secondary"
+                            onclick="cancelIssue()"
                     >
                         Cancel
                     </button>
 
                     <button
-                        type="button"
-                        id="saveButton"
-                        class="form-button primary"
-                        disabled
-                        onclick="saveIssue()"
+                            type="button"
+                            id="saveButton"
+                            class="form-button primary"
+                            disabled
+                            onclick="saveIssue()"
                     >
                         Save
                     </button>
 
-                
+
                 </div>
             </section>
 
@@ -989,7 +1442,7 @@
                  CART ITEMS
             ====================================================== -->
 
-            
+
 
         </div>
 
@@ -1000,14 +1453,129 @@
 </div>
 
 
+
+<!-- =========================================================
+     SUPPLIER MODAL
+========================================================== -->
+
+<div
+        id="supplierModal"
+        class="supplier-modal"
+        onclick="closeSupplierOnBackdrop(event)"
+>
+    <div class="supplier-dialog" onclick="event.stopPropagation()">
+
+        <div class="supplier-header">
+            <div>
+                <h3>Add Suppliers</h3>
+                <p class="supplier-header-subtitle">
+                    Select a supplier and add the selected supplier to the issue form.
+                </p>
+            </div>
+
+            <button
+                    type="button"
+                    class="supplier-close"
+                    onclick="closeSupplierModal()"
+                    aria-label="Close"
+            >×</button>
+        </div>
+
+        <div class="supplier-body">
+
+            <div class="supplier-filter-field">
+                <label for="supplierSearchType">Select</label>
+
+                <select
+                        id="supplierSearchType"
+                        class="supplier-select"
+                >
+                    <option value="name">Supplier Name</option>
+                    <option value="code">Supplier Code</option>
+                </select>
+            </div>
+
+            <div class="supplier-filter-field">
+                <label for="supplierSearchValue">Value</label>
+
+                <input
+                        type="text"
+                        id="supplierSearchValue"
+                        class="supplier-value"
+                        placeholder=""
+                        onkeydown="if(event.key === 'Enter') filterSuppliers()"
+                >
+            </div>
+
+            <div class="supplier-filter-actions">
+                <button
+                        type="button"
+                        class="supplier-blue-button"
+                        onclick="filterSuppliers()"
+                >Filter</button>
+
+                <button
+                        type="button"
+                        class="supplier-blue-button"
+                        onclick="clearSupplierFilter()"
+                >Clear Filter</button>
+            </div>
+
+            <div class="supplier-list-header">
+                <span class="supplier-list-header-title">
+                    List of Suppliers
+                </span>
+
+                <button
+                        type="button"
+                        class="supplier-add-top"
+                        onclick="addSelectedSuppliers()"
+                >
+                    <span class="plus">+</span>
+                    Add Supplier
+                </button>
+            </div>
+
+            <div class="supplier-table-wrap">
+                <div id="supplierTableContainer"></div>
+            </div>
+
+        </div>
+
+        <div class="supplier-footer">
+            <div class="supplier-footer-info" id="supplierFooterInfo">
+                10 records found. Select supplier(s) to continue.
+            </div>
+
+            <div class="supplier-footer-actions">
+                <button
+                        type="button"
+                        class="supplier-cancel-button"
+                        onclick="closeSupplierModal()"
+                >Cancel</button>
+
+                <button
+                        type="button"
+                        id="supplierAddSelectionButton"
+                        class="supplier-add-selection-button"
+                        onclick="addSelectedSuppliers()"
+                        disabled
+                >✓ Add Selection</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 <!-- =========================================================
      LOOKUP MODAL
 ========================================================== -->
 
 <div
-    id="lookupModal"
-    class="lookup-modal"
-    onclick="closeLookupOnBackdrop(event)"
+        id="lookupModal"
+        class="lookup-modal"
+        onclick="closeLookupOnBackdrop(event)"
 >
 
     <div class="lookup-dialog">
@@ -1027,9 +1595,9 @@
             </div>
 
             <button
-                type="button"
-                class="lookup-close"
-                onclick="closeLookup()"
+                    type="button"
+                    class="lookup-close"
+                    onclick="closeLookup()"
             >
                 ×
             </button>
@@ -1067,27 +1635,27 @@
                 </label>
 
                 <input
-                    type="text"
-                    id="lookupSearchInput"
-                    placeholder="Enter search value..."
+                        type="text"
+                        id="lookupSearchInput"
+                        placeholder="Enter search value..."
                 >
 
             </div>
 
 
             <button
-                type="button"
-                class="lookup-button"
-                onclick="filterLookup()"
+                    type="button"
+                    class="lookup-button"
+                    onclick="filterLookup()"
             >
                 🔍 Filter
             </button>
 
 
             <button
-                type="button"
-                class="lookup-button light"
-                onclick="clearLookupFilter()"
+                    type="button"
+                    class="lookup-button light"
+                    onclick="clearLookupFilter()"
             >
                 Clear
             </button>
@@ -1096,16 +1664,16 @@
 
 
         <div
-            id="lookupTableContainer"
-            class="lookup-table-wrapper"
+                id="lookupTableContainer"
+                class="lookup-table-wrapper"
         ></div>
 
 
         <div class="lookup-footer">
 
             <div
-                id="lookupFooterInfo"
-                class="lookup-footer-info"
+                    id="lookupFooterInfo"
+                    class="lookup-footer-info"
             >
                 Select one record.
             </div>
@@ -1113,19 +1681,19 @@
             <div class="lookup-footer-actions">
 
                 <button
-                    type="button"
-                    class="lookup-button light"
-                    onclick="closeLookup()"
+                        type="button"
+                        class="lookup-button light"
+                        onclick="closeLookup()"
                 >
                     Cancel
                 </button>
 
                 <button
-                    type="button"
-                    id="lookupAddButton"
-                    class="lookup-add"
-                    disabled
-                    onclick="addLookupSelection()"
+                        type="button"
+                        id="lookupAddButton"
+                        class="lookup-add"
+                        disabled
+                        onclick="addLookupSelection()"
                 >
                     ✓ Add Selection
                 </button>
@@ -2000,8 +2568,8 @@
             document.getElementById(
                 "lookupSearchInput"
             ).value
-            .toLowerCase()
-            .trim();
+                .toLowerCase()
+                .trim();
 
 
         if (!value) {
@@ -2022,8 +2590,8 @@
                     return String(
                         item[searchType] || ""
                     )
-                    .toLowerCase()
-                    .includes(value);
+                        .toLowerCase()
+                        .includes(value);
 
                 }
             );
@@ -2208,16 +2776,450 @@
     // SUPPLIER HELP
     // =========================================================
 
-    function showSupplierInfo() {
+    // =========================================================
+    // SUPPLIER LOOKUP
+    // =========================================================
 
-        Swal.fire({
-            icon: "info",
-            title: "Search Supplier",
-            text: "Supplier lookup can be connected to your backend API later.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#2563eb"
-        });
+    const suppliers = [
+        {
+            name: "(Protiviti) Insight for Financial and Business Consulting L.L.C",
+            code: "V-000451"
+        },
+        {
+            name: "360 BSI Middle East Limited",
+            code: "V-000669"
+        },
+        {
+            name: "360 Degree",
+            code: "V-000027"
+        },
+        {
+            name: "4 Trust L.L.C",
+            code: "V-000313"
+        },
+        {
+            name: "43 Studio International Tunes",
+            code: "V-000622"
+        },
+        {
+            name: "Ahlan Computer Systems",
+            code: "V-000741"
+        },
+        {
+            name: "Al Maha Trading Company",
+            code: "V-000805"
+        },
+        {
+            name: "Al Noor Services LLC",
+            code: "V-000918"
+        },
+        {
+            name: "Arabian Business Solutions",
+            code: "V-001021"
+        },
+        {
+            name: "Bayan Technology LLC",
+            code: "V-001114"
+        }
+    ];
+
+    let filteredSuppliers = suppliers.slice();
+    let supplierCurrentPage = 1;
+    let supplierRowsPerPage = 5;
+
+    function showSupplierInfo() {
+        const modal = document.getElementById("supplierModal");
+
+        if (!modal) {
+            return;
+        }
+
+        document.getElementById("supplierSearchType").value = "name";
+        document.getElementById("supplierSearchValue").value = "";
+
+        filteredSuppliers = suppliers.slice();
+        supplierCurrentPage = 1;
+
+        renderSupplierTable();
+
+        modal.classList.add("open");
+
+        setTimeout(function () {
+            document.getElementById("supplierSearchType")?.focus();
+        }, 100);
     }
+
+    function closeSupplierModal() {
+        document
+            .getElementById("supplierModal")
+            ?.classList.remove("open");
+    }
+
+    function closeSupplierOnBackdrop(event) {
+        if (event.target.id === "supplierModal") {
+            closeSupplierModal();
+        }
+    }
+
+    function renderSupplierTable() {
+        const container =
+            document.getElementById("supplierTableContainer");
+
+        if (!container) {
+            return;
+        }
+
+        const totalPages =
+            Math.max(
+                1,
+                Math.ceil(
+                    filteredSuppliers.length /
+                    supplierRowsPerPage
+                )
+            );
+
+        if (supplierCurrentPage > totalPages) {
+            supplierCurrentPage = totalPages;
+        }
+
+        const start =
+            (supplierCurrentPage - 1) *
+            supplierRowsPerPage;
+
+        const pageData =
+            filteredSuppliers.slice(
+                start,
+                start + supplierRowsPerPage
+            );
+
+        if (!pageData.length) {
+            container.innerHTML = `
+                <div class="supplier-empty">
+                    No suppliers found.
+                </div>
+            `;
+            return;
+        }
+
+        let rows = "";
+
+        pageData.forEach(function (supplier, pageIndex) {
+            const absoluteIndex = start + pageIndex;
+
+            rows += `
+                <tr>
+                    <td style="text-align:center;">
+                        <input
+                            type="checkbox"
+                            class="supplier-checkbox"
+                            data-index="${absoluteIndex}"
+                            onchange="updateSupplierSelectionState()"
+                        >
+                    </td>
+
+                    <td>
+                        ${escapeHtml(supplier.name)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(supplier.code)}
+                    </td>
+                </tr>
+            `;
+        });
+
+        const total =
+            filteredSuppliers.length;
+
+        const from =
+            total === 0 ? 0 : start + 1;
+
+        const to =
+            Math.min(
+                start + pageData.length,
+                total
+            );
+
+        container.innerHTML = `
+            <table class="supplier-table">
+                <thead>
+                    <tr>
+                        <th></th>
+
+                        <th>
+                            Supplier Name
+                            <span class="supplier-sort">▲</span>
+                        </th>
+
+                        <th>
+                            Supplier Code
+                            <span class="supplier-sort">▲</span>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    ${rows}
+                </tbody>
+            </table>
+
+            <div class="supplier-pagination">
+
+                <button
+                    type="button"
+                    class="supplier-page-button"
+                    onclick="changeSupplierPage(1)"
+                    ${supplierCurrentPage === 1 ? "disabled" : ""}
+                >&lt;&lt;</button>
+
+                <button
+                    type="button"
+                    class="supplier-page-button"
+                    onclick="changeSupplierPage(${supplierCurrentPage - 1})"
+                    ${supplierCurrentPage === 1 ? "disabled" : ""}
+                >&lt;</button>
+
+                <button
+                    type="button"
+                    class="supplier-page-current"
+                >${supplierCurrentPage}</button>
+
+                ${
+            totalPages > 1
+                ? `
+                            <button
+                                type="button"
+                                class="supplier-page-button"
+                                onclick="changeSupplierPage(${supplierCurrentPage + 1})"
+                                ${supplierCurrentPage === totalPages ? "disabled" : ""}
+                            >2</button>
+                        `
+                : ""
+        }
+
+                ${
+            totalPages > 2
+                ? `<span class="supplier-page-ellipsis">...</span>`
+                : ""
+        }
+
+                ${
+            totalPages > 2
+                ? `
+                            <button
+                                type="button"
+                                class="supplier-page-button"
+                                onclick="changeSupplierPage(${totalPages - 1})"
+                            >${totalPages - 1}</button>
+                        `
+                : ""
+        }
+
+                ${
+            totalPages > 1
+                ? `
+                            <button
+                                type="button"
+                                class="supplier-page-button"
+                                onclick="changeSupplierPage(${totalPages})"
+                            >${totalPages}</button>
+                        `
+                : ""
+        }
+
+                <button
+                    type="button"
+                    class="supplier-page-button"
+                    onclick="changeSupplierPage(${supplierCurrentPage + 1})"
+                    ${supplierCurrentPage === totalPages ? "disabled" : ""}
+                >&gt;</button>
+
+                <button
+                    type="button"
+                    class="supplier-page-button"
+                    onclick="changeSupplierPage(${totalPages})"
+                    ${supplierCurrentPage === totalPages ? "disabled" : ""}
+                >&gt;&gt;</button>
+
+                <span class="supplier-page-label">Go to page:</span>
+
+                <select
+                    class="supplier-page-select"
+                    onchange="changeSupplierPage(Number(this.value))"
+                >
+                    ${Array.from(
+            { length: totalPages },
+            (_, index) => `
+                            <option
+                                value="${index + 1}"
+                                ${supplierCurrentPage === index + 1 ? "selected" : ""}
+                            >
+                                ${index + 1}
+                            </option>
+                        `
+        ).join("")}
+                </select>
+
+                <span class="supplier-page-label">Row count:</span>
+
+                <select
+                    class="supplier-page-select"
+                    onchange="changeSupplierRows(Number(this.value))"
+                >
+                    <option value="5" ${supplierRowsPerPage === 5 ? "selected" : ""}>5</option>
+                    <option value="10" ${supplierRowsPerPage === 10 ? "selected" : ""}>10</option>
+                </select>
+
+                <span class="supplier-page-label">
+                    Showing ${from}-${to} of ${total}
+                </span>
+            </div>
+        `;
+
+        const footerInfo =
+            document.getElementById("supplierFooterInfo");
+
+        if (footerInfo) {
+            footerInfo.textContent =
+                `${filteredSuppliers.length} record${filteredSuppliers.length === 1 ? "" : "s"} found. Select supplier(s) to continue.`;
+        }
+
+        updateSupplierSelectionState();
+        restoreSupplierSelections();
+    }
+
+    function changeSupplierPage(page) {
+        const totalPages =
+            Math.max(
+                1,
+                Math.ceil(
+                    filteredSuppliers.length /
+                    supplierRowsPerPage
+                )
+            );
+
+        supplierCurrentPage =
+            Math.max(
+                1,
+                Math.min(page, totalPages)
+            );
+
+        renderSupplierTable();
+    }
+
+    function changeSupplierRows(rows) {
+        supplierRowsPerPage = rows;
+        supplierCurrentPage = 1;
+        renderSupplierTable();
+    }
+
+    function filterSuppliers() {
+        const type =
+            document.getElementById(
+                "supplierSearchType"
+            ).value;
+
+        const value =
+            document.getElementById(
+                "supplierSearchValue"
+            ).value
+                .toLowerCase()
+                .trim();
+
+        if (!value) {
+            filteredSuppliers = suppliers.slice();
+        } else {
+            filteredSuppliers =
+                suppliers.filter(function (supplier) {
+                    return String(
+                        supplier[type] || ""
+                    )
+                        .toLowerCase()
+                        .includes(value);
+                });
+        }
+
+        supplierCurrentPage = 1;
+        renderSupplierTable();
+    }
+
+    function clearSupplierFilter() {
+        document.getElementById(
+            "supplierSearchType"
+        ).value = "name";
+
+        document.getElementById(
+            "supplierSearchValue"
+        ).value = "";
+
+        filteredSuppliers = suppliers.slice();
+        supplierCurrentPage = 1;
+
+        renderSupplierTable();
+    }
+
+    function updateSupplierSelectionState() {
+        const selectedCount =
+            document.querySelectorAll(
+                "#supplierTableContainer .supplier-checkbox:checked"
+            ).length;
+
+        const addButton =
+            document.getElementById(
+                "supplierAddSelectionButton"
+            );
+
+        if (addButton) {
+            addButton.disabled = selectedCount === 0;
+        }
+    }
+
+    function restoreSupplierSelections() {
+        // Reserved for retaining selections between pages.
+    }
+
+    function addSelectedSuppliers() {
+        const selected =
+            Array.from(
+                document.querySelectorAll(
+                    "#supplierTableContainer .supplier-checkbox:checked"
+                )
+            ).map(function (checkbox) {
+                const index =
+                    Number(checkbox.dataset.index);
+
+                return filteredSuppliers[index];
+            })
+                .filter(Boolean);
+
+        if (!selected.length) {
+            Swal.fire({
+                icon: "warning",
+                title: "Select Supplier",
+                text: "Please select at least one supplier.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#2563eb"
+            });
+            return;
+        }
+
+        const supplierField =
+            document.getElementById("supplier");
+
+        if (supplierField) {
+            supplierField.value =
+                selected
+                    .map(function (supplier) {
+                        return `${supplier.name} [${supplier.code}]`;
+                    })
+                    .join(", ");
+
+            supplierField.classList.add("selected-field");
+        }
+
+        closeSupplierModal();
+    }
+
 
 
     // =========================================================
@@ -2409,10 +3411,10 @@
 
                     ${selectedAssets.length}
                     asset${
-                        selectedAssets.length === 1
-                            ? ""
-                            : "s"
-                    }
+                selectedAssets.length === 1
+                    ? ""
+                    : "s"
+            }
                     issued successfully.
 
                 </div>
@@ -2467,7 +3469,7 @@
         savedIssueTransactions.unshift({
 
             transactionNo:
-                transactionNo,
+            transactionNo,
 
             transactionDate:
                 new Date().toLocaleString(
@@ -2493,7 +3495,7 @@
 
             // THIS IS THE IMPORTANT COUNT
             assetCount:
-                selectedAssets.length,
+            selectedAssets.length,
 
             assets:
                 selectedAssets.map(
@@ -2630,11 +3632,6 @@
 
     }
 
-
-    // =========================================================
-    // ESCAPE HTML
-    // =========================================================
-
     function escapeHtml(value) {
 
         if (
@@ -2656,3 +3653,4 @@
 
 </body>
 </html>
+```
