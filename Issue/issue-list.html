@@ -68,7 +68,9 @@
         .issue-workspace {
             display: grid;
             grid-template-columns: 360px minmax(0, 1fr);
-            min-height: 680px;
+            height: calc(100vh - 230px);
+            min-height: 520px;
+            max-height: 680px;
             border: 1px solid #dfe4ec;
             border-radius: 10px;
             background: #fff;
@@ -79,6 +81,7 @@
         .issue-list-pane {
             position: relative;
             min-width: 0;
+            min-height: 0;
             display: flex;
             flex-direction: column;
             border-right: 1px solid #dfe4ec;
@@ -112,13 +115,14 @@
 
         .issue-search-box input {
             width: 100%;
-            height: 36px;
-            padding: 0 10px 0 31px;
-            border: 1px solid #cfd8e6;
-            border-radius: 7px;
+            height: 38px;
+            padding: 0 10px 0 34px;
+            border: 1px solid #dfe4ec;
+            border-radius: 10px;
             outline: none;
             box-sizing: border-box;
             font-size: 12px;
+            background: #fff;
         }
 
         .issue-search-box input:focus {
@@ -127,19 +131,19 @@
         }
 
         .issue-filter-button {
-            height: 36px;
-            min-width: 78px;
-            padding: 0 12px;
+            height: 38px;
+            min-width: 82px;
+            padding: 0 14px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            border: 1px solid #4f46e5;
-            border-radius: 8px;
-            background: #4f46e5;
-            color: #ffffff;
+            border: 1px solid #dfe4ec;
+            border-radius: 10px;
+            background: #fff;
+            color: #334155;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
             box-sizing: border-box;
@@ -147,8 +151,8 @@
         }
 
         .issue-filter-button:hover {
-            background: #4338ca;
-            border-color: #4338ca;
+            background: #f8fafc;
+            border-color: #cbd5e1;
         }
 
         /* The filter control beside the search box is the primary filter trigger. */
@@ -173,8 +177,8 @@
 
         .issue-list-row {
             position: relative;
-            padding: 10px 12px;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef1f5;
             cursor: pointer;
             transition: background .15s ease;
         }
@@ -197,54 +201,31 @@
             background: #4f46e5;
         }
 
-        .issue-list-row-top {
+        .issue-row-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .issue-list-transaction {
-            color: #111827;
-            font-size: 12px;
+        .issue-row-title {
+            color: #0f172a;
+            font-size: 14px;
             font-weight: 700;
+            line-height: 1.3;
         }
 
-        .issue-list-date {
-            margin-top: 4px;
-            color: #475569;
+        .issue-row-code {
+            margin-top: 5px;
+            color: #2563eb;
             font-size: 11px;
+            font-weight: 600;
         }
 
-        .issue-list-created {
-            margin-top: 4px;
+        .issue-row-meta {
+            margin-top: 3px;
             color: #64748b;
             font-size: 11px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .issue-list-row-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 9px;
-            color: #475569;
-            font-size: 11px;
-        }
-
-        .issue-list-row-details span {
-            white-space: nowrap;
-        }
-
-        .issue-list-asset,
-        .issue-list-range,
-        .issue-list-remarks {
-            margin-top: 8px;
-            color: #64748b;
-            font-size: 11px;
-            line-height: 1.35;
         }
 
         .issue-type-pill {
@@ -275,6 +256,32 @@
             color: #1d4ed8;
         }
 
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-pill.green {
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .status-pill.orange {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .status-pill.gray {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
         .issue-list-footer {
             display: flex;
             align-items: center;
@@ -286,8 +293,42 @@
             font-size: 11px;
         }
 
+        .issue-pagination {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .issue-pagination-btn {
+            min-width: 24px;
+            height: 24px;
+            padding: 0 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dfe4ec;
+            border-radius: 6px;
+            background: #fff;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .issue-pagination-btn.active {
+            border-color: #4f46e5;
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .issue-pagination-btn[disabled] {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
         .issue-detail-pane {
             min-width: 0;
+            min-height: 0;
             background: #f8fafc;
             overflow-y: auto;
         }
@@ -318,6 +359,73 @@
             padding: 18px 20px 28px;
         }
 
+        /* =====================================================
+           SELECTED-ISSUE CHIP BAR
+        ====================================================== */
+
+        .issue-chip-bar {
+            padding: 10px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            margin: -18px -20px 0;
+        }
+
+        .issue-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 10px 6px 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            background: #fff;
+        }
+
+        .issue-chip-avatar {
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #ede9fe;
+            color: #6d28d9;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .issue-chip-title {
+            color: #0f172a;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .issue-chip-code {
+            color: #2563eb;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .issue-chip-close {
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .issue-chip-close:hover {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
         .issue-detail-header {
             display: flex;
             align-items: flex-start;
@@ -326,8 +434,15 @@
             padding-bottom: 15px;
             border-bottom: 1px solid #e2e8f0;
             background: #fff;
-            margin: -18px -20px 18px;
-            padding: 18px 20px 15px;
+            margin: 0 -20px 18px;
+            padding: 16px 20px 15px;
+        }
+
+        .issue-detail-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .issue-detail-title {
@@ -417,21 +532,16 @@
         .issue-detail-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
-            border: 1px solid #dfe4ec;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fff;
+            gap: 12px;
             margin-bottom: 18px;
         }
 
         .issue-detail-cell {
             min-height: 74px;
             padding: 13px 14px;
-            border-right: 1px solid #e5e7eb;
-        }
-
-        .issue-detail-cell:last-child {
-            border-right: 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fff;
         }
 
         .issue-detail-cell span {
@@ -918,6 +1028,68 @@
             font-size: 11px;
         }
 
+        /* =====================================================
+           ISSUE TRANSACTION INFO (from Issue Details view)
+        ====================================================== */
+
+        .issue-period-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .issue-period-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            background: #fffbeb;
+            font-size: 11px;
+        }
+
+        .issue-period-card .label {
+            color: #b45309;
+            font-weight: 800;
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-right: 4px;
+        }
+
+        .issue-period-card strong {
+            color: #92400e;
+        }
+
+        .issue-period-card .arrow {
+            color: #d97706;
+        }
+
+        .issue-returnable-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .issue-returnable-badge.yes {
+            border: 1px solid #bbf7d0;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .issue-returnable-badge.no {
+            border: 1px solid #e2e8f0;
+            background: #f1f5f9;
+            color: #475569;
+        }
+
         @media (max-width: 1000px) {
             .issue-workspace {
                 grid-template-columns: 320px minmax(0, 1fr);
@@ -926,19 +1098,13 @@
             .issue-detail-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
-
-            .issue-detail-cell:nth-child(2) {
-                border-right: 0;
-            }
-
-            .issue-detail-cell:nth-child(-n+2) {
-                border-bottom: 1px solid #e5e7eb;
-            }
         }
 
         @media (max-width: 760px) {
             .issue-workspace {
                 grid-template-columns: 1fr;
+                height: auto;
+                max-height: none;
             }
 
             .issue-list-pane {
@@ -949,6 +1115,7 @@
 
             .issue-detail-pane {
                 min-height: 600px;
+                max-height: none;
             }
 
             .issue-detail-header {
@@ -970,16 +1137,6 @@
 
             .issued-asset-status {
                 align-self: flex-start;
-            }
-
-
-            .issue-detail-cell {
-                border-right: 0;
-                border-bottom: 1px solid #e5e7eb;
-            }
-
-            .issue-detail-cell:last-child {
-                border-bottom: 0;
             }
 
             .modern-filter-body {
@@ -1054,7 +1211,7 @@
                 <div class="issue-topbar">
                     <div class="issue-title-group">
                         <h1>Issue Assets</h1>
-                        <button type="button" class="generic-view-button">Generic View⌄</button>
+                        <button type="button" class="generic-view-button" onclick="openIssueAsset()">＋ Create</button>
                     </div>
                 </div>
 
@@ -1154,8 +1311,18 @@
                         <div id="issueListRecords" class="issue-list-records"></div>
 
                         <div class="issue-list-footer">
-                            <span id="issueShowingText">1-0</span>
-                            <span id="issueTotalText">of 0</span>
+                            <span>
+                                <span id="issueShowingText">1-0</span>
+                                <span id="issueTotalText">of 0</span>
+                            </span>
+
+                            <div class="issue-pagination">
+                                <span class="issue-pagination-btn" disabled>«</span>
+                                <span class="issue-pagination-btn" disabled>‹</span>
+                                <span class="issue-pagination-btn active">1</span>
+                                <span class="issue-pagination-btn" disabled>›</span>
+                                <span class="issue-pagination-btn" disabled>»</span>
+                            </div>
                         </div>
 
                     </aside>
@@ -1541,8 +1708,8 @@
                 row.dataset.transaction = issueDetail.transactionNo || "";
 
                 row.innerHTML = `
-                    <div class="issue-list-row-top">
-                        <span class="issue-list-transaction">
+                    <div class="issue-row-top">
+                        <span class="issue-row-title">
                             ${escapeIssueHtml(issueDetail.transactionNo || "-")}
                         </span>
 
@@ -1551,22 +1718,21 @@
                         </span>
                     </div>
 
-                    <div class="issue-list-row-details">
-                        <span>Issued to: ${escapeIssueHtml(issueValue(issueDetail.issuedTo, "Unknown"))}</span>
-                        <span>Returnable: ${escapeIssueHtml(issueValue(issueDetail.returnable, "N/A"))}</span>
+                    <div class="issue-row-meta">
+                        Issued to: ${escapeIssueHtml(issueValue(issueDetail.issuedTo, "Unknown"))} &nbsp;·&nbsp; Returnable: ${escapeIssueHtml(issueValue(issueDetail.returnable, "N/A"))}
                     </div>
 
-                    ${dateRange ? `<div class="issue-list-range">${dateRange}</div>` : ""}
+                    ${dateRange ? `<div class="issue-row-code">${dateRange}</div>` : ""}
 
-                    <div class="issue-list-asset">
+                    <div class="issue-row-meta">
                         ${escapeIssueHtml(assetSummary)}
                     </div>
 
-                    <div class="issue-list-date">
+                    <div class="issue-row-meta">
                         ${escapeIssueHtml(issueDetail.transactionDate || "-")}
                     </div>
 
-                    <div class="issue-list-created">
+                    <div class="issue-row-meta">
                         ${escapeIssueHtml(issueDetail.createdBy || "-")}
                     </div>
                 `;
@@ -1658,13 +1824,15 @@
             return [];
         }
 
-        function showIssueDetails(issue) {
+        function showIssueDetails(issueInput) {
 
             const pane = document.getElementById("issueDetailPane");
 
-            if (!pane || !issue) {
+            if (!pane || !issueInput) {
                 return;
             }
+
+            const issue = mergeIssueData(issueInput);
 
             const assets = getIssueAssets(issue);
 
@@ -1675,6 +1843,19 @@
 
             const issueType = issue.issueType || "-";
             const badgeClass = issueType.toLowerCase();
+
+            const primaryAsset = assets[0] || {};
+            const chipTitle = issueValue(
+                primaryAsset.assetName || primaryAsset.assetTag,
+                issue.transactionNo || "Issue"
+            );
+            const chipInitials = chipTitle
+                .replace(/[^A-Za-z0-9]/g, " ")
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map(word => word.charAt(0).toUpperCase())
+                .join("") || "IS";
 
             let assetContent = "";
 
@@ -1912,18 +2093,35 @@
             }
 
             pane.innerHTML = `
+                <div class="issue-chip-bar">
+                    <div class="issue-chip">
+                        <span class="issue-chip-avatar">${escapeIssueHtml(chipInitials)}</span>
+                        <div>
+                            <div class="issue-chip-title">${escapeIssueHtml(chipTitle)}</div>
+                            <div class="issue-chip-code">${escapeIssueHtml(issue.transactionNo || "-")}</div>
+                        </div>
+                        <button type="button" class="issue-chip-close" onclick="clearIssueSelection()" title="Close">×</button>
+                    </div>
+                </div>
+
                 <div class="issue-detail-content">
 
                     <div class="issue-detail-header">
 
                         <div>
 
-                            <h2 class="issue-detail-title">
-                                ${escapeIssueHtml(
-                                    issue.transactionNo ||
-                                    "Issue Transaction"
-                                )}
-                            </h2>
+                            <div class="issue-detail-title-row">
+                                <h2 class="issue-detail-title">
+                                    ${escapeIssueHtml(
+                                        issue.transactionNo ||
+                                        "Issue Transaction"
+                                    )}
+                                </h2>
+
+                                <span class="issue-type-pill ${badgeClass}">
+                                    ● ${escapeIssueHtml(issueType)}
+                                </span>
+                            </div>
 
                             <div class="issue-detail-subtitle">
                                 Issue transaction details
@@ -2041,6 +2239,29 @@
 
                     </div>
 
+                    <div class="issue-period-row">
+
+                        <div class="issue-period-card">
+                            <span class="label">Issue Period</span>
+                            <strong>${escapeIssueHtml(issueValue(issue.fromDate))}</strong>
+                            <span class="arrow">→</span>
+                            <strong>${escapeIssueHtml(issueValue(issue.toDate))}</strong>
+                        </div>
+
+                        <span class="issue-returnable-badge ${
+                            String(issue.returnable || "").toLowerCase() === "yes"
+                                ? "yes"
+                                : "no"
+                        }">
+                            ${
+                                String(issue.returnable || "").toLowerCase() === "yes"
+                                    ? "● Returnable"
+                                    : "● Non-returnable"
+                            }
+                        </span>
+
+                    </div>
+
                     <section class="issue-section">
 
                         <div class="issued-assets-header">
@@ -2060,6 +2281,37 @@
 
                     </section>
 
+                </div>
+            `;
+        }
+
+
+        /* =====================================================
+           CLEAR SELECTED ISSUE (chip close button)
+        ====================================================== */
+
+        function clearIssueSelection() {
+
+            const pane = document.getElementById("issueDetailPane");
+
+            if (!pane) {
+                return;
+            }
+
+            document.querySelectorAll(".issue-list-row.active")
+                .forEach(function(activeRow) {
+                    activeRow.classList.remove("active");
+                });
+
+            pane.innerHTML = `
+                <div class="issue-detail-empty">
+                    <div>
+                        <div class="issue-detail-empty-icon">▣</div>
+                        <strong>Select an issue transaction</strong>
+                        <div style="margin-top:5px;font-size:11px;">
+                            Select a transaction from the list to view its details.
+                        </div>
+                    </div>
                 </div>
             `;
         }
