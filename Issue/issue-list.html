@@ -68,9 +68,7 @@
         .issue-workspace {
             display: grid;
             grid-template-columns: 360px minmax(0, 1fr);
-            height: calc(100vh - 230px);
-            min-height: 520px;
-            max-height: 680px;
+            min-height: 760px;
             border: 1px solid #dfe4ec;
             border-radius: 10px;
             background: #fff;
@@ -79,9 +77,11 @@
         }
 
         .issue-list-pane {
-            position: relative;
+            position: sticky;
+            top: 0;
+            align-self: start;
             min-width: 0;
-            min-height: 0;
+            max-height: calc(100vh - 150px);
             display: flex;
             flex-direction: column;
             border-right: 1px solid #dfe4ec;
@@ -364,19 +364,35 @@
         ====================================================== */
 
         .issue-chip-bar {
-            padding: 10px 20px;
+            display: flex;
+            align-items: stretch;
+            overflow-x: auto;
             border-bottom: 1px solid #e2e8f0;
             background: #f8fafc;
-            margin: -18px -20px 0;
         }
 
         .issue-chip {
             display: inline-flex;
             align-items: center;
             gap: 9px;
-            padding: 6px 10px 6px 8px;
-            border: 1px solid #e2e8f0;
-            border-radius: 999px;
+            padding: 10px 14px;
+            border-right: 1px solid #e2e8f0;
+            background: #f1f5f9;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .15s ease;
+        }
+
+        .issue-chip:hover {
+            background: #e8edf3;
+        }
+
+        .issue-chip.active {
+            background: #fff;
+            box-shadow: inset 0 -2px 0 #4f46e5;
+        }
+
+        .issue-chip.active:hover {
             background: #fff;
         }
 
@@ -1103,8 +1119,6 @@
         @media (max-width: 760px) {
             .issue-workspace {
                 grid-template-columns: 1fr;
-                height: auto;
-                max-height: none;
             }
 
             .issue-list-pane {
@@ -1115,7 +1129,6 @@
 
             .issue-detail-pane {
                 min-height: 600px;
-                max-height: none;
             }
 
             .issue-detail-header {
@@ -1744,14 +1757,14 @@
                         });
 
                     row.classList.add("active");
-                    showIssueDetails(issue);
+                    openIssueTab(issueDetail.transactionNo);
                 });
 
                 list.appendChild(row);
 
                 if (index === 0) {
                     row.classList.add("active");
-                    showIssueDetails(issue);
+                    openIssueTab(issueDetail.transactionNo);
                 }
             });
 
@@ -1824,15 +1837,27 @@
             return [];
         }
 
-        function showIssueDetails(issueInput) {
+        function getIssueChipInfo(issue) {
+            const assets = getIssueAssets(issue);
+            const primaryAsset = assets[0] || {};
 
-            const pane = document.getElementById("issueDetailPane");
+            const chipTitle = issueValue(
+                primaryAsset.assetName || primaryAsset.assetTag,
+                issue.transactionNo || "Issue"
+            );
 
-            if (!pane || !issueInput) {
-                return;
-            }
+            const chipInitials = chipTitle
+                .replace(/[^A-Za-z0-9]/g, " ")
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map(word => word.charAt(0).toUpperCase())
+                .join("") || "IS";
 
-            const issue = mergeIssueData(issueInput);
+            return { chipTitle, chipInitials };
+        }
+
+        function buildIssueDetailContentHtml(issue) {
 
             const assets = getIssueAssets(issue);
 
@@ -1843,19 +1868,6 @@
 
             const issueType = issue.issueType || "-";
             const badgeClass = issueType.toLowerCase();
-
-            const primaryAsset = assets[0] || {};
-            const chipTitle = issueValue(
-                primaryAsset.assetName || primaryAsset.assetTag,
-                issue.transactionNo || "Issue"
-            );
-            const chipInitials = chipTitle
-                .replace(/[^A-Za-z0-9]/g, " ")
-                .trim()
-                .split(/\s+/)
-                .slice(0, 2)
-                .map(word => word.charAt(0).toUpperCase())
-                .join("") || "IS";
 
             let assetContent = "";
 
@@ -2092,18 +2104,7 @@
 
             }
 
-            pane.innerHTML = `
-                <div class="issue-chip-bar">
-                    <div class="issue-chip">
-                        <span class="issue-chip-avatar">${escapeIssueHtml(chipInitials)}</span>
-                        <div>
-                            <div class="issue-chip-title">${escapeIssueHtml(chipTitle)}</div>
-                            <div class="issue-chip-code">${escapeIssueHtml(issue.transactionNo || "-")}</div>
-                        </div>
-                        <button type="button" class="issue-chip-close" onclick="clearIssueSelection()" title="Close">×</button>
-                    </div>
-                </div>
-
+            return `
                 <div class="issue-detail-content">
 
                     <div class="issue-detail-header">
@@ -2287,10 +2288,70 @@
 
 
         /* =====================================================
-           CLEAR SELECTED ISSUE (chip close button)
+           MULTI-TAB SELECTION
+           Selecting another record adds a tab instead of
+           replacing the one already open.
         ====================================================== */
 
-        function clearIssueSelection() {
+        let openIssueTransactions = [];
+        let activeIssueTransaction = null;
+
+        function findIssueRecord(transactionNo) {
+            const raw = allIssueRows.find(function(row) {
+                return row.transactionNo === transactionNo;
+            });
+
+            return raw ? mergeIssueData(raw) : null;
+        }
+
+        function syncActiveListRow() {
+            document.querySelectorAll(".issue-list-row").forEach(function(row) {
+                row.classList.toggle(
+                    "active",
+                    row.dataset.transaction === activeIssueTransaction
+                );
+            });
+        }
+
+        function openIssueTab(transactionNo) {
+            if (!transactionNo) {
+                return;
+            }
+
+            if (!openIssueTransactions.includes(transactionNo)) {
+                openIssueTransactions.push(transactionNo);
+            }
+
+            activeIssueTransaction = transactionNo;
+            renderIssuePane();
+        }
+
+        function selectIssueTab(transactionNo) {
+            activeIssueTransaction = transactionNo;
+            renderIssuePane();
+            syncActiveListRow();
+        }
+
+        function closeIssueTab(transactionNo, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+
+            openIssueTransactions = openIssueTransactions.filter(function(tx) {
+                return tx !== transactionNo;
+            });
+
+            if (activeIssueTransaction === transactionNo) {
+                activeIssueTransaction = openIssueTransactions.length
+                    ? openIssueTransactions[openIssueTransactions.length - 1]
+                    : null;
+            }
+
+            renderIssuePane();
+            syncActiveListRow();
+        }
+
+        function renderIssuePane() {
 
             const pane = document.getElementById("issueDetailPane");
 
@@ -2298,21 +2359,60 @@
                 return;
             }
 
-            document.querySelectorAll(".issue-list-row.active")
-                .forEach(function(activeRow) {
-                    activeRow.classList.remove("active");
-                });
-
-            pane.innerHTML = `
-                <div class="issue-detail-empty">
-                    <div>
-                        <div class="issue-detail-empty-icon">▣</div>
-                        <strong>Select an issue transaction</strong>
-                        <div style="margin-top:5px;font-size:11px;">
-                            Select a transaction from the list to view its details.
+            if (!openIssueTransactions.length || !activeIssueTransaction) {
+                pane.innerHTML = `
+                    <div class="issue-detail-empty">
+                        <div>
+                            <div class="issue-detail-empty-icon">▣</div>
+                            <strong>Select an issue transaction</strong>
+                            <div style="margin-top:5px;font-size:11px;">
+                                Select a transaction from the list to view its details.
+                            </div>
                         </div>
                     </div>
-                </div>
+                `;
+                return;
+            }
+
+            const tabsHtml = openIssueTransactions.map(function(transactionNo) {
+                const tabIssue = findIssueRecord(transactionNo);
+
+                if (!tabIssue) {
+                    return "";
+                }
+
+                const { chipTitle, chipInitials } = getIssueChipInfo(tabIssue);
+                const isActive = transactionNo === activeIssueTransaction;
+
+                return `
+                    <div
+                        class="issue-chip ${isActive ? "active" : ""}"
+                        onclick="selectIssueTab('${transactionNo.replace(/'/g, "\\'")}')"
+                    >
+                        <span class="issue-chip-avatar">${escapeIssueHtml(chipInitials)}</span>
+                        <div>
+                            <div class="issue-chip-title">${escapeIssueHtml(chipTitle)}</div>
+                            <div class="issue-chip-code">${escapeIssueHtml(transactionNo)}</div>
+                        </div>
+                        <button
+                            type="button"
+                            class="issue-chip-close"
+                            onclick="closeIssueTab('${transactionNo.replace(/'/g, "\\'")}', event)"
+                            title="Close"
+                        >×</button>
+                    </div>
+                `;
+            }).join("");
+
+            const activeIssue = findIssueRecord(activeIssueTransaction);
+
+            const contentHtml = activeIssue
+                ? buildIssueDetailContentHtml(activeIssue)
+                : "";
+
+            pane.innerHTML = `
+                <div class="issue-chip-bar">${tabsHtml}</div>
+                ${contentHtml}
             `;
         }
 
