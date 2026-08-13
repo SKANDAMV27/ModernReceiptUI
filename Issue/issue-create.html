@@ -231,6 +231,17 @@
             font-weight: 800 !important;
         }
 
+
+        /* Hide Asset search when In Stock is the selected/default mode */
+        #assetStatus[value="stock"] ~ #issueTargetControl {
+            display: none !important;
+        }
+
+        /* The JS changes the select's value, so also use the class applied below. */
+        .issue-toolbar-modern.in-stock-mode #issueTargetControl {
+            display: none !important;
+        }
+
         /* =========================================================
            TARGET MODAL
            ========================================================= */
@@ -603,8 +614,8 @@
             background: #fff !important;
 
             box-shadow:
-                0 12px 30px rgba(15,23,42,.14),
-                0 2px 8px rgba(15,23,42,.06) !important;
+                    0 12px 30px rgba(15,23,42,.14),
+                    0 2px 8px rgba(15,23,42,.06) !important;
 
             z-index: 9999 !important;
         }
@@ -1155,8 +1166,49 @@
             width: 100% !important;
         }
 
+        /* List header / Select All row */
         .issue-workspace .asset-table thead {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        .issue-workspace .asset-table thead tr {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            min-height: 42px !important;
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
+            border-bottom: 1px solid var(--ia-border) !important;
+            background: #fafbfd !important;
+            cursor: default !important;
+        }
+
+        .issue-workspace .asset-table thead th {
             display: none !important;
+        }
+
+        .issue-workspace .asset-table thead th.checkbox-column {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            height: auto !important;
+            padding: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+            color: var(--ia-muted) !important;
+            font-size: 10.5px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: .04em !important;
+            text-align: left !important;
+        }
+
+        .select-all-label {
+            user-select: none;
+            cursor: pointer;
         }
 
         .issue-workspace .asset-table,
@@ -1788,7 +1840,7 @@
                     <option value="issuedToAsset">Issued To Asset</option>
                     <option value="issuedToCustodian">Issued To Custodian</option>
                     <option value="issuedToLocation">Issued To Location</option>
-                    <option value="stock">In Stock</option>
+                    <option value="stock" selected>In Stock</option>
                 </select>
             </div>
 
@@ -1802,18 +1854,18 @@
                 <div class="issue-target-input-wrap">
 
                     <input
-                        id="issueTargetSearch"
-                        type="text"
-                        placeholder="Type min 2 characters to search"
-                        autocomplete="off"
+                            id="issueTargetSearch"
+                            type="text"
+                            placeholder="Type min 2 characters to search"
+                            autocomplete="off"
                     >
 
                     <button
-                        type="button"
-                        id="issueTargetHelp"
-                        class="issue-help-button"
-                        onclick="openIssueTargetPopup()"
-                        aria-label="Select asset"
+                            type="button"
+                            id="issueTargetHelp"
+                            class="issue-help-button"
+                            onclick="openIssueTargetPopup()"
+                            aria-label="Select asset"
                     >
                         ?
                     </button>
@@ -1824,9 +1876,9 @@
             <div class="issue-toolbar-actions">
 
                 <button
-                    type="button"
-                    class="create-action-button show-cart-button"
-                    onclick="showCart()"
+                        type="button"
+                        class="create-action-button show-cart-button"
+                        onclick="showCart()"
                 >
                     🛒
                     <span>Show Cart</span>
@@ -1837,18 +1889,18 @@
                 </button>
 
                 <button
-                    type="button"
-                    class="create-action-button empty-cart-button"
-                    onclick="emptyCart()"
+                        type="button"
+                        class="create-action-button empty-cart-button"
+                        onclick="emptyCart()"
                 >
                     🗑
                     <span>Empty Cart</span>
                 </button>
 
                 <button
-                    type="button"
-                    class="create-action-button issue-cart-button"
-                    onclick="issueAssetFromCart()"
+                        type="button"
+                        class="create-action-button issue-cart-button"
+                        onclick="issueAssetFromCart()"
                 >
                     ✓
                     <span>Issue Assets From Cart</span>
@@ -1859,9 +1911,9 @@
 
         <!-- TARGET MODAL -->
         <div
-            id="issueTargetModal"
-            class="issue-target-modal"
-            aria-hidden="true"
+                id="issueTargetModal"
+                class="issue-target-modal"
+                aria-hidden="true"
         >
             <div class="issue-target-modal-card">
 
@@ -1878,10 +1930,10 @@
                     </div>
 
                     <button
-                        type="button"
-                        class="modal-close-button"
-                        onclick="closeIssueTargetPopup()"
-                        aria-label="Close"
+                            type="button"
+                            class="modal-close-button"
+                            onclick="closeIssueTargetPopup()"
+                            aria-label="Close"
                     >
                         ×
                     </button>
@@ -1910,26 +1962,26 @@
                             </label>
 
                             <input
-                                id="issuePopupSearch"
-                                type="text"
-                                placeholder="Enter search value..."
-                                autocomplete="off"
+                                    id="issuePopupSearch"
+                                    type="text"
+                                    placeholder="Enter search value..."
+                                    autocomplete="off"
                             >
                         </div>
 
                         <button
-                            type="button"
-                            class="target-popup-filter-button"
-                            onclick="filterIssueTargetPopup()"
+                                type="button"
+                                class="target-popup-filter-button"
+                                onclick="filterIssueTargetPopup()"
                         >
                             <span>⌕</span>
                             Filter
                         </button>
 
                         <button
-                            type="button"
-                            class="target-popup-clear-button"
-                            onclick="clearIssueTargetPopupFilter()"
+                                type="button"
+                                class="target-popup-clear-button"
+                                onclick="clearIssueTargetPopupFilter()"
                         >
                             Clear
                         </button>
@@ -1940,27 +1992,27 @@
 
                         <table class="target-popup-table">
                             <thead>
-                                <tr>
-                                    <th class="target-radio-column"></th>
-                                    <th id="targetPopupColumnOne">
-                                        ASSET NAME
-                                    </th>
-                                    <th id="targetPopupColumnTwo">
-                                        ASSET CODE
-                                    </th>
-                                    <th id="targetPopupColumnThree">
-                                        MANUFACTURER
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th class="target-radio-column"></th>
+                                <th id="targetPopupColumnOne">
+                                    ASSET NAME
+                                </th>
+                                <th id="targetPopupColumnTwo">
+                                    ASSET CODE
+                                </th>
+                                <th id="targetPopupColumnThree">
+                                    MANUFACTURER
+                                </th>
+                            </tr>
                             </thead>
 
                             <tbody id="issueTargetTableBody"></tbody>
                         </table>
 
                         <div
-                            id="issueTargetEmptyState"
-                            class="target-popup-empty"
-                            hidden
+                                id="issueTargetEmptyState"
+                                class="target-popup-empty"
+                                hidden
                         >
                             No records found.
                         </div>
@@ -1972,8 +2024,8 @@
                 <div class="issue-target-modal-footer">
 
                     <div
-                        id="issueTargetRecordSummary"
-                        class="target-popup-record-summary"
+                            id="issueTargetRecordSummary"
+                            class="target-popup-record-summary"
                     >
                         0 records found. Select one to continue.
                     </div>
@@ -1981,19 +2033,19 @@
                     <div class="target-popup-footer-actions">
 
                         <button
-                            type="button"
-                            class="modal-secondary-button"
-                            onclick="closeIssueTargetPopup()"
+                                type="button"
+                                class="modal-secondary-button"
+                                onclick="closeIssueTargetPopup()"
                         >
                             Cancel
                         </button>
 
                         <button
-                            type="button"
-                            id="issueTargetAddButton"
-                            class="modal-primary-button"
-                            onclick="addIssueTargetSelection()"
-                            disabled
+                                type="button"
+                                id="issueTargetAddButton"
+                                class="modal-primary-button"
+                                onclick="addIssueTargetSelection()"
+                                disabled
                         >
                             ✓ Add Selection
                         </button>
@@ -2003,10 +2055,10 @@
                 </div>
 
                 <select
-                    id="issuePopupSelect"
-                    class="issue-popup-hidden-select"
-                    aria-hidden="true"
-                    tabindex="-1"
+                        id="issuePopupSelect"
+                        class="issue-popup-hidden-select"
+                        aria-hidden="true"
+                        tabindex="-1"
                 ></select>
 
             </div>
@@ -2028,25 +2080,25 @@
             </div>
 
             <div
-                class="asset-filter-content filters-hidden"
-                id="assetFilterContent"
+                    class="asset-filter-content filters-hidden"
+                    id="assetFilterContent"
             >
 
                 <div class="filter-popup-header">
                     <strong>Filter records</strong>
 
                     <button
-                        type="button"
-                        class="filter-clear-button"
-                        onclick="reloadAssets()"
+                            type="button"
+                            class="filter-clear-button"
+                            onclick="reloadAssets()"
                     >
                         Clear all
                     </button>
                 </div>
 
                 <div
-                    class="asset-filter-grid"
-                    id="assetFilterGrid"
+                        class="asset-filter-grid"
+                        id="assetFilterGrid"
                 >
 
                     <div class="asset-filter-field">
@@ -2100,24 +2152,24 @@
                         <div class="asset-common-search-wrap">
 
                             <span
-                                class="asset-search-icon"
-                                aria-hidden="true"
+                                    class="asset-search-icon"
+                                    aria-hidden="true"
                             >
                                 ⌕
                             </span>
 
                             <input
-                                type="text"
-                                id="assetCommonSearch"
-                                placeholder="Serial No, Model, ERP No or Plate No"
-                                autocomplete="off"
+                                    type="text"
+                                    id="assetCommonSearch"
+                                    placeholder="Serial No, Model, ERP No or Plate No"
+                                    autocomplete="off"
                             >
 
                             <button
-                                type="button"
-                                class="search-help-button"
-                                aria-label="Search help"
-                                title="Search by Serial No, Model, ERP No or Plate No"
+                                    type="button"
+                                    class="search-help-button"
+                                    aria-label="Search help"
+                                    title="Search by Serial No, Model, ERP No or Plate No"
                             >
                                 ?
                                 <span class="search-help-tooltip">
@@ -2141,16 +2193,16 @@
                         <div class="asset-date-wrap">
 
                             <span
-                                class="asset-date-icon"
-                                aria-hidden="true"
+                                    class="asset-date-icon"
+                                    aria-hidden="true"
                             >
                                 ▣
                             </span>
 
                             <input
-                                type="date"
-                                id="registrationDateFilter"
-                                title="Filter by registration date"
+                                    type="date"
+                                    id="registrationDateFilter"
+                                    title="Filter by registration date"
                             >
 
                         </div>
@@ -2161,9 +2213,9 @@
                 <div class="asset-filter-actions">
 
                     <button
-                        type="button"
-                        class="filter-button modern-filter-button filter-popup-apply"
-                        onclick="filterAssets()"
+                            type="button"
+                            class="filter-button modern-filter-button filter-popup-apply"
+                            onclick="filterAssets()"
                     >
                         <span id="filterApplyText">
                             Show results
@@ -2171,9 +2223,9 @@
                     </button>
 
                     <button
-                        type="button"
-                        class="reload-button modern-reload-button filter-popup-reset"
-                        onclick="reloadAssets()"
+                            type="button"
+                            class="reload-button modern-reload-button filter-popup-reset"
+                            onclick="reloadAssets()"
                     >
                         Reset
                     </button>
@@ -2200,17 +2252,17 @@
                     <div class="table-header-actions">
 
                         <button
-                            type="button"
-                            id="assetFilterToggleButton"
-                            class="asset-filter-toggle-button table-filter-button"
-                            onclick="toggleAssetFilters()"
-                            aria-expanded="false"
-                            aria-controls="assetFilterContent"
-                            title="Show filters"
+                                type="button"
+                                id="assetFilterToggleButton"
+                                class="asset-filter-toggle-button table-filter-button"
+                                onclick="toggleAssetFilters()"
+                                aria-expanded="false"
+                                aria-controls="assetFilterContent"
+                                title="Show filters"
                         >
                             <span
-                                id="assetFilterToggleIcon"
-                                class="asset-filter-toggle-icon"
+                                    id="assetFilterToggleIcon"
+                                    class="asset-filter-toggle-icon"
                             >
                                 +
                             </span>
@@ -2221,9 +2273,9 @@
                         </button>
 
                         <button
-                            type="button"
-                            class="small-action-button"
-                            onclick="addSelectedToCart()"
+                                type="button"
+                                class="small-action-button"
+                                onclick="addSelectedToCart()"
                         >
                             🛒
                             Add To Cart
@@ -2237,31 +2289,38 @@
                     <table class="asset-table">
 
                         <thead>
-                            <tr>
-                                <th class="checkbox-column">
-                                    <input
+                        <tr>
+                            <th class="checkbox-column">
+                                <input
                                         type="checkbox"
                                         id="selectAllAssets"
                                         onchange="selectAllAssets(this)"
-                                    >
-                                </th>
+                                        aria-label="Select all assets"
+                                >
+                                <span
+                                        class="select-all-label"
+                                        onclick="document.getElementById('selectAllAssets').click()"
+                                >
+                                        Select All Assets
+                                    </span>
+                            </th>
 
-                                <th>Asset Name</th>
-                                <th>Asset Tag</th>
-                                <th>Serial No</th>
-                                <th>Model</th>
-                                <th>Manufacturer</th>
-                                <th>Location</th>
-                                <th>Stock Status</th>
-                                <th>ERP No</th>
-                                <th>Plate No</th>
-                                <th>Registration Date</th>
-                                <th>User</th>
-                                <th>Department</th>
-                                <th>Custodian</th>
-                                <th>Asset Type</th>
-                                <th class="action-column">Action</th>
-                            </tr>
+                            <th>Asset Name</th>
+                            <th>Asset Tag</th>
+                            <th>Serial No</th>
+                            <th>Model</th>
+                            <th>Manufacturer</th>
+                            <th>Location</th>
+                            <th>Stock Status</th>
+                            <th>ERP No</th>
+                            <th>Plate No</th>
+                            <th>Registration Date</th>
+                            <th>User</th>
+                            <th>Department</th>
+                            <th>Custodian</th>
+                            <th>Asset Type</th>
+                            <th class="action-column">Action</th>
+                        </tr>
                         </thead>
 
                         <tbody id="assetTableBody"></tbody>
@@ -2293,9 +2352,9 @@
             </section>
 
             <aside
-                id="assetDetailPanel"
-                class="detail-panel"
-                aria-live="polite"
+                    id="assetDetailPanel"
+                    class="detail-panel"
+                    aria-live="polite"
             >
                 <div class="detail-panel-empty">
                     <div class="empty-icon">🗂️</div>
@@ -2315,91 +2374,91 @@
 <script src="./js/layout.js"></script>
 
 <script>
-/* =========================================================
-   AVAILABLE ASSET DATA
-   ========================================================= */
+    /* =========================================================
+       AVAILABLE ASSET DATA
+       ========================================================= */
 
-const availableAssets = [
-    {
-        assetName: "Desktop",
-        assetTag: "ITE-0001276",
-        serialNo: "",
-        model: "",
-        manufacturer: "",
-        location: "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
-        stockStatus: "In Stock",
-        erpNo: "",
-        plateNo: "",
-        registrationDate: "",
-        user: "",
-        department: "",
-        custodian: "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
-        assetType: "Capitalized"
-    },
-    {
-        assetName: "Dell",
-        assetTag: "FUN-0001616",
-        serialNo: "Dell01",
-        model: "",
-        manufacturer: "",
-        location: "Ad Dakhliyah",
-        stockStatus: "In Stock",
-        erpNo: "",
-        plateNo: "",
-        registrationDate: "",
-        user: "",
-        department: "",
-        custodian: "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
-        assetType: "Capitalized"
-    },
-    {
-        assetName: "Desktop",
-        assetTag: "ITE-0001272",
-        serialNo: "",
-        model: "",
-        manufacturer: "",
-        location: "Ad Dakhliyah-Adam TS-Admin building-Female Toilet",
-        stockStatus: "In Stock",
-        erpNo: "",
-        plateNo: "",
-        registrationDate: "",
-        user: "",
-        department: "",
-        custodian: "",
-        assetType: "Capitalized"
-    },
-    {
-        assetName: "AC",
-        assetTag: "OFE-0000409",
-        serialNo: "",
-        model: "samsung24",
-        manufacturer: "SAMSUNG",
-        location: "Ad Dakhliyah",
-        stockStatus: "In Stock",
-        erpNo: "1",
-        plateNo: "4456",
-        registrationDate: "29-Mar-2021",
-        user: "",
-        department: "",
-        custodian: "",
-        assetType: "Capitalized"
-    },
-    {
-        assetName: "KEYBOARD",
-        assetTag: "ITE-0001263",
-        serialNo: "",
-        model: "sam-098",
-        manufacturer: "ASUS",
-        location: "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
-        stockStatus: "In Stock",
-        erpNo: "01",
-        plateNo: "5665",
-        registrationDate: "27-Mar-2021",
-        user: "",
-        department: "",
-        custodian: "",
-        assetType: "Capitalized"
-    },
+    const availableAssets = [
+        {
+            assetName: "Desktop",
+            assetTag: "ITE-0001276",
+            serialNo: "",
+            model: "",
+            manufacturer: "",
+            location: "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+            stockStatus: "In Stock",
+            erpNo: "",
+            plateNo: "",
+            registrationDate: "",
+            user: "",
+            department: "",
+            custodian: "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+            assetType: "Capitalized"
+        },
+        {
+            assetName: "Dell",
+            assetTag: "FUN-0001616",
+            serialNo: "Dell01",
+            model: "",
+            manufacturer: "",
+            location: "Ad Dakhliyah",
+            stockStatus: "In Stock",
+            erpNo: "",
+            plateNo: "",
+            registrationDate: "",
+            user: "",
+            department: "",
+            custodian: "Mohamed Jaafar Mohamed Al Mahdi [beah-0168]",
+            assetType: "Capitalized"
+        },
+        {
+            assetName: "Desktop",
+            assetTag: "ITE-0001272",
+            serialNo: "",
+            model: "",
+            manufacturer: "",
+            location: "Ad Dakhliyah-Adam TS-Admin building-Female Toilet",
+            stockStatus: "In Stock",
+            erpNo: "",
+            plateNo: "",
+            registrationDate: "",
+            user: "",
+            department: "",
+            custodian: "",
+            assetType: "Capitalized"
+        },
+        {
+            assetName: "AC",
+            assetTag: "OFE-0000409",
+            serialNo: "",
+            model: "samsung24",
+            manufacturer: "SAMSUNG",
+            location: "Ad Dakhliyah",
+            stockStatus: "In Stock",
+            erpNo: "1",
+            plateNo: "4456",
+            registrationDate: "29-Mar-2021",
+            user: "",
+            department: "",
+            custodian: "",
+            assetType: "Capitalized"
+        },
+        {
+            assetName: "KEYBOARD",
+            assetTag: "ITE-0001263",
+            serialNo: "",
+            model: "sam-098",
+            manufacturer: "ASUS",
+            location: "Ad Dakhliyah-Adam TS-Admin building-Dining Room",
+            stockStatus: "In Stock",
+            erpNo: "01",
+            plateNo: "5665",
+            registrationDate: "27-Mar-2021",
+            user: "",
+            department: "",
+            custodian: "",
+            assetType: "Capitalized"
+        },
         {
             assetName: "Laptop",
             assetTag: "ITE-0001263",
@@ -2481,91 +2540,201 @@ const availableAssets = [
             assetType: "Capitalized"
         }];
 
-/* =========================================================
-   CART
-   ========================================================= */
+    /* =========================================================
+       CART
+       ========================================================= */
 
-let cart = [];
-let selectedDetailAssetTag = null;
+    let cart = [];
+    let selectedDetailAssetTag = null;
 
-function loadCart() {
-    try {
-        const savedCart = sessionStorage.getItem("issueCart");
-        cart = savedCart ? JSON.parse(savedCart) : [];
+    function loadCart() {
+        try {
+            const savedCart = sessionStorage.getItem("issueCart");
+            cart = savedCart ? JSON.parse(savedCart) : [];
 
-        if (!Array.isArray(cart)) {
+            if (!Array.isArray(cart)) {
+                cart = [];
+            }
+        } catch (error) {
+            console.error("Unable to load issue cart.", error);
             cart = [];
         }
-    } catch (error) {
-        console.error("Unable to load issue cart.", error);
-        cart = [];
-    }
-}
-
-function saveCart() {
-    sessionStorage.setItem(
-        "issueCart",
-        JSON.stringify(cart)
-    );
-}
-
-function updateCartCount() {
-    const badge =
-        document.getElementById("cartCountBadge");
-
-    if (badge) {
-        badge.textContent = String(cart.length);
     }
 
-    const emptyButton =
-        document.querySelector(".empty-cart-button");
-
-    const issueButton =
-        document.querySelector(".issue-cart-button");
-
-    if (emptyButton) {
-        emptyButton.disabled = cart.length === 0;
-        emptyButton.title =
-            cart.length === 0
-                ? "Cart is empty"
-                : "Remove all assets from the cart";
+    function saveCart() {
+        sessionStorage.setItem(
+            "issueCart",
+            JSON.stringify(cart)
+        );
     }
 
-    if (issueButton) {
-        issueButton.disabled = cart.length === 0;
-        issueButton.title =
-            cart.length === 0
-                ? "Add assets to the cart first"
-                : "Issue assets from the cart";
+    function updateCartCount() {
+        const badge =
+            document.getElementById("cartCountBadge");
+
+        if (badge) {
+            badge.textContent = String(cart.length);
+        }
+
+        const emptyButton =
+            document.querySelector(".empty-cart-button");
+
+        const issueButton =
+            document.querySelector(".issue-cart-button");
+
+        if (emptyButton) {
+            emptyButton.disabled = cart.length === 0;
+            emptyButton.title =
+                cart.length === 0
+                    ? "Cart is empty"
+                    : "Remove all assets from the cart";
+        }
+
+        if (issueButton) {
+            issueButton.disabled = cart.length === 0;
+            issueButton.title =
+                cart.length === 0
+                    ? "Add assets to the cart first"
+                    : "Issue assets from the cart";
+        }
     }
-}
 
-/* =========================================================
-   FILTER POPUP
-   ========================================================= */
+    /* =========================================================
+       FILTER POPUP
+       ========================================================= */
 
-function toggleAssetFilters() {
+    function toggleAssetFilters() {
 
-    const filterContent =
-        document.getElementById("assetFilterContent");
+        const filterContent =
+            document.getElementById("assetFilterContent");
 
-    const toggleButton =
-        document.getElementById("assetFilterToggleButton");
+        const toggleButton =
+            document.getElementById("assetFilterToggleButton");
 
-    const toggleText =
-        document.getElementById("assetFilterToggleText");
+        const toggleText =
+            document.getElementById("assetFilterToggleText");
 
-    const toggleIcon =
-        document.getElementById("assetFilterToggleIcon");
+        const toggleIcon =
+            document.getElementById("assetFilterToggleIcon");
 
-    if (!filterContent || !toggleButton) {
-        return;
+        if (!filterContent || !toggleButton) {
+            return;
+        }
+
+        const isHidden =
+            filterContent.classList.contains("filters-hidden");
+
+        if (isHidden) {
+
+            const buttonRect =
+                toggleButton.getBoundingClientRect();
+
+            const popupWidth =
+                Math.min(
+                    525,
+                    window.innerWidth - 30
+                );
+
+            let popupLeft =
+                buttonRect.left;
+
+            if (
+                popupLeft + popupWidth >
+                window.innerWidth - 15
+            ) {
+                popupLeft =
+                    window.innerWidth -
+                    popupWidth -
+                    15;
+            }
+
+            if (popupLeft < 15) {
+                popupLeft = 15;
+            }
+
+            const popupTop =
+                buttonRect.bottom + 8;
+
+            document.documentElement.style.setProperty(
+                "--asset-filter-popup-top",
+                `${popupTop}px`
+            );
+
+            document.documentElement.style.setProperty(
+                "--asset-filter-popup-left",
+                `${popupLeft}px`
+            );
+
+            filterContent.classList.remove(
+                "filters-hidden"
+            );
+
+            toggleButton.classList.add("active");
+
+            if (toggleText) {
+                toggleText.textContent = "Filters";
+            }
+
+            if (toggleIcon) {
+                toggleIcon.textContent = "−";
+            }
+
+            toggleButton.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            toggleButton.setAttribute(
+                "title",
+                "Hide filters"
+            );
+
+        } else {
+
+            filterContent.classList.add(
+                "filters-hidden"
+            );
+
+            toggleButton.classList.remove(
+                "active"
+            );
+
+            if (toggleText) {
+                toggleText.textContent = "Filters";
+            }
+
+            if (toggleIcon) {
+                toggleIcon.textContent = "+";
+            }
+
+            toggleButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            toggleButton.setAttribute(
+                "title",
+                "Show filters"
+            );
+        }
     }
 
-    const isHidden =
-        filterContent.classList.contains("filters-hidden");
+    /* Recalculate popup position if browser is resized. */
+    function repositionFilterPopup() {
 
-    if (isHidden) {
+        const filterContent =
+            document.getElementById("assetFilterContent");
+
+        const toggleButton =
+            document.getElementById("assetFilterToggleButton");
+
+        if (
+            !filterContent ||
+            !toggleButton ||
+            filterContent.classList.contains("filters-hidden")
+        ) {
+            return;
+        }
 
         const buttonRect =
             toggleButton.getBoundingClientRect();
@@ -2593,178 +2762,68 @@ function toggleAssetFilters() {
             popupLeft = 15;
         }
 
-        const popupTop =
-            buttonRect.bottom + 8;
-
         document.documentElement.style.setProperty(
             "--asset-filter-popup-top",
-            `${popupTop}px`
+            `${buttonRect.bottom + 8}px`
         );
 
         document.documentElement.style.setProperty(
             "--asset-filter-popup-left",
             `${popupLeft}px`
         );
-
-        filterContent.classList.remove(
-            "filters-hidden"
-        );
-
-        toggleButton.classList.add("active");
-
-        if (toggleText) {
-            toggleText.textContent = "Filters";
-        }
-
-        if (toggleIcon) {
-            toggleIcon.textContent = "−";
-        }
-
-        toggleButton.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-
-        toggleButton.setAttribute(
-            "title",
-            "Hide filters"
-        );
-
-    } else {
-
-        filterContent.classList.add(
-            "filters-hidden"
-        );
-
-        toggleButton.classList.remove(
-            "active"
-        );
-
-        if (toggleText) {
-            toggleText.textContent = "Filters";
-        }
-
-        if (toggleIcon) {
-            toggleIcon.textContent = "+";
-        }
-
-        toggleButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        toggleButton.setAttribute(
-            "title",
-            "Show filters"
-        );
-    }
-}
-
-/* Recalculate popup position if browser is resized. */
-function repositionFilterPopup() {
-
-    const filterContent =
-        document.getElementById("assetFilterContent");
-
-    const toggleButton =
-        document.getElementById("assetFilterToggleButton");
-
-    if (
-        !filterContent ||
-        !toggleButton ||
-        filterContent.classList.contains("filters-hidden")
-    ) {
-        return;
     }
 
-    const buttonRect =
-        toggleButton.getBoundingClientRect();
-
-    const popupWidth =
-        Math.min(
-            525,
-            window.innerWidth - 30
-        );
-
-    let popupLeft =
-        buttonRect.left;
-
-    if (
-        popupLeft + popupWidth >
-        window.innerWidth - 15
-    ) {
-        popupLeft =
-            window.innerWidth -
-            popupWidth -
-            15;
-    }
-
-    if (popupLeft < 15) {
-        popupLeft = 15;
-    }
-
-    document.documentElement.style.setProperty(
-        "--asset-filter-popup-top",
-        `${buttonRect.bottom + 8}px`
+    window.addEventListener(
+        "resize",
+        repositionFilterPopup
     );
 
-    document.documentElement.style.setProperty(
-        "--asset-filter-popup-left",
-        `${popupLeft}px`
+    window.addEventListener(
+        "scroll",
+        repositionFilterPopup,
+        true
     );
-}
 
-window.addEventListener(
-    "resize",
-    repositionFilterPopup
-);
+    /* =========================================================
+       ASSET DETAIL
+       ========================================================= */
 
-window.addEventListener(
-    "scroll",
-    repositionFilterPopup,
-    true
-);
+    function selectAssetDetail(assetTag) {
 
-/* =========================================================
-   ASSET DETAIL
-   ========================================================= */
+        const asset =
+            availableAssets.find(function(item) {
+                return item.assetTag === assetTag;
+            });
 
-function selectAssetDetail(assetTag) {
+        if (!asset) {
+            return;
+        }
 
-    const asset =
-        availableAssets.find(function(item) {
-            return item.assetTag === assetTag;
-        });
+        selectedDetailAssetTag = assetTag;
 
-    if (!asset) {
-        return;
+        document
+            .querySelectorAll(".asset-row")
+            .forEach(function(row) {
+                row.classList.toggle(
+                    "active-row",
+                    row.dataset.assetTag === assetTag
+                );
+            });
+
+        renderAssetDetail(asset);
     }
 
-    selectedDetailAssetTag = assetTag;
+    function renderAssetDetail(asset) {
 
-    document
-        .querySelectorAll(".asset-row")
-        .forEach(function(row) {
-            row.classList.toggle(
-                "active-row",
-                row.dataset.assetTag === assetTag
-            );
-        });
+        const panel =
+            document.getElementById("assetDetailPanel");
 
-    renderAssetDetail(asset);
-}
+        if (!panel) {
+            return;
+        }
 
-function renderAssetDetail(asset) {
-
-    const panel =
-        document.getElementById("assetDetailPanel");
-
-    if (!panel) {
-        return;
-    }
-
-    if (!asset) {
-        panel.innerHTML = `
+        if (!asset) {
+            panel.innerHTML = `
             <div class="detail-panel-empty">
                 <div class="empty-icon">🗂️</div>
                 <strong>No asset selected</strong>
@@ -2773,21 +2832,21 @@ function renderAssetDetail(asset) {
                 </span>
             </div>
         `;
-        return;
-    }
+            return;
+        }
 
-    const value = function(v, fallback = "-") {
-        return (
-            v === null ||
-            v === undefined ||
-            String(v).trim() === ""
-        )
-            ? fallback
-            : String(v);
-    };
+        const value = function(v, fallback = "-") {
+            return (
+                v === null ||
+                v === undefined ||
+                String(v).trim() === ""
+            )
+                ? fallback
+                : String(v);
+        };
 
-    const info = function(label, val, full = false) {
-        return `
+        const info = function(label, val, full = false) {
+            return `
             <div class="merged-info-item${full ? " full" : ""}">
                 <div class="merged-info-label">
                     ${escapeHtml(label)}
@@ -2797,12 +2856,12 @@ function renderAssetDetail(asset) {
                 </div>
             </div>
         `;
-    };
+        };
 
-    const isInStock =
-        normalizeFilterValue(asset.stockStatus) === "in stock";
+        const isInStock =
+            normalizeFilterValue(asset.stockStatus) === "in stock";
 
-    panel.innerHTML = `
+        panel.innerHTML = `
         <div class="detail-panel-header">
 
             <div>
@@ -2811,14 +2870,14 @@ function renderAssetDetail(asset) {
 
                     <h2>
                         ${escapeHtml(
-                            value(asset.assetName, "Asset")
-                        )}
+            value(asset.assetName, "Asset")
+        )}
                     </h2>
 
                     <span class="stock-badge">
                         ${escapeHtml(
-                            value(asset.stockStatus)
-                        )}
+            value(asset.stockStatus)
+        )}
                     </span>
 
                 </div>
@@ -2827,17 +2886,17 @@ function renderAssetDetail(asset) {
 
                     <span class="asset-tag-text">
                         ${escapeHtml(
-                            value(asset.assetTag)
-                        )}
+            value(asset.assetTag)
+        )}
                     </span>
 
                     ${
-                        asset.serialNo
-                            ? `<span>
+            asset.serialNo
+                ? `<span>
                                 SN ${escapeHtml(asset.serialNo)}
                               </span>`
-                            : ""
-                    }
+                : ""
+        }
 
                 </div>
             </div>
@@ -2863,11 +2922,11 @@ function renderAssetDetail(asset) {
                     </span>
                     <span class="summary-value">
                         ${escapeHtml(
-                            value(
-                                asset.assetClass,
-                                asset.assetType || "IT Equipment"
-                            )
-                        )}
+            value(
+                asset.assetClass,
+                asset.assetType || "IT Equipment"
+            )
+        )}
                     </span>
                 </div>
 
@@ -2877,11 +2936,11 @@ function renderAssetDetail(asset) {
                     </span>
                     <span class="summary-value">
                         ${escapeHtml(
-                            value(
-                                asset.itemCatalogue,
-                                "CAT-TEE-0001"
-                            )
-                        )}
+            value(
+                asset.itemCatalogue,
+                "CAT-TEE-0001"
+            )
+        )}
                     </span>
                 </div>
 
@@ -2891,13 +2950,13 @@ function renderAssetDetail(asset) {
                     </span>
                     <span class="summary-value">
                         ${escapeHtml(
-                            value(asset.manufacturer, "-")
-                        )}
+            value(asset.manufacturer, "-")
+        )}
                         ${
-                            asset.model
-                                ? ` · ${escapeHtml(asset.model)}`
-                                : ""
-                        }
+            asset.model
+                ? ` · ${escapeHtml(asset.model)}`
+                : ""
+        }
                     </span>
                 </div>
 
@@ -2907,16 +2966,16 @@ function renderAssetDetail(asset) {
                     </span>
                     <span class="summary-value">
                         ${escapeHtml(
-                            value(
-                                asset.owner,
-                                asset.user || "-"
-                            )
-                        )}
+            value(
+                asset.owner,
+                asset.user || "-"
+            )
+        )}
                         ${
-                            asset.custodian
-                                ? ` · ${escapeHtml(asset.custodian)}`
-                                : ""
-                        }
+            asset.custodian
+                ? ` · ${escapeHtml(asset.custodian)}`
+                : ""
+        }
                     </span>
                 </div>
 
@@ -2926,13 +2985,13 @@ function renderAssetDetail(asset) {
                     </span>
                     <span class="summary-value">
                         ${escapeHtml(
-                            value(asset.department, "-")
-                        )}
+            value(asset.department, "-")
+        )}
                         ${
-                            asset.location
-                                ? ` · ${escapeHtml(asset.location)}`
-                                : ""
-                        }
+            asset.location
+                ? ` · ${escapeHtml(asset.location)}`
+                : ""
+        }
                     </span>
                 </div>
 
@@ -2944,8 +3003,8 @@ function renderAssetDetail(asset) {
                     <span class="detail-label">Condition</span>
                     <span class="detail-value">
                         ${escapeHtml(
-                            value(asset.condition, "Good")
-                        )}
+            value(asset.condition, "Good")
+        )}
                     </span>
                 </div>
 
@@ -2953,8 +3012,8 @@ function renderAssetDetail(asset) {
                     <span class="detail-label">Maintainable</span>
                     <span class="detail-value">
                         ${escapeHtml(
-                            value(asset.maintainable, "Yes")
-                        )}
+            value(asset.maintainable, "Yes")
+        )}
                     </span>
                 </div>
 
@@ -2962,8 +3021,8 @@ function renderAssetDetail(asset) {
                     <span class="detail-label">Criticality</span>
                     <span class="detail-value">
                         ${escapeHtml(
-                            value(asset.criticality, "Medium")
-                        )}
+            value(asset.criticality, "Medium")
+        )}
                     </span>
                 </div>
 
@@ -2971,11 +3030,11 @@ function renderAssetDetail(asset) {
                     <span class="detail-label">Description</span>
                     <span class="detail-value">
                         ${escapeHtml(
-                            value(
-                                asset.description,
-                                asset.assetName
-                            )
-                        )}
+            value(
+                asset.description,
+                asset.assetName
+            )
+        )}
                     </span>
                 </div>
 
@@ -3276,52 +3335,52 @@ function renderAssetDetail(asset) {
             </div>
         </div>
     `;
-}
-
-function showMergedAssetTab(tabId, button) {
-
-    document
-        .querySelectorAll(".merged-detail-tab")
-        .forEach(function(tab) {
-            tab.classList.remove("active");
-        });
-
-    document
-        .querySelectorAll(".merged-detail-panel")
-        .forEach(function(panel) {
-            panel.classList.remove("active");
-        });
-
-    const panel =
-        document.getElementById(tabId);
-
-    if (panel) {
-        panel.classList.add("active");
     }
 
-    if (button) {
-        button.classList.add("active");
+    function showMergedAssetTab(tabId, button) {
+
+        document
+            .querySelectorAll(".merged-detail-tab")
+            .forEach(function(tab) {
+                tab.classList.remove("active");
+            });
+
+        document
+            .querySelectorAll(".merged-detail-panel")
+            .forEach(function(panel) {
+                panel.classList.remove("active");
+            });
+
+        const panel =
+            document.getElementById(tabId);
+
+        if (panel) {
+            panel.classList.add("active");
+        }
+
+        if (button) {
+            button.classList.add("active");
+        }
     }
-}
 
-/* =========================================================
-   DISPLAY ASSETS
-   ========================================================= */
+    /* =========================================================
+       DISPLAY ASSETS
+       ========================================================= */
 
-function displayAssets(data) {
+    function displayAssets(data) {
 
-    const tbody =
-        document.getElementById("assetTableBody");
+        const tbody =
+            document.getElementById("assetTableBody");
 
-    if (!tbody) {
-        return;
-    }
+        if (!tbody) {
+            return;
+        }
 
-    tbody.innerHTML = "";
+        tbody.innerHTML = "";
 
-    if (!data || data.length === 0) {
+        if (!data || data.length === 0) {
 
-        tbody.innerHTML = `
+            tbody.innerHTML = `
             <tr>
                 <td colspan="16" class="no-assets-cell">
                     <div class="no-assets-icon">📦</div>
@@ -3333,31 +3392,31 @@ function displayAssets(data) {
             </tr>
         `;
 
-        updateAssetCount(0);
-        renderAssetDetail(null);
-        return;
-    }
+            updateAssetCount(0);
+            renderAssetDetail(null);
+            return;
+        }
 
-    data.forEach(function(asset) {
+        data.forEach(function(asset) {
 
-        const row =
-            document.createElement("tr");
+            const row =
+                document.createElement("tr");
 
-        row.dataset.assetTag =
-            asset.assetTag;
+            row.dataset.assetTag =
+                asset.assetTag;
 
-        row.classList.add("asset-row");
+            row.classList.add("asset-row");
 
-        row.addEventListener(
-            "click",
-            function() {
-                selectAssetDetail(
-                    asset.assetTag
-                );
-            }
-        );
+            row.addEventListener(
+                "click",
+                function() {
+                    selectAssetDetail(
+                        asset.assetTag
+                    );
+                }
+            );
 
-        row.innerHTML = `
+            row.innerHTML = `
             <td class="checkbox-column">
                 <input
                     type="checkbox"
@@ -3374,10 +3433,10 @@ function displayAssets(data) {
 
                 <span class="list-row-meta">
                     ${
-                        asset.location
-                            ? escapeHtml(asset.location)
-                            : "-"
-                    }
+                asset.location
+                    ? escapeHtml(asset.location)
+                    : "-"
+            }
                 </span>
             </td>
 
@@ -3425,147 +3484,147 @@ function displayAssets(data) {
             </td>
         `;
 
-        tbody.appendChild(row);
-    });
-
-    updateAssetCount(data.length);
-
-    const stillVisible =
-        data.some(function(asset) {
-            return asset.assetTag === selectedDetailAssetTag;
+            tbody.appendChild(row);
         });
 
-    selectAssetDetail(
-        stillVisible
-            ? selectedDetailAssetTag
-            : data[0].assetTag
-    );
-}
+        updateAssetCount(data.length);
 
-function displayValue(value) {
-
-    if (
-        value === null ||
-        value === undefined ||
-        String(value).trim() === ""
-    ) {
-        return `
-            <span class="empty-value">-</span>
-        `;
-    }
-
-    return escapeHtml(String(value));
-}
-
-function escapeHtml(value) {
-
-    if (
-        value === null ||
-        value === undefined
-    ) {
-        return "";
-    }
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-function escapeJs(value) {
-
-    return String(value ?? "")
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'");
-}
-
-function updateAssetCount(count) {
-
-    const assetCount =
-        document.getElementById("assetCount");
-
-    const showingCount =
-        document.getElementById("showingCount");
-
-    const totalCount =
-        document.getElementById("totalCount");
-
-    if (assetCount) {
-        assetCount.textContent =
-            `${count} Assets`;
-    }
-
-    if (showingCount) {
-        showingCount.textContent =
-            count === 0
-                ? "0"
-                : `1-${count}`;
-    }
-
-    if (totalCount) {
-        totalCount.textContent =
-            availableAssets.length;
-    }
-}
-
-/* =========================================================
-   SELECT ALL / CART
-   ========================================================= */
-
-function selectAllAssets(source) {
-
-    document
-        .querySelectorAll(".asset-checkbox")
-        .forEach(function(checkbox) {
-            checkbox.checked =
-                source.checked;
-        });
-}
-
-async function addSelectedToCart() {
-
-    const selected =
-        document.querySelectorAll(
-            ".asset-checkbox:checked"
-        );
-
-    if (selected.length === 0) {
-
-        await Swal.fire({
-            icon: "warning",
-            title: "No Asset Selected",
-            text: "Please select at least one asset to add to the cart.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#4f46e5"
-        });
-
-        return;
-    }
-
-    const selectedAssets = [];
-
-    selected.forEach(function(checkbox) {
-
-        const assetTag =
-            checkbox.dataset.assetTag;
-
-        const asset =
-            availableAssets.find(function(item) {
-                return item.assetTag === assetTag;
+        const stillVisible =
+            data.some(function(asset) {
+                return asset.assetTag === selectedDetailAssetTag;
             });
 
-        if (asset) {
-            selectedAssets.push(asset);
-        }
-    });
+        selectAssetDetail(
+            stillVisible
+                ? selectedDetailAssetTag
+                : data[0].assetTag
+        );
+    }
 
-    const result =
-        await Swal.fire({
-            icon: "question",
-            title: "Add Assets to Cart?",
-            html: `
+    function displayValue(value) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            String(value).trim() === ""
+        ) {
+            return `
+            <span class="empty-value">-</span>
+        `;
+        }
+
+        return escapeHtml(String(value));
+    }
+
+    function escapeHtml(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function escapeJs(value) {
+
+        return String(value ?? "")
+            .replace(/\\/g, "\\\\")
+            .replace(/'/g, "\\'");
+    }
+
+    function updateAssetCount(count) {
+
+        const assetCount =
+            document.getElementById("assetCount");
+
+        const showingCount =
+            document.getElementById("showingCount");
+
+        const totalCount =
+            document.getElementById("totalCount");
+
+        if (assetCount) {
+            assetCount.textContent =
+                `${count} Assets`;
+        }
+
+        if (showingCount) {
+            showingCount.textContent =
+                count === 0
+                    ? "0"
+                    : `1-${count}`;
+        }
+
+        if (totalCount) {
+            totalCount.textContent =
+                availableAssets.length;
+        }
+    }
+
+    /* =========================================================
+       SELECT ALL / CART
+       ========================================================= */
+
+    function selectAllAssets(source) {
+
+        document
+            .querySelectorAll(".asset-checkbox")
+            .forEach(function(checkbox) {
+                checkbox.checked =
+                    source.checked;
+            });
+    }
+
+    async function addSelectedToCart() {
+
+        const selected =
+            document.querySelectorAll(
+                ".asset-checkbox:checked"
+            );
+
+        if (selected.length === 0) {
+
+            await Swal.fire({
+                icon: "warning",
+                title: "No Asset Selected",
+                text: "Please select at least one asset to add to the cart.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#4f46e5"
+            });
+
+            return;
+        }
+
+        const selectedAssets = [];
+
+        selected.forEach(function(checkbox) {
+
+            const assetTag =
+                checkbox.dataset.assetTag;
+
+            const asset =
+                availableAssets.find(function(item) {
+                    return item.assetTag === assetTag;
+                });
+
+            if (asset) {
+                selectedAssets.push(asset);
+            }
+        });
+
+        const result =
+            await Swal.fire({
+                icon: "question",
+                title: "Add Assets to Cart?",
+                html: `
                 <div class="swal-message">
                     Are you sure you want to
                     <strong>Add to Cart</strong>
@@ -3578,53 +3637,53 @@ async function addSelectedToCart() {
                     selected
                 </div>
             `,
-            showCancelButton: true,
-            confirmButtonText: "Yes, Add to Cart",
-            cancelButtonText: "Cancel",
-            confirmButtonColor: "#4f46e5",
-            cancelButtonColor: "#64748b",
-            reverseButtons: true
-        });
-
-    if (!result.isConfirmed) {
-        return;
-    }
-
-    let addedCount = 0;
-    let alreadyInCartCount = 0;
-
-    selectedAssets.forEach(function(asset) {
-
-        const alreadyExists =
-            cart.some(function(item) {
-                return item.assetTag === asset.assetTag;
+                showCancelButton: true,
+                confirmButtonText: "Yes, Add to Cart",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#4f46e5",
+                cancelButtonColor: "#64748b",
+                reverseButtons: true
             });
 
-        if (!alreadyExists) {
-            cart.push(asset);
-            addedCount++;
-        } else {
-            alreadyInCartCount++;
+        if (!result.isConfirmed) {
+            return;
         }
-    });
 
-    saveCart();
-    updateCartCount();
+        let addedCount = 0;
+        let alreadyInCartCount = 0;
 
-    const selectAll =
-        document.getElementById("selectAllAssets");
+        selectedAssets.forEach(function(asset) {
 
-    if (selectAll) {
-        selectAll.checked = false;
-    }
+            const alreadyExists =
+                cart.some(function(item) {
+                    return item.assetTag === asset.assetTag;
+                });
 
-    document
-        .querySelectorAll(".asset-checkbox")
-        .forEach(function(checkbox) {
-            checkbox.checked = false;
+            if (!alreadyExists) {
+                cart.push(asset);
+                addedCount++;
+            } else {
+                alreadyInCartCount++;
+            }
         });
 
-    let successMessage = `
+        saveCart();
+        updateCartCount();
+
+        const selectAll =
+            document.getElementById("selectAllAssets");
+
+        if (selectAll) {
+            selectAll.checked = false;
+        }
+
+        document
+            .querySelectorAll(".asset-checkbox")
+            .forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+
+        let successMessage = `
         <strong>
             ${addedCount}
             asset${addedCount !== 1 ? "s" : ""}
@@ -3632,180 +3691,184 @@ async function addSelectedToCart() {
         successfully added to your cart.
     `;
 
-    if (alreadyInCartCount > 0) {
-        successMessage += `
+        if (alreadyInCartCount > 0) {
+            successMessage += `
             <div class="swal-warning-text">
                 ${alreadyInCartCount}
                 asset${alreadyInCartCount !== 1 ? "s" : ""}
                 already existed in the cart.
             </div>
         `;
+        }
+
+        await Swal.fire({
+            icon: "success",
+            title: "Added to Cart",
+            html: successMessage,
+            confirmButtonText: "OK",
+            confirmButtonColor: "#16a34a"
+        });
     }
 
-    await Swal.fire({
-        icon: "success",
-        title: "Added to Cart",
-        html: successMessage,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#16a34a"
-    });
-}
+    /* =========================================================
+       ISSUE TARGET
+       ========================================================= */
 
-/* =========================================================
-   ISSUE TARGET
-   ========================================================= */
+    function getTargetOptions(mode) {
 
-function getTargetOptions(mode) {
+        if (mode === "issuedToCustodian") {
+            return [
+                ...new Set(
+                    availableAssets
+                        .map(a => String(a.custodian || "").trim())
+                        .filter(Boolean)
+                )
+            ].sort();
+        }
 
-    if (mode === "issuedToCustodian") {
-        return [
-            ...new Set(
-                availableAssets
-                    .map(a => String(a.custodian || "").trim())
-                    .filter(Boolean)
-            )
-        ].sort();
+        if (mode === "issuedToLocation") {
+            return [
+                ...new Set(
+                    availableAssets
+                        .map(a => String(a.location || "").trim())
+                        .filter(Boolean)
+                )
+            ].sort();
+        }
+
+        if (mode === "issuedToAsset") {
+            return availableAssets.map(
+                a => `${a.assetName} — ${a.assetTag}`
+            );
+        }
+
+        return [];
     }
 
-    if (mode === "issuedToLocation") {
-        return [
-            ...new Set(
-                availableAssets
-                    .map(a => String(a.location || "").trim())
-                    .filter(Boolean)
-            )
-        ].sort();
-    }
+    function changeIssueTarget(mode) {
+        const toolbar = document.querySelector(".issue-toolbar-modern");
+        if (toolbar) {
+            toolbar.classList.toggle("in-stock-mode", mode === "stock");
+        }
 
-    if (mode === "issuedToAsset") {
-        return availableAssets.map(
-            a => `${a.assetName} — ${a.assetTag}`
-        );
-    }
+        const control =
+            document.getElementById("issueTargetControl");
 
-    return [];
-}
+        const label =
+            document.getElementById("issueTargetLabel");
 
-function changeIssueTarget(mode) {
+        const input =
+            document.getElementById("issueTargetSearch");
 
-    const control =
-        document.getElementById("issueTargetControl");
+        const help =
+            document.getElementById("issueTargetHelp");
 
-    const label =
-        document.getElementById("issueTargetLabel");
+        if (!control || !label || !input || !help) {
+            return;
+        }
 
-    const input =
-        document.getElementById("issueTargetSearch");
+        input.value = "";
+        input.removeAttribute("readonly");
+        input.style.display = "";
+        help.style.display = "grid";
 
-    const help =
-        document.getElementById("issueTargetHelp");
+        if (mode === "stock") {
+            control.style.display = "none";
+            filterAssets();
+            return;
+        }
 
-    if (!control || !label || !input || !help) {
-        return;
-    }
+        control.style.display = "flex";
 
-    input.value = "";
-    input.removeAttribute("readonly");
-    input.style.display = "";
-    help.style.display = "grid";
+        if (mode === "issuedToCustodian") {
+            label.textContent = "Employee:";
+            input.placeholder =
+                "Type min 2 characters to search";
+            help.title = "Select employee";
+        } else if (mode === "issuedToLocation") {
+            label.textContent = "Location:";
+            input.placeholder =
+                "Select location...";
+            help.title = "Select location";
+        } else {
+            label.textContent = "Asset:";
+            input.placeholder =
+                "Type min 2 characters to search";
+            help.title = "Select asset";
+        }
 
-    if (mode === "stock") {
-        control.style.display = "none";
         filterAssets();
-        return;
     }
 
-    control.style.display = "flex";
+    function getIssueTargetPopupRecords(mode) {
 
-    if (mode === "issuedToCustodian") {
-        label.textContent = "Employee:";
-        input.placeholder =
-            "Type min 2 characters to search";
-        help.title = "Select employee";
-    } else if (mode === "issuedToLocation") {
-        label.textContent = "Location:";
-        input.placeholder =
-            "Select location...";
-        help.title = "Select location";
-    } else {
-        label.textContent = "Asset:";
-        input.placeholder =
-            "Type min 2 characters to search";
-        help.title = "Select asset";
+        if (mode === "issuedToAsset") {
+            return availableAssets.map((asset, index) => ({
+                value: `${asset.assetName} — ${asset.assetTag}`,
+                name: asset.assetName || "—",
+                code: asset.assetTag || "—",
+                type: asset.manufacturer || "—",
+                index
+            }));
+        }
+
+        if (mode === "issuedToLocation") {
+            return [
+                ...new Set(
+                    availableAssets
+                        .map(a => String(a.location || "").trim())
+                        .filter(Boolean)
+                )
+            ].sort().map((value, index) => ({
+                value,
+                name: value,
+                code: "—",
+                type: "Location",
+                index
+            }));
+        }
+
+        if (mode === "issuedToCustodian") {
+            return [
+                ...new Set(
+                    availableAssets
+                        .map(a => String(a.custodian || "").trim())
+                        .filter(Boolean)
+                )
+            ].sort().map((value, index) => ({
+                value,
+                name: value,
+                code: "—",
+                type: "Employee",
+                index
+            }));
+        }
+
+        return [];
     }
 
-    filterAssets();
-}
+    let issueTargetPopupRecords = [];
+    let issueTargetPopupSelectedValue = "";
 
-function getIssueTargetPopupRecords(mode) {
+    function renderIssueTargetPopupRows(records) {
 
-    if (mode === "issuedToAsset") {
-        return availableAssets.map((asset, index) => ({
-            value: `${asset.assetName} — ${asset.assetTag}`,
-            name: asset.assetName || "—",
-            code: asset.assetTag || "—",
-            type: asset.manufacturer || "—",
-            index
-        }));
-    }
+        const tbody =
+            document.getElementById("issueTargetTableBody");
 
-    if (mode === "issuedToLocation") {
-        return [
-            ...new Set(
-                availableAssets
-                    .map(a => String(a.location || "").trim())
-                    .filter(Boolean)
-            )
-        ].sort().map((value, index) => ({
-            value,
-            name: value,
-            code: "—",
-            type: "Location",
-            index
-        }));
-    }
+        const emptyState =
+            document.getElementById("issueTargetEmptyState");
 
-    if (mode === "issuedToCustodian") {
-        return [
-            ...new Set(
-                availableAssets
-                    .map(a => String(a.custodian || "").trim())
-                    .filter(Boolean)
-            )
-        ].sort().map((value, index) => ({
-            value,
-            name: value,
-            code: "—",
-            type: "Employee",
-            index
-        }));
-    }
+        const summary =
+            document.getElementById("issueTargetRecordSummary");
 
-    return [];
-}
+        const addButton =
+            document.getElementById("issueTargetAddButton");
 
-let issueTargetPopupRecords = [];
-let issueTargetPopupSelectedValue = "";
+        if (!tbody || !emptyState || !summary || !addButton) {
+            return;
+        }
 
-function renderIssueTargetPopupRows(records) {
-
-    const tbody =
-        document.getElementById("issueTargetTableBody");
-
-    const emptyState =
-        document.getElementById("issueTargetEmptyState");
-
-    const summary =
-        document.getElementById("issueTargetRecordSummary");
-
-    const addButton =
-        document.getElementById("issueTargetAddButton");
-
-    if (!tbody || !emptyState || !summary || !addButton) {
-        return;
-    }
-
-    tbody.innerHTML = records.map(record => `
+        tbody.innerHTML = records.map(record => `
         <tr
             class="${record.value === issueTargetPopupSelectedValue ? "selected" : ""}"
             onclick="selectIssueTargetRow(this, ${JSON.stringify(record.value)})"
@@ -3832,366 +3895,366 @@ function renderIssueTargetPopupRows(records) {
         </tr>
     `).join("");
 
-    emptyState.hidden = records.length !== 0;
+        emptyState.hidden = records.length !== 0;
 
-    summary.textContent =
-        `${records.length} ${records.length === 1 ? "record" : "records"} found. Select one to continue.`;
+        summary.textContent =
+            `${records.length} ${records.length === 1 ? "record" : "records"} found. Select one to continue.`;
 
-    addButton.disabled = !issueTargetPopupSelectedValue;
-}
-
-function selectIssueTargetRow(row, value) {
-
-    issueTargetPopupSelectedValue = value || "";
-
-    const select =
-        document.getElementById("issuePopupSelect");
-
-    if (select) {
-        const option =
-            [...select.options].find(
-                item => item.value === issueTargetPopupSelectedValue
-            );
-
-        select.value = option ? option.value : "";
+        addButton.disabled = !issueTargetPopupSelectedValue;
     }
 
-    document
-        .querySelectorAll("#issueTargetTableBody tr")
-        .forEach(tr => tr.classList.remove("selected"));
+    function selectIssueTargetRow(row, value) {
 
-    if (row) {
-        row.classList.add("selected");
+        issueTargetPopupSelectedValue = value || "";
 
-        const radio =
-            row.querySelector(".target-popup-radio");
+        const select =
+            document.getElementById("issuePopupSelect");
 
-        if (radio) {
-            radio.checked = true;
+        if (select) {
+            const option =
+                [...select.options].find(
+                    item => item.value === issueTargetPopupSelectedValue
+                );
+
+            select.value = option ? option.value : "";
+        }
+
+        document
+            .querySelectorAll("#issueTargetTableBody tr")
+            .forEach(tr => tr.classList.remove("selected"));
+
+        if (row) {
+            row.classList.add("selected");
+
+            const radio =
+                row.querySelector(".target-popup-radio");
+
+            if (radio) {
+                radio.checked = true;
+            }
+        }
+
+        const addButton =
+            document.getElementById("issueTargetAddButton");
+
+        if (addButton) {
+            addButton.disabled = !issueTargetPopupSelectedValue;
         }
     }
 
-    const addButton =
-        document.getElementById("issueTargetAddButton");
+    function filterIssueTargetPopup() {
 
-    if (addButton) {
-        addButton.disabled = !issueTargetPopupSelectedValue;
+        const search =
+            document.getElementById("issuePopupSearch");
+
+        const filterSelect =
+            document.getElementById("issuePopupFilterSelect");
+
+        const query =
+            String(search?.value || "").trim().toLowerCase();
+
+        const field =
+            filterSelect?.value || "name";
+
+        if (!query) {
+            renderIssueTargetPopupRows(issueTargetPopupRecords);
+            return;
+        }
+
+        const filtered =
+            issueTargetPopupRecords.filter(record => {
+                const value =
+                    field === "code"
+                        ? record.code
+                        : field === "manufacturer"
+                            ? record.type
+                            : record.name;
+
+                return String(value || "")
+                    .toLowerCase()
+                    .includes(query);
+            });
+
+        renderIssueTargetPopupRows(filtered);
     }
-}
 
-function filterIssueTargetPopup() {
+    function clearIssueTargetPopupFilter() {
 
-    const search =
-        document.getElementById("issuePopupSearch");
+        const search =
+            document.getElementById("issuePopupSearch");
 
-    const filterSelect =
-        document.getElementById("issuePopupFilterSelect");
+        if (search) {
+            search.value = "";
+        }
 
-    const query =
-        String(search?.value || "").trim().toLowerCase();
+        const filterSelect =
+            document.getElementById("issuePopupFilterSelect");
 
-    const field =
-        filterSelect?.value || "name";
+        if (filterSelect) {
+            filterSelect.value = "name";
+        }
 
-    if (!query) {
+        issueTargetPopupSelectedValue = "";
+
+        const select =
+            document.getElementById("issuePopupSelect");
+
+        if (select) {
+            select.value = "";
+        }
+
         renderIssueTargetPopupRows(issueTargetPopupRecords);
-        return;
     }
 
-    const filtered =
-        issueTargetPopupRecords.filter(record => {
-            const value =
-                field === "code"
-                    ? record.code
-                    : field === "manufacturer"
-                        ? record.type
-                        : record.name;
+    function openIssueTargetPopup() {
 
-            return String(value || "")
-                .toLowerCase()
-                .includes(query);
-        });
+        const mode =
+            document.getElementById("assetStatus")?.value ||
+            "issuedToAsset";
 
-    renderIssueTargetPopupRows(filtered);
-}
+        if (mode === "stock") {
+            return;
+        }
 
-function clearIssueTargetPopupFilter() {
+        const modal =
+            document.getElementById("issueTargetModal");
 
-    const search =
-        document.getElementById("issuePopupSearch");
+        const select =
+            document.getElementById("issuePopupSelect");
 
-    if (search) {
-        search.value = "";
-    }
+        const title =
+            document.getElementById("issueTargetModalTitle");
 
-    const filterSelect =
-        document.getElementById("issuePopupFilterSelect");
+        const subtitle =
+            document.getElementById("issueTargetModalSubtitle");
 
-    if (filterSelect) {
-        filterSelect.value = "name";
-    }
+        const filterSelect =
+            document.getElementById("issuePopupFilterSelect");
 
-    issueTargetPopupSelectedValue = "";
+        const search =
+            document.getElementById("issuePopupSearch");
 
-    const select =
-        document.getElementById("issuePopupSelect");
+        const columnOne =
+            document.getElementById("targetPopupColumnOne");
 
-    if (select) {
-        select.value = "";
-    }
+        const columnTwo =
+            document.getElementById("targetPopupColumnTwo");
 
-    renderIssueTargetPopupRows(issueTargetPopupRecords);
-}
+        const columnThree =
+            document.getElementById("targetPopupColumnThree");
 
-function openIssueTargetPopup() {
+        if (!modal || !select) {
+            return;
+        }
 
-    const mode =
-        document.getElementById("assetStatus")?.value ||
-        "issuedToAsset";
+        issueTargetPopupRecords =
+            getIssueTargetPopupRecords(mode);
 
-    if (mode === "stock") {
-        return;
-    }
+        issueTargetPopupSelectedValue = "";
 
-    const modal =
-        document.getElementById("issueTargetModal");
-
-    const select =
-        document.getElementById("issuePopupSelect");
-
-    const title =
-        document.getElementById("issueTargetModalTitle");
-
-    const subtitle =
-        document.getElementById("issueTargetModalSubtitle");
-
-    const filterSelect =
-        document.getElementById("issuePopupFilterSelect");
-
-    const search =
-        document.getElementById("issuePopupSearch");
-
-    const columnOne =
-        document.getElementById("targetPopupColumnOne");
-
-    const columnTwo =
-        document.getElementById("targetPopupColumnTwo");
-
-    const columnThree =
-        document.getElementById("targetPopupColumnThree");
-
-    if (!modal || !select) {
-        return;
-    }
-
-    issueTargetPopupRecords =
-        getIssueTargetPopupRecords(mode);
-
-    issueTargetPopupSelectedValue = "";
-
-    select.innerHTML =
-        issueTargetPopupRecords
-            .map(record => `
+        select.innerHTML =
+            issueTargetPopupRecords
+                .map(record => `
                 <option value="${escapeHtml(record.value)}">
                     ${escapeHtml(record.value)}
                 </option>
             `)
-            .join("");
+                .join("");
 
-    select.value = "";
+        select.value = "";
 
-    if (search) {
-        search.value = "";
-    }
-
-    if (filterSelect) {
-        filterSelect.value = "name";
-    }
-
-    if (mode === "issuedToCustodian") {
-
-        title.textContent = "Select Employee";
-        subtitle.textContent =
-            "Select an employee and add it to the issue form.";
+        if (search) {
+            search.value = "";
+        }
 
         if (filterSelect) {
-            filterSelect.innerHTML = `
+            filterSelect.value = "name";
+        }
+
+        if (mode === "issuedToCustodian") {
+
+            title.textContent = "Select Employee";
+            subtitle.textContent =
+                "Select an employee and add it to the issue form.";
+
+            if (filterSelect) {
+                filterSelect.innerHTML = `
                 <option value="name">Employee Name</option>
             `;
-        }
+            }
 
-        if (columnOne) {
-            columnOne.textContent = "EMPLOYEE NAME";
-        }
+            if (columnOne) {
+                columnOne.textContent = "EMPLOYEE NAME";
+            }
 
-        if (columnTwo) {
-            columnTwo.textContent = "EMPLOYEE CODE";
-        }
+            if (columnTwo) {
+                columnTwo.textContent = "EMPLOYEE CODE";
+            }
 
-        if (columnThree) {
-            columnThree.textContent = "EMPLOYEE TYPE";
-        }
+            if (columnThree) {
+                columnThree.textContent = "EMPLOYEE TYPE";
+            }
 
-    } else if (mode === "issuedToLocation") {
+        } else if (mode === "issuedToLocation") {
 
-        title.textContent = "Select Location";
-        subtitle.textContent =
-            "Select a location and add it to the issue form.";
+            title.textContent = "Select Location";
+            subtitle.textContent =
+                "Select a location and add it to the issue form.";
 
-        if (filterSelect) {
-            filterSelect.innerHTML = `
+            if (filterSelect) {
+                filterSelect.innerHTML = `
                 <option value="name">Location Name</option>
             `;
-        }
+            }
 
-        if (columnOne) {
-            columnOne.textContent = "LOCATION NAME";
-        }
+            if (columnOne) {
+                columnOne.textContent = "LOCATION NAME";
+            }
 
-        if (columnTwo) {
-            columnTwo.textContent = "LOCATION CODE";
-        }
+            if (columnTwo) {
+                columnTwo.textContent = "LOCATION CODE";
+            }
 
-        if (columnThree) {
-            columnThree.textContent = "LOCATION TYPE";
-        }
+            if (columnThree) {
+                columnThree.textContent = "LOCATION TYPE";
+            }
 
-    } else {
+        } else {
 
-        title.textContent = "Select Asset";
-        subtitle.textContent =
-            "Select an asset and add it to the issue form.";
+            title.textContent = "Select Asset";
+            subtitle.textContent =
+                "Select an asset and add it to the issue form.";
 
-        if (filterSelect) {
-            filterSelect.innerHTML = `
+            if (filterSelect) {
+                filterSelect.innerHTML = `
                 <option value="name">Asset Name</option>
                 <option value="code">Asset Code</option>
                 <option value="manufacturer">Manufacturer</option>
             `;
+            }
+
+            if (columnOne) {
+                columnOne.textContent = "ASSET NAME";
+            }
+
+            if (columnTwo) {
+                columnTwo.textContent = "ASSET CODE";
+            }
+
+            if (columnThree) {
+                columnThree.textContent = "MANUFACTURER";
+            }
         }
 
-        if (columnOne) {
-            columnOne.textContent = "ASSET NAME";
+        renderIssueTargetPopupRows(issueTargetPopupRecords);
+
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+    }
+
+    function addIssueTargetSelection() {
+
+        const mode =
+            document.getElementById("assetStatus")?.value ||
+            "issuedToAsset";
+
+        const selected =
+            issueTargetPopupSelectedValue ||
+            document.getElementById("issuePopupSelect")?.value ||
+            "";
+
+        const input =
+            document.getElementById("issueTargetSearch");
+
+        if (!selected || !input) {
+            return;
         }
 
-        if (columnTwo) {
-            columnTwo.textContent = "ASSET CODE";
+        if (mode === "issuedToAsset") {
+            input.value =
+                selected.replace(/\s+—\s+[^—]+$/, "");
+        } else {
+            input.value = selected;
         }
 
-        if (columnThree) {
-            columnThree.textContent = "MANUFACTURER";
+        closeIssueTargetPopup();
+        filterAssets();
+    }
+
+    function closeIssueTargetPopup() {
+
+        const modal =
+            document.getElementById("issueTargetModal");
+
+        if (!modal) {
+            return;
         }
+
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
     }
 
-    renderIssueTargetPopupRows(issueTargetPopupRecords);
 
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-}
 
-function addIssueTargetSelection() {
+    function addIssueTargetSelection() {
 
-    const mode =
-        document.getElementById("assetStatus")?.value ||
-        "issuedToAsset";
+        const mode =
+            document.getElementById("assetStatus")?.value ||
+            "issuedToAsset";
 
-    const selected =
-        issueTargetPopupSelectedValue ||
-        document.getElementById("issuePopupSelect")?.value ||
-        "";
+        const selected =
+            document.getElementById("issuePopupSelect")?.value ||
+            "";
 
-    const input =
-        document.getElementById("issueTargetSearch");
+        const input =
+            document.getElementById("issueTargetSearch");
 
-    if (!selected || !input) {
-        return;
+        if (!selected || !input) {
+            return;
+        }
+
+        if (mode === "issuedToAsset") {
+            input.value =
+                selected.replace(/\s+—\s+[^—]+$/, "");
+        } else {
+            input.value = selected;
+        }
+
+        closeIssueTargetPopup();
+        filterAssets();
     }
 
-    if (mode === "issuedToAsset") {
-        input.value =
-            selected.replace(/\s+—\s+[^—]+$/, "");
-    } else {
-        input.value = selected;
+    /* =========================================================
+       CART NAVIGATION
+       ========================================================= */
+
+    function showCart() {
+        saveCart();
+        window.location.href = "issue-cart.html";
     }
 
-    closeIssueTargetPopup();
-    filterAssets();
-}
+    async function emptyCart() {
 
-function closeIssueTargetPopup() {
+        loadCart();
 
-    const modal =
-        document.getElementById("issueTargetModal");
+        if (cart.length === 0) {
 
-    if (!modal) {
-        return;
-    }
+            await Swal.fire({
+                icon: "info",
+                title: "Cart is Empty",
+                text: "There are no assets in the issue cart.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#4f46e5"
+            });
 
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
-}
+            return;
+        }
 
-
-
-function addIssueTargetSelection() {
-
-    const mode =
-        document.getElementById("assetStatus")?.value ||
-        "issuedToAsset";
-
-    const selected =
-        document.getElementById("issuePopupSelect")?.value ||
-        "";
-
-    const input =
-        document.getElementById("issueTargetSearch");
-
-    if (!selected || !input) {
-        return;
-    }
-
-    if (mode === "issuedToAsset") {
-        input.value =
-            selected.replace(/\s+—\s+[^—]+$/, "");
-    } else {
-        input.value = selected;
-    }
-
-    closeIssueTargetPopup();
-    filterAssets();
-}
-
-/* =========================================================
-   CART NAVIGATION
-   ========================================================= */
-
-function showCart() {
-    saveCart();
-    window.location.href = "issue-cart.html";
-}
-
-async function emptyCart() {
-
-    loadCart();
-
-    if (cart.length === 0) {
-
-        await Swal.fire({
-            icon: "info",
-            title: "Cart is Empty",
-            text: "There are no assets in the issue cart.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#4f46e5"
-        });
-
-        return;
-    }
-
-    const result =
-        await Swal.fire({
-            icon: "warning",
-            title: "Empty Cart?",
-            html: `
+        const result =
+            await Swal.fire({
+                icon: "warning",
+                title: "Empty Cart?",
+                html: `
                 <div class="swal-message">
                     Are you sure you want to remove
                     <strong>
@@ -4201,504 +4264,431 @@ async function emptyCart() {
                     from the issue cart?
                 </div>
             `,
-            showCancelButton: true,
-            confirmButtonText: "Yes, Empty Cart",
-            cancelButtonText: "Cancel",
-            confirmButtonColor: "#dc2626",
-            cancelButtonColor: "#64748b",
-            reverseButtons: true
-        });
+                showCancelButton: true,
+                confirmButtonText: "Yes, Empty Cart",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#64748b",
+                reverseButtons: true
+            });
 
-    if (!result.isConfirmed) {
-        return;
-    }
-
-    cart = [];
-
-    saveCart();
-    updateCartCount();
-
-    await Swal.fire({
-        icon: "success",
-        title: "Cart Emptied",
-        text: "All assets have been removed from the issue cart.",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#16a34a"
-    });
-}
-
-function issueAssetFromCart() {
-
-    loadCart();
-
-    if (cart.length === 0) {
-
-        Swal.fire({
-            icon: "warning",
-            title: "Cart is Empty",
-            text: "Please add at least one asset to the cart before issuing.",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#4f46e5"
-        });
-
-        return;
-    }
-
-    saveCart();
-
-    window.location.href =
-        "issue-form.html";
-}
-
-/* =========================================================
-   FILTER LOGIC
-   ========================================================= */
-
-function normalizeFilterValue(value) {
-    return String(value ?? "")
-        .trim()
-        .toLowerCase();
-}
-
-function parseAssetDate(value) {
-
-    const text =
-        String(value ?? "").trim();
-
-    if (!text) {
-        return "";
-    }
-
-    const match =
-        text.match(
-            /^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/
-        );
-
-    if (!match) {
-        return "";
-    }
-
-    const months = {
-        Jan: "01",
-        Feb: "02",
-        Mar: "03",
-        Apr: "04",
-        May: "05",
-        Jun: "06",
-        Jul: "07",
-        Aug: "08",
-        Sep: "09",
-        Oct: "10",
-        Nov: "11",
-        Dec: "12"
-    };
-
-    const month =
-        months[
-            match[2].charAt(0).toUpperCase() +
-            match[2].slice(1).toLowerCase()
-        ];
-
-    if (!month) {
-        return "";
-    }
-
-    return `${match[3]}-${month}-${String(match[1]).padStart(2,"0")}`;
-}
-
-function getUniqueAssetValues(field) {
-
-    return [
-        ...new Set(
-            availableAssets
-                .map(function(asset) {
-                    return String(
-                        asset[field] ?? ""
-                    ).trim();
-                })
-                .filter(Boolean)
-        )
-    ].sort(function(a,b) {
-        return a.localeCompare(
-            b,
-            undefined,
-            { sensitivity: "base" }
-        );
-    });
-}
-
-function populateAssetFilterDropdowns() {
-
-    const dropdowns = [
-        {
-            id: "assetNameFilter",
-            field: "assetName",
-            allText: "All Asset Names"
-        },
-        {
-            id: "manufacturerFilter",
-            field: "manufacturer",
-            allText: "All Manufacturers"
-        },
-        {
-            id: "locationFilter",
-            field: "location",
-            allText: "All Locations"
-        }
-    ];
-
-    dropdowns.forEach(function(config) {
-
-        const select =
-            document.getElementById(config.id);
-
-        if (!select) {
+        if (!result.isConfirmed) {
             return;
         }
 
-        select.innerHTML =
-            `<option value="">${config.allText}</option>`;
+        cart = [];
 
-        getUniqueAssetValues(
-            config.field
-        ).forEach(function(value) {
-
-            const option =
-                document.createElement("option");
-
-            option.value = value;
-            option.textContent = value;
-
-            select.appendChild(option);
-        });
-    });
-}
-
-function updateFilterResultHint(count) {
-
-    const applyText =
-        document.getElementById("filterApplyText");
-
-    if (!applyText) {
-        return;
-    }
-
-    applyText.textContent =
-        count === availableAssets.length
-            ? "Show results"
-            : `Show ${count} result${count !== 1 ? "s" : ""}`;
-}
-
-function filterAssets() {
-
-    const issueMode =
-        document.getElementById("assetStatus")?.value ||
-        "issuedToAsset";
-
-    const issueTarget =
-        normalizeFilterValue(
-            document.getElementById(
-                "issueTargetSearch"
-            )?.value
-        );
-
-    const assetName =
-        normalizeFilterValue(
-            document.getElementById(
-                "assetNameFilter"
-            )?.value
-        );
-
-    const manufacturer =
-        normalizeFilterValue(
-            document.getElementById(
-                "manufacturerFilter"
-            )?.value
-        );
-
-    const location =
-        normalizeFilterValue(
-            document.getElementById(
-                "locationFilter"
-            )?.value
-        );
-
-    const commonSearch =
-        normalizeFilterValue(
-            document.getElementById(
-                "assetCommonSearch"
-            )?.value
-        );
-
-    const registrationDate =
-        document.getElementById(
-            "registrationDateFilter"
-        )?.value || "";
-
-    const filtered =
-        availableAssets.filter(function(asset) {
-
-            const matchesAssetName =
-                !assetName ||
-                normalizeFilterValue(
-                    asset.assetName
-                ) === assetName;
-
-            const matchesManufacturer =
-                !manufacturer ||
-                normalizeFilterValue(
-                    asset.manufacturer
-                ) === manufacturer;
-
-            const matchesLocation =
-                !location ||
-                normalizeFilterValue(
-                    asset.location
-                ) === location;
-
-            const matchesCommonSearch =
-                !commonSearch ||
-                [
-                    asset.serialNo,
-                    asset.model,
-                    asset.erpNo,
-                    asset.plateNo
-                ].some(function(value) {
-                    return normalizeFilterValue(
-                        value
-                    ).includes(commonSearch);
-                });
-
-            const matchesRegistrationDate =
-                !registrationDate ||
-                parseAssetDate(
-                    asset.registrationDate
-                ) === registrationDate;
-
-            let matchesIssueTarget = true;
-
-            if (issueMode === "stock") {
-
-                matchesIssueTarget =
-                    normalizeFilterValue(
-                        asset.stockStatus
-                    ) === "in stock";
-
-            } else if (issueTarget) {
-
-                if (issueMode === "issuedToCustodian") {
-
-                    matchesIssueTarget =
-                        normalizeFilterValue(
-                            asset.custodian
-                        ).includes(issueTarget);
-
-                } else if (issueMode === "issuedToLocation") {
-
-                    matchesIssueTarget =
-                        normalizeFilterValue(
-                            asset.location
-                        ).includes(issueTarget);
-
-                } else {
-
-                    matchesIssueTarget =
-                        normalizeFilterValue(
-                            asset.assetName
-                        ).includes(issueTarget) ||
-                        normalizeFilterValue(
-                            asset.assetTag
-                        ).includes(issueTarget);
-                }
-            }
-
-            return (
-                matchesIssueTarget &&
-                matchesAssetName &&
-                matchesManufacturer &&
-                matchesLocation &&
-                matchesCommonSearch &&
-                matchesRegistrationDate
-            );
-        });
-
-    displayAssets(filtered);
-    updateFilterResultHint(filtered.length);
-
-    const selectAll =
-        document.getElementById(
-            "selectAllAssets"
-        );
-
-    if (selectAll) {
-        selectAll.checked = false;
-    }
-
-    /* Close popup after Show results, like the reference flow. */
-    closeAssetFilterPopup();
-}
-
-function closeAssetFilterPopup() {
-
-    const filterContent =
-        document.getElementById(
-            "assetFilterContent"
-        );
-
-    const toggleButton =
-        document.getElementById(
-            "assetFilterToggleButton"
-        );
-
-    const toggleIcon =
-        document.getElementById(
-            "assetFilterToggleIcon"
-        );
-
-    if (!filterContent) {
-        return;
-    }
-
-    filterContent.classList.add(
-        "filters-hidden"
-    );
-
-    if (toggleButton) {
-        toggleButton.classList.remove("active");
-        toggleButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-        toggleButton.setAttribute(
-            "title",
-            "Show filters"
-        );
-    }
-
-    if (toggleIcon) {
-        toggleIcon.textContent = "+";
-    }
-}
-
-function reloadAssets() {
-
-    const assetNameFilter =
-        document.getElementById(
-            "assetNameFilter"
-        );
-
-    const manufacturerFilter =
-        document.getElementById(
-            "manufacturerFilter"
-        );
-
-    const locationFilter =
-        document.getElementById(
-            "locationFilter"
-        );
-
-    const commonSearch =
-        document.getElementById(
-            "assetCommonSearch"
-        );
-
-    const registrationDate =
-        document.getElementById(
-            "registrationDateFilter"
-        );
-
-    if (assetNameFilter) {
-        assetNameFilter.value = "";
-    }
-
-    if (manufacturerFilter) {
-        manufacturerFilter.value = "";
-    }
-
-    if (locationFilter) {
-        locationFilter.value = "";
-    }
-
-    if (commonSearch) {
-        commonSearch.value = "";
-    }
-
-    if (registrationDate) {
-        registrationDate.value = "";
-    }
-
-    displayAssets(
-        availableAssets
-    );
-
-    updateFilterResultHint(
-        availableAssets.length
-    );
-
-    const selectAll =
-        document.getElementById(
-            "selectAllAssets"
-        );
-
-    if (selectAll) {
-        selectAll.checked = false;
-    }
-
-    closeAssetFilterPopup();
-}
-
-/* Enter in common search */
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter" &&
-            document.activeElement &&
-            document.activeElement.id ===
-            "assetCommonSearch"
-        ) {
-            filterAssets();
-        }
-
-        if (
-            event.key === "Escape"
-        ) {
-            closeAssetFilterPopup();
-        }
-    }
-);
-
-/* =========================================================
-   PAGE INITIALIZATION
-   ========================================================= */
-
-function openAssetDetailsPage(assetTag) {
-
-    const encodedTag =
-        encodeURIComponent(
-            assetTag || ""
-        );
-
-    window.location.href =
-        `issue-asset-details.html?assetTag=${encodedTag}`;
-}
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        populateAssetFilterDropdowns();
-
-        loadCart();
+        saveCart();
         updateCartCount();
 
-        changeIssueTarget(
+        await Swal.fire({
+            icon: "success",
+            title: "Cart Emptied",
+            text: "All assets have been removed from the issue cart.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#16a34a"
+        });
+    }
+
+    function issueAssetFromCart() {
+
+        loadCart();
+
+        if (cart.length === 0) {
+
+            Swal.fire({
+                icon: "warning",
+                title: "Cart is Empty",
+                text: "Please add at least one asset to the cart before issuing.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#4f46e5"
+            });
+
+            return;
+        }
+
+        saveCart();
+
+        window.location.href =
+            "issue-form.html";
+    }
+
+    /* =========================================================
+       FILTER LOGIC
+       ========================================================= */
+
+    function normalizeFilterValue(value) {
+        return String(value ?? "")
+            .trim()
+            .toLowerCase();
+    }
+
+    function parseAssetDate(value) {
+
+        const text =
+            String(value ?? "").trim();
+
+        if (!text) {
+            return "";
+        }
+
+        const match =
+            text.match(
+                /^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/
+            );
+
+        if (!match) {
+            return "";
+        }
+
+        const months = {
+            Jan: "01",
+            Feb: "02",
+            Mar: "03",
+            Apr: "04",
+            May: "05",
+            Jun: "06",
+            Jul: "07",
+            Aug: "08",
+            Sep: "09",
+            Oct: "10",
+            Nov: "11",
+            Dec: "12"
+        };
+
+        const month =
+            months[
+            match[2].charAt(0).toUpperCase() +
+            match[2].slice(1).toLowerCase()
+                ];
+
+        if (!month) {
+            return "";
+        }
+
+        return `${match[3]}-${month}-${String(match[1]).padStart(2,"0")}`;
+    }
+
+    function getUniqueAssetValues(field) {
+
+        return [
+            ...new Set(
+                availableAssets
+                    .map(function(asset) {
+                        return String(
+                            asset[field] ?? ""
+                        ).trim();
+                    })
+                    .filter(Boolean)
+            )
+        ].sort(function(a,b) {
+            return a.localeCompare(
+                b,
+                undefined,
+                { sensitivity: "base" }
+            );
+        });
+    }
+
+    function populateAssetFilterDropdowns() {
+
+        const dropdowns = [
+            {
+                id: "assetNameFilter",
+                field: "assetName",
+                allText: "All Asset Names"
+            },
+            {
+                id: "manufacturerFilter",
+                field: "manufacturer",
+                allText: "All Manufacturers"
+            },
+            {
+                id: "locationFilter",
+                field: "location",
+                allText: "All Locations"
+            }
+        ];
+
+        dropdowns.forEach(function(config) {
+
+            const select =
+                document.getElementById(config.id);
+
+            if (!select) {
+                return;
+            }
+
+            select.innerHTML =
+                `<option value="">${config.allText}</option>`;
+
+            getUniqueAssetValues(
+                config.field
+            ).forEach(function(value) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = value;
+                option.textContent = value;
+
+                select.appendChild(option);
+            });
+        });
+    }
+
+    function updateFilterResultHint(count) {
+
+        const applyText =
+            document.getElementById("filterApplyText");
+
+        if (!applyText) {
+            return;
+        }
+
+        applyText.textContent =
+            count === availableAssets.length
+                ? "Show results"
+                : `Show ${count} result${count !== 1 ? "s" : ""}`;
+    }
+
+    function filterAssets() {
+
+        const issueMode =
+            document.getElementById("assetStatus")?.value ||
+            "issuedToAsset";
+
+        const issueTarget =
+            normalizeFilterValue(
+                document.getElementById(
+                    "issueTargetSearch"
+                )?.value
+            );
+
+        const assetName =
+            normalizeFilterValue(
+                document.getElementById(
+                    "assetNameFilter"
+                )?.value
+            );
+
+        const manufacturer =
+            normalizeFilterValue(
+                document.getElementById(
+                    "manufacturerFilter"
+                )?.value
+            );
+
+        const location =
+            normalizeFilterValue(
+                document.getElementById(
+                    "locationFilter"
+                )?.value
+            );
+
+        const commonSearch =
+            normalizeFilterValue(
+                document.getElementById(
+                    "assetCommonSearch"
+                )?.value
+            );
+
+        const registrationDate =
             document.getElementById(
-                "assetStatus"
-            )?.value ||
-            "issuedToAsset"
+                "registrationDateFilter"
+            )?.value || "";
+
+        const filtered =
+            availableAssets.filter(function(asset) {
+
+                const matchesAssetName =
+                    !assetName ||
+                    normalizeFilterValue(
+                        asset.assetName
+                    ) === assetName;
+
+                const matchesManufacturer =
+                    !manufacturer ||
+                    normalizeFilterValue(
+                        asset.manufacturer
+                    ) === manufacturer;
+
+                const matchesLocation =
+                    !location ||
+                    normalizeFilterValue(
+                        asset.location
+                    ) === location;
+
+                const matchesCommonSearch =
+                    !commonSearch ||
+                    [
+                        asset.serialNo,
+                        asset.model,
+                        asset.erpNo,
+                        asset.plateNo
+                    ].some(function(value) {
+                        return normalizeFilterValue(
+                            value
+                        ).includes(commonSearch);
+                    });
+
+                const matchesRegistrationDate =
+                    !registrationDate ||
+                    parseAssetDate(
+                        asset.registrationDate
+                    ) === registrationDate;
+
+                let matchesIssueTarget = true;
+
+                if (issueMode === "stock") {
+
+                    matchesIssueTarget =
+                        normalizeFilterValue(
+                            asset.stockStatus
+                        ) === "in stock";
+
+                } else if (issueTarget) {
+
+                    if (issueMode === "issuedToCustodian") {
+
+                        matchesIssueTarget =
+                            normalizeFilterValue(
+                                asset.custodian
+                            ).includes(issueTarget);
+
+                    } else if (issueMode === "issuedToLocation") {
+
+                        matchesIssueTarget =
+                            normalizeFilterValue(
+                                asset.location
+                            ).includes(issueTarget);
+
+                    } else {
+
+                        matchesIssueTarget =
+                            normalizeFilterValue(
+                                asset.assetName
+                            ).includes(issueTarget) ||
+                            normalizeFilterValue(
+                                asset.assetTag
+                            ).includes(issueTarget);
+                    }
+                }
+
+                return (
+                    matchesIssueTarget &&
+                    matchesAssetName &&
+                    matchesManufacturer &&
+                    matchesLocation &&
+                    matchesCommonSearch &&
+                    matchesRegistrationDate
+                );
+            });
+
+        displayAssets(filtered);
+        updateFilterResultHint(filtered.length);
+
+        const selectAll =
+            document.getElementById(
+                "selectAllAssets"
+            );
+
+        if (selectAll) {
+            selectAll.checked = false;
+        }
+
+        /* Close popup after Show results, like the reference flow. */
+        closeAssetFilterPopup();
+    }
+
+    function closeAssetFilterPopup() {
+
+        const filterContent =
+            document.getElementById(
+                "assetFilterContent"
+            );
+
+        const toggleButton =
+            document.getElementById(
+                "assetFilterToggleButton"
+            );
+
+        const toggleIcon =
+            document.getElementById(
+                "assetFilterToggleIcon"
+            );
+
+        if (!filterContent) {
+            return;
+        }
+
+        filterContent.classList.add(
+            "filters-hidden"
         );
+
+        if (toggleButton) {
+            toggleButton.classList.remove("active");
+            toggleButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+            toggleButton.setAttribute(
+                "title",
+                "Show filters"
+            );
+        }
+
+        if (toggleIcon) {
+            toggleIcon.textContent = "+";
+        }
+    }
+
+    function reloadAssets() {
+
+        const assetNameFilter =
+            document.getElementById(
+                "assetNameFilter"
+            );
+
+        const manufacturerFilter =
+            document.getElementById(
+                "manufacturerFilter"
+            );
+
+        const locationFilter =
+            document.getElementById(
+                "locationFilter"
+            );
+
+        const commonSearch =
+            document.getElementById(
+                "assetCommonSearch"
+            );
+
+        const registrationDate =
+            document.getElementById(
+                "registrationDateFilter"
+            );
+
+        if (assetNameFilter) {
+            assetNameFilter.value = "";
+        }
+
+        if (manufacturerFilter) {
+            manufacturerFilter.value = "";
+        }
+
+        if (locationFilter) {
+            locationFilter.value = "";
+        }
+
+        if (commonSearch) {
+            commonSearch.value = "";
+        }
+
+        if (registrationDate) {
+            registrationDate.value = "";
+        }
 
         displayAssets(
             availableAssets
@@ -4707,8 +4697,85 @@ document.addEventListener(
         updateFilterResultHint(
             availableAssets.length
         );
+
+        const selectAll =
+            document.getElementById(
+                "selectAllAssets"
+            );
+
+        if (selectAll) {
+            selectAll.checked = false;
+        }
+
+        closeAssetFilterPopup();
     }
-);
+
+    /* Enter in common search */
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                document.activeElement &&
+                document.activeElement.id ===
+                "assetCommonSearch"
+            ) {
+                filterAssets();
+            }
+
+            if (
+                event.key === "Escape"
+            ) {
+                closeAssetFilterPopup();
+            }
+        }
+    );
+
+    /* =========================================================
+       PAGE INITIALIZATION
+       ========================================================= */
+
+    function openAssetDetailsPage(assetTag) {
+
+        const encodedTag =
+            encodeURIComponent(
+                assetTag || ""
+            );
+
+        window.location.href =
+            `issue-asset-details.html?assetTag=${encodedTag}`;
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            populateAssetFilterDropdowns();
+
+            loadCart();
+            updateCartCount();
+
+            const assetStatus =
+                document.getElementById("assetStatus");
+
+            /* In Stock is the default view when the page opens. */
+            if (assetStatus) {
+                assetStatus.value = "stock";
+            }
+
+            /*
+             * changeIssueTarget("stock") hides the Asset search field
+             * and applies the In Stock filter. Do not call displayAssets
+             * with all assets afterwards, otherwise the stock filter would
+             * immediately be overwritten.
+             */
+            changeIssueTarget(
+                assetStatus?.value ||
+                "stock"
+            );
+        }
+    );
 </script>
 </body>
 </html>
